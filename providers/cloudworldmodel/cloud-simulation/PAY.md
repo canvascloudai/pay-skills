@@ -3,7 +3,7 @@ name: cloud-simulation
 title: "Cloud World Model API"
 description: "Multi-cloud infrastructure simulation with RL, chaos, and AI analysis endpoints; x402 pay-per-call on Solana mainnet USDC and Base, no signup required."
 use_case: "Use for training RL autoscaling policies, running chaos scenarios, comparing multi-cloud costs, and requesting AI architecture analysis — pay-per-call on Solana or Base USDC, no signup required."
-category: developer-tools
+category: devtools
 service_url: https://www.cloudworldmodel.ai
 openapi:
   path: openapi.json
