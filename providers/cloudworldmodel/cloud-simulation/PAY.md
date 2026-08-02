@@ -2,15 +2,8 @@
 name: cloud-simulation
 title: "Cloud World Model API"
 description: "Multi-cloud infrastructure simulation with RL, chaos, and AI analysis endpoints; x402 pay-per-call on Solana mainnet USDC and Base, no signup required."
-use_case: |
-  Call this API when an agent needs to train autoscaling RL policies across AWS, GCP,
-  Azure, OCI, or DigitalOcean without provisioning real cloud resources; when running
-  chaos scenarios (instance kills, AZ outages, database overloads, network partitions)
-  and scoring resilience; when comparing equivalent multi-cloud architectures on cost
-  and latency; or when requesting AI-generated architecture analysis, optimization
-  recommendations, or bottleneck diagnostics. All calls are pay-per-use — no account
-  or API key required; the agent pays in USDC on Solana mainnet or Base via x402.
-category: devtools
+use_case: "Use for training RL autoscaling policies, running chaos scenarios, comparing multi-cloud costs, and requesting AI architecture analysis — pay-per-call on Solana or Base USDC, no signup required."
+category: developer-tools
 service_url: https://www.cloudworldmodel.ai
 openapi:
   path: openapi.json
