@@ -6390,6 +6390,12 @@
         "in": "header",
         "name": "X-PAYMENT",
         "type": "apiKey"
+      },
+      "x402Solana": {
+        "description": "x402 v2 Solana payment alternative. Use this security option when the\npayment challenge selects the Solana network, and send the signed Solana\nUSDC payment payload in the `PAYMENT-SIGNATURE` header.\n\nFor Base payments, select the `x402` security option instead and send\nits signed payment payload in the `X-PAYMENT` header.\n",
+        "in": "header",
+        "name": "PAYMENT-SIGNATURE",
+        "type": "apiKey"
       }
     }
   },
@@ -6522,6 +6528,9 @@
           },
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Submit async AI analysis job",
@@ -6889,6 +6898,9 @@
           },
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Retrieve completed AI job results",
@@ -7094,6 +7106,9 @@
           },
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Get optimization recommendations",
@@ -7325,6 +7340,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Submit an infrastructure optimization job",
@@ -7809,6 +7827,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Run a batch of chaos tests in parallel",
@@ -8099,6 +8120,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Run a chaos engineering test",
@@ -8858,6 +8882,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Explore multi-cloud deployment strategies",
@@ -11008,6 +11035,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Find optimal autoscaling thresholds",
@@ -11588,6 +11618,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Validate infrastructure against a traffic forecast",
@@ -14379,6 +14412,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Execute an RL action and advance one step",
@@ -15087,6 +15123,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Identify performance bottlenecks with AI",
@@ -15623,6 +15662,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Explain simulation behaviour in natural language",
@@ -16011,6 +16053,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Fail a specific node by resourceId or resourceName (deterministic, recommended)",
@@ -16214,6 +16259,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Inject traffic into a simulation (deterministic targetRps or deltaPercent recommended)",
@@ -16349,6 +16397,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Get AI optimization suggestions for the simulation",
@@ -17050,6 +17101,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Advance simulation one step (hybrid ML + rules)",
@@ -17198,6 +17252,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Troubleshoot a simulation issue with AI guidance",
@@ -18049,6 +18106,9 @@
         "security": [
           {
             "x402": []
+          },
+          {
+            "x402Solana": []
           }
         ],
         "summary": "Issue a wallet session JWT via x402 micro-payment",
