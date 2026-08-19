@@ -138,7 +138,7 @@
                   "type": "array"
                 },
                 "error": {
-                  "example": "Payment required. Send a PAYMENT-SIGNATURE header containing a signed USDC payment on Base (x402 protocol).",
+                  "example": "Payment required. Send an X-PAYMENT header containing a signed USDC payment on Base (x402 protocol).",
                   "type": "string"
                 },
                 "extensions": {
@@ -182,7 +182,7 @@
             }
           }
         },
-        "description": "Payment required — the endpoint is metered and no API key was provided.\n\nThe response body follows the [x402 v2 protocol](https://x402.org) and describes\nthe USDC-on-Base payment that the caller must make before retrying the request.\nAfter paying, re-send the original request with a `PAYMENT-SIGNATURE` header containing\nthe signed payment payload.  The server will verify the payment against the\nPayAI facilitator at `https://facilitator.payai.network`.\n\nThe `PAYMENT-REQUIRED` response header carries this entire JSON body as a\nbase64-encoded string for protocol-aware clients.\n\nCall `GET /api/billing/x402/config` to retrieve the current price table and wallet\naddress before constructing a payment.\n"
+        "description": "Payment required — the endpoint is metered and no API key was provided.\n\nThe response body follows the [x402 v2 protocol](https://x402.org) and describes\nthe USDC-on-Base payment that the caller must make before retrying the request.\nAfter paying on Base, re-send the original request with an `X-PAYMENT` header\ncontaining the signed payment payload. The server will verify the payment against\nthe PayAI facilitator at `https://facilitator.payai.network`.\n\nThe `PAYMENT-REQUIRED` response header carries this entire JSON body as a\nbase64-encoded string for protocol-aware clients.\n\nCall `GET /api/billing/x402/config` to retrieve the current price table and wallet\naddress before constructing a payment.\n"
       }
     },
     "schemas": {
@@ -6386,9 +6386,9 @@
         "type": "http"
       },
       "x402": {
-        "description": "x402 v2 micropayment protocol. Agents send a signed USDC micro-payment\non the Base network in the `PAYMENT-SIGNATURE` header and get full\naccess to the metered endpoint in a single round-trip — no account,\nno API key, no sign-up required.\n\n**402 → pay → retry loop:**\n1. Call the endpoint without a `PAYMENT-SIGNATURE` header.\n2. Receive a `402 Payment Required` response. The body is a\n   standard JSON `PaymentRequired` object. The same payload is also\n   echoed as a base64-encoded string in the `PAYMENT-REQUIRED`\n   response header for clients that cannot access the body.\n3. Decode the `PaymentRequired` body (or the `PAYMENT-REQUIRED`\n   header) to read the exact `payTo` wallet,\n   USDC amount, network, and facilitator URL.\n4. Construct and sign the payment with your x402 client library.\n5. Retry the request with the `PAYMENT-SIGNATURE` header — the server\n   verifies via `https://facilitator.payai.network` and responds `200`.\n\n**Discovery:** `GET /api/billing/x402/config` returns the live `payTo`\naddress, per-call-type USDC amounts, facilitator URL, and the\ncredits-per-USDC conversion rate. Always fetch this before hardcoding\nany amounts.\n\n**Price range:** $0.0010 per step/RL call — $0.0050 per\nanalysis/chaos/multi-cloud call (see `x-x402-price-usdc` on each\noperation for the exact amount).\n\n**Facilitator:** `https://facilitator.payai.network` (PayAI-operated,\nsettles on Base mainnet).\n",
+        "description": "x402 v2 micropayment protocol. Agents send a signed USDC micro-payment\non the Base network in the `X-PAYMENT` header and get full\naccess to the metered endpoint in a single round-trip — no account,\nno API key, no sign-up required.\n\n**402 → pay → retry loop:**\n1. Call the endpoint without an `X-PAYMENT` header.\n2. Receive a `402 Payment Required` response. The body is a\n   standard JSON `PaymentRequired` object. The same payload is also\n   echoed as a base64-encoded string in the `PAYMENT-REQUIRED`\n   response header for clients that cannot access the body.\n3. Decode the `PaymentRequired` body (or the `PAYMENT-REQUIRED`\n   header) to read the exact `payTo` wallet,\n   USDC amount, network, and facilitator URL.\n4. Construct and sign the payment with your x402 client library.\n5. Retry the Base request with the `X-PAYMENT` header — the server\n   verifies via `https://facilitator.payai.network` and responds `200`.\n\n**Solana compatibility:** The service also accepts `PAYMENT-SIGNATURE`\nfor Solana payment payloads. Use `X-PAYMENT` for Base, as shown by this\nOpenAPI security scheme.\n\n**Discovery:** `GET /api/billing/x402/config` returns the live `payTo`\naddress, per-call-type USDC amounts, facilitator URL, and the\ncredits-per-USDC conversion rate. Always fetch this before hardcoding\nany amounts.\n\n**Price range:** $0.0010 per step/RL call — $0.0050 per\nanalysis/chaos/multi-cloud call (see `x-x402-price-usdc` on each\noperation for the exact amount).\n\n**Facilitator:** `https://facilitator.payai.network` (PayAI-operated,\nsettles on Base mainnet).\n",
         "in": "header",
-        "name": "PAYMENT-SIGNATURE",
+        "name": "X-PAYMENT",
         "type": "apiKey"
       }
     }
@@ -7365,7 +7365,7 @@
     },
     "/billing/x402/config": {
       "get": {
-        "description": "Returns the x402 payment configuration for this server, including the USDC-on-Base\nwallet address, network, asset contract, facilitator URL, and per-call-type price table.\n\nAI agents can use this endpoint to discover whether x402 anonymous pay-per-request is\nenabled, and to obtain the exact USDC amounts required before sending a `PAYMENT-SIGNATURE`\nheader on a metered endpoint.\n\nThis endpoint requires no authentication and is always public.\n",
+        "description": "Returns the x402 payment configuration for this server, including the USDC-on-Base\nwallet address, network, asset contract, facilitator URL, and per-call-type price table.\n\nAI agents can use this endpoint to discover whether x402 anonymous pay-per-request is\nenabled, and to obtain the exact USDC amounts required before sending an `X-PAYMENT`\nheader on a Base-metered endpoint.\n\nThis endpoint requires no authentication and is always public.\n",
         "operationId": "getX402Config",
         "responses": {
           "200": {
