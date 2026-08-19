@@ -6518,7 +6518,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           },
           {
             "x402": []
@@ -6597,7 +6597,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           }
         ],
         "summary": "Cancel a pending AI job now",
@@ -6685,7 +6685,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           }
         ],
         "summary": "Check the current AI job status",
@@ -6885,7 +6885,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           },
           {
             "x402": []
@@ -7090,7 +7090,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           },
           {
             "x402": []
@@ -18048,7 +18048,7 @@
         },
         "security": [
           {
-            "X402Payment": []
+            "x402": []
           }
         ],
         "summary": "Issue a wallet session JWT via x402 micro-payment",
