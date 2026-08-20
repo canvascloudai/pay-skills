@@ -6609,7 +6609,7 @@
             "BearerAuth": []
           }
         ],
-        "summary": "Cancel a pending AI job now",
+        "summary": "Delete a pending asynchronous AI job",
         "tags": [
           "AI Jobs"
         ]
@@ -6697,7 +6697,7 @@
             "BearerAuth": []
           }
         ],
-        "summary": "Check the current AI job status",
+        "summary": "Fetch the current AI job status",
         "tags": [
           "AI Jobs"
         ]
@@ -6903,7 +6903,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Retrieve completed AI job results",
+        "summary": "Fetch completed AI job results",
         "tags": [
           "AI Jobs"
         ],
@@ -6955,7 +6955,7 @@
           }
         },
         "security": [],
-        "summary": "Get optimization job status",
+        "summary": "Fetch optimization job status",
         "tags": [
           "Infrastructure Optimization"
         ],
@@ -6963,17 +6963,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/analysis/jobs/job_abc123 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/analysis/jobs/job_abc123 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/analysis/jobs/{JOB_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\njob = resp.json()\nprint(\"Status:\", job[\"status\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/analysis/jobs/{JOB_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\njob = resp.json()\nprint(\"Status:\", job[\"status\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/jobs/${JOB_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst job = await resp.json();\nconsole.log(\"Status:\", job.status);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/jobs/${JOB_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst job = await resp.json();\nconsole.log(\"Status:\", job.status);\n"
           }
         ]
       },
@@ -7111,7 +7111,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Get optimization recommendations",
+        "summary": "Fetch optimization recommendations",
         "tags": [
           "Infrastructure Optimization"
         ],
@@ -7119,17 +7119,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/analysis/jobs/job_abc123/recommendations \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/analysis/jobs/job_abc123/recommendations \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/analysis/jobs/{JOB_ID}/recommendations\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nfor rec in data[\"recommendations\"]:\n    print(rec[\"title\"], \"— savings:\", rec.get(\"estimatedSavings\"))\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/analysis/jobs/{JOB_ID}/recommendations\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nfor rec in data[\"recommendations\"]:\n    print(rec[\"title\"], \"— savings:\", rec.get(\"estimatedSavings\"))\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/jobs/${JOB_ID}/recommendations`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { recommendations } = await resp.json();\nrecommendations.forEach(rec =>\n  console.log(rec.title, \"— savings:\", rec.estimatedSavings)\n);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/jobs/${JOB_ID}/recommendations`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { recommendations } = await resp.json();\nrecommendations.forEach(rec =>\n  console.log(rec.title, \"— savings:\", rec.estimatedSavings)\n);\n"
           }
         ],
         "x-payment-info": {
@@ -7353,17 +7353,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/analysis/optimize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-abc123\",\n    \"goals\": {\n      \"primary\": \"minimize_cost\",\n      \"constraints\": {\n        \"max_cost_per_hour\": 10.0,\n        \"min_throughput\": 5000,\n        \"max_latency_p95\": 200\n      }\n    },\n    \"testScenario\": {\n      \"traffic_pattern\": \"spike\",\n      \"duration_steps\": 100,\n      \"include_failures\": true\n    }\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/analysis/optimize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-abc123\",\n    \"goals\": {\n      \"primary\": \"minimize_cost\",\n      \"constraints\": {\n        \"max_cost_per_hour\": 10.0,\n        \"min_throughput\": 5000,\n        \"max_latency_p95\": 200\n      }\n    },\n    \"testScenario\": {\n      \"traffic_pattern\": \"spike\",\n      \"duration_steps\": 100,\n      \"include_failures\": true\n    }\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/analysis/optimize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-abc123\",\n        \"goals\": {\n            \"primary\": \"minimize_cost\",\n            \"constraints\": {\n                \"max_cost_per_hour\": 10.0,\n                \"min_throughput\": 5000,\n                \"max_latency_p95\": 200,\n            },\n        },\n        \"testScenario\": {\n            \"traffic_pattern\": \"spike\",\n            \"duration_steps\": 100,\n            \"include_failures\": True,\n        },\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/analysis/optimize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-abc123\",\n        \"goals\": {\n            \"primary\": \"minimize_cost\",\n            \"constraints\": {\n                \"max_cost_per_hour\": 10.0,\n                \"min_throughput\": 5000,\n                \"max_latency_p95\": 200,\n            },\n        },\n        \"testScenario\": {\n            \"traffic_pattern\": \"spike\",\n            \"duration_steps\": 100,\n            \"include_failures\": True,\n        },\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/optimize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-abc123\",\n    goals: {\n      primary: \"minimize_cost\",\n      constraints: {\n        max_cost_per_hour: 10.0,\n        min_throughput: 5000,\n        max_latency_p95: 200,\n      },\n    },\n    testScenario: {\n      traffic_pattern: \"spike\",\n      duration_steps: 100,\n      include_failures: true,\n    },\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/analysis/optimize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-abc123\",\n    goals: {\n      primary: \"minimize_cost\",\n      constraints: {\n        max_cost_per_hour: 10.0,\n        min_throughput: 5000,\n        max_latency_p95: 200,\n      },\n    },\n    testScenario: {\n      traffic_pattern: \"spike\",\n      duration_steps: 100,\n      include_failures: true,\n    },\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
           }
         ],
         "x-payment-info": {
@@ -7491,7 +7491,7 @@
           }
         },
         "security": [],
-        "summary": "Discover x402 pricing and payment config",
+        "summary": "Fetch x402 pricing and payment configuration",
         "tags": [
           "Discover"
         ]
@@ -7840,17 +7840,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/chaos/batch \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"scenarios\": [\n      {\"scenarioId\": \"zone_failure\", \"duration\": 120},\n      {\"scenarioId\": \"database_crash\", \"duration\": 90}\n    ],\n    \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n    \"webhookSecret\": \"your-secret-key-here\"\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/chaos/batch \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"scenarios\": [\n      {\"scenarioId\": \"zone_failure\", \"duration\": 120},\n      {\"scenarioId\": \"database_crash\", \"duration\": 90}\n    ],\n    \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n    \"webhookSecret\": \"your-secret-key-here\"\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/chaos/batch\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"scenarios\": [\n            {\"scenarioId\": \"zone_failure\", \"duration\": 120},\n            {\"scenarioId\": \"database_crash\", \"duration\": 90},\n        ],\n        \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n        \"webhookSecret\": \"your-secret-key-here\",\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(f\"Batch job started: {job['id']}  totalJobs={job['totalJobs']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/chaos/batch\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"scenarios\": [\n            {\"scenarioId\": \"zone_failure\", \"duration\": 120},\n            {\"scenarioId\": \"database_crash\", \"duration\": 90},\n        ],\n        \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n        \"webhookSecret\": \"your-secret-key-here\",\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(f\"Batch job started: {job['id']}  totalJobs={job['totalJobs']}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/chaos/batch`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    scenarios: [\n      { scenarioId: \"zone_failure\", duration: 120 },\n      { scenarioId: \"database_crash\", duration: 90 },\n    ],\n    webhookUrl: \"https://your-app.com/webhooks/chaos\",\n    webhookSecret: \"your-secret-key-here\",\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(`Batch job started: ${job.id}  totalJobs=${job.totalJobs}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/chaos/batch`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    scenarios: [\n      { scenarioId: \"zone_failure\", duration: 120 },\n      { scenarioId: \"database_crash\", duration: 90 },\n    ],\n    webhookUrl: \"https://your-app.com/webhooks/chaos\",\n    webhookSecret: \"your-secret-key-here\",\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(`Batch job started: ${job.id}  totalJobs=${job.totalJobs}`);\n"
           }
         ],
         "x-payment-info": {
@@ -8133,17 +8133,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/chaos/run \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"scenarioId\": \"zone_failure\",\n    \"duration\": 300,\n    \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n    \"webhookSecret\": \"your-secret-key-here\"\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/chaos/run \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"scenarioId\": \"zone_failure\",\n    \"duration\": 300,\n    \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n    \"webhookSecret\": \"your-secret-key-here\"\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/chaos/run\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"scenarioId\": \"zone_failure\",\n        \"duration\": 300,\n        \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n        \"webhookSecret\": \"your-secret-key-here\",\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(f\"Chaos job started: {job['id']}  status={job['status']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/chaos/run\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"scenarioId\": \"zone_failure\",\n        \"duration\": 300,\n        \"webhookUrl\": \"https://your-app.com/webhooks/chaos\",\n        \"webhookSecret\": \"your-secret-key-here\",\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(f\"Chaos job started: {job['id']}  status={job['status']}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/chaos/run`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    scenarioId: \"zone_failure\",\n    duration: 300,\n    webhookUrl: \"https://your-app.com/webhooks/chaos\",\n    webhookSecret: \"your-secret-key-here\",\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(`Chaos job started: ${job.id}  status=${job.status}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/chaos/run`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    scenarioId: \"zone_failure\",\n    duration: 300,\n    webhookUrl: \"https://your-app.com/webhooks/chaos\",\n    webhookSecret: \"your-secret-key-here\",\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(`Chaos job started: ${job.id}  status=${job.status}`);\n"
           }
         ],
         "x-payment-info": {
@@ -8302,17 +8302,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X PATCH https://your-production-domain.com/api/failures/fail-001 \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"isActive\": false}'\n"
+            "source": "curl -X PATCH https://www.cloudworldmodel.ai/api/failures/fail-001 \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"isActive\": false}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.patch(\n    f\"{BASE_URL}/failures/fail-001\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"isActive\": False},\n)\nresp.raise_for_status()\nprint(\"Failure injection updated:\", resp.json())\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.patch(\n    f\"{BASE_URL}/failures/fail-001\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"isActive\": False},\n)\nresp.raise_for_status()\nprint(\"Failure injection updated:\", resp.json())\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/failures/fail-001`, {\n  method: \"PATCH\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ isActive: false }),\n});\nconst failure = await resp.json();\nconsole.log(\"Failure injection updated:\", failure);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/failures/fail-001`, {\n  method: \"PATCH\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ isActive: false }),\n});\nconst failure = await resp.json();\nconsole.log(\"Failure injection updated:\", failure);\n"
           }
         ],
         "x-x402-call-type": "simulation.inject_failure_update",
@@ -8887,7 +8887,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Explore multi-cloud deployment strategies",
+        "summary": "Search multi-cloud deployment strategies",
         "tags": [
           "Optimize & Predict"
         ],
@@ -8895,32 +8895,32 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/multi-cloud/explore \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workloadProfile\": {\n      \"computeInstances\": 8,\n      \"databaseInstances\": 2,\n      \"storageGB\": 500,\n      \"trafficRPS\": 2500,\n      \"latencyRequirementMs\": 100,\n      \"primaryRegion\": \"us-east-1\",\n      \"secondaryRegions\": [\"eu-west-1\"]\n    },\n    \"optimizationWeights\": {\n      \"cost\": 0.4,\n      \"latency\": 0.4,\n      \"vendorLockIn\": 0.2\n    },\n    \"webhookUrl\": \"https://your-app.com/webhooks/multicloud\"\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/multi-cloud/explore \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workloadProfile\": {\n      \"computeInstances\": 8,\n      \"databaseInstances\": 2,\n      \"storageGB\": 500,\n      \"trafficRPS\": 2500,\n      \"latencyRequirementMs\": 100,\n      \"primaryRegion\": \"us-east-1\",\n      \"secondaryRegions\": [\"eu-west-1\"]\n    },\n    \"optimizationWeights\": {\n      \"cost\": 0.4,\n      \"latency\": 0.4,\n      \"vendorLockIn\": 0.2\n    },\n    \"webhookUrl\": \"https://your-app.com/webhooks/multicloud\"\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\npayload = {\n    \"workloadProfile\": {\n        \"computeInstances\": 8,\n        \"databaseInstances\": 2,\n        \"storageGB\": 500,\n        \"trafficRPS\": 2500,\n        \"latencyRequirementMs\": 100,\n        \"primaryRegion\": \"us-east-1\",\n        \"secondaryRegions\": [\"eu-west-1\"],\n    },\n    \"optimizationWeights\": {\"cost\": 0.4, \"latency\": 0.4, \"vendorLockIn\": 0.2},\n    \"webhookUrl\": \"https://your-app.com/webhooks/multicloud\",\n}\n\nresp = requests.post(\n    f\"{BASE_URL}/multi-cloud/explore\",\n    json=payload,\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\njob = data[\"job\"]\nprint(f\"Job started: id={job['id']}  status={job['status']}\")\nprint(f\"Poll status at: GET /api/multi-cloud/jobs/{job['id']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\npayload = {\n    \"workloadProfile\": {\n        \"computeInstances\": 8,\n        \"databaseInstances\": 2,\n        \"storageGB\": 500,\n        \"trafficRPS\": 2500,\n        \"latencyRequirementMs\": 100,\n        \"primaryRegion\": \"us-east-1\",\n        \"secondaryRegions\": [\"eu-west-1\"],\n    },\n    \"optimizationWeights\": {\"cost\": 0.4, \"latency\": 0.4, \"vendorLockIn\": 0.2},\n    \"webhookUrl\": \"https://your-app.com/webhooks/multicloud\",\n}\n\nresp = requests.post(\n    f\"{BASE_URL}/multi-cloud/explore\",\n    json=payload,\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\njob = data[\"job\"]\nprint(f\"Job started: id={job['id']}  status={job['status']}\")\nprint(f\"Poll status at: GET /api/multi-cloud/jobs/{job['id']}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst payload = {\n  workloadProfile: {\n    computeInstances: 8,\n    databaseInstances: 2,\n    storageGB: 500,\n    trafficRPS: 2500,\n    latencyRequirementMs: 100,\n    primaryRegion: \"us-east-1\",\n    secondaryRegions: [\"eu-west-1\"],\n  },\n  optimizationWeights: { cost: 0.4, latency: 0.4, vendorLockIn: 0.2 },\n  webhookUrl: \"https://your-app.com/webhooks/multicloud\",\n};\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/explore`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nconst data = await resp.json();\nconst { job } = data;\nconsole.log(`Job started: id=${job.id}  status=${job.status}`);\nconsole.log(`Poll status at: GET /api/multi-cloud/jobs/${job.id}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst payload = {\n  workloadProfile: {\n    computeInstances: 8,\n    databaseInstances: 2,\n    storageGB: 500,\n    trafficRPS: 2500,\n    latencyRequirementMs: 100,\n    primaryRegion: \"us-east-1\",\n    secondaryRegions: [\"eu-west-1\"],\n  },\n  optimizationWeights: { cost: 0.4, latency: 0.4, vendorLockIn: 0.2 },\n  webhookUrl: \"https://your-app.com/webhooks/multicloud\",\n};\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/explore`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nconst data = await resp.json();\nconst { job } = data;\nconsole.log(`Job started: id=${job.id}  status=${job.status}`);\nconsole.log(`Poll status at: GET /api/multi-cloud/jobs/${job.id}`);\n"
           },
           {
             "label": "curl (OCI Preemptible)",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/multi-cloud/explore \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workloadProfile\": {\n      \"computeInstances\": 4,\n      \"databaseInstances\": 1,\n      \"storageGB\": 200,\n      \"trafficRPS\": 700,\n      \"latencyRequirementMs\": 600,\n      \"primaryRegion\": \"us-ashburn-1\"\n    },\n    \"optimizationWeights\": {\n      \"cost\": 0.75,\n      \"latency\": 0.15,\n      \"vendorLockIn\": 0.10\n    },\n    \"webhookUrl\": \"https://your-app.example.com/webhooks/multicloud\",\n    \"webhookSecret\": \"oci-preemptible-secret\"\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/multi-cloud/explore \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workloadProfile\": {\n      \"computeInstances\": 4,\n      \"databaseInstances\": 1,\n      \"storageGB\": 200,\n      \"trafficRPS\": 700,\n      \"latencyRequirementMs\": 600,\n      \"primaryRegion\": \"us-ashburn-1\"\n    },\n    \"optimizationWeights\": {\n      \"cost\": 0.75,\n      \"latency\": 0.15,\n      \"vendorLockIn\": 0.10\n    },\n    \"webhookUrl\": \"https://your-app.example.com/webhooks/multicloud\",\n    \"webhookSecret\": \"oci-preemptible-secret\"\n  }'\n"
           },
           {
             "label": "Python (OCI Preemptible)",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\npayload = {\n    \"workloadProfile\": {\n        \"computeInstances\": 4,\n        \"databaseInstances\": 1,\n        \"storageGB\": 200,\n        \"trafficRPS\": 700,\n        \"latencyRequirementMs\": 600,\n        \"primaryRegion\": \"us-ashburn-1\",\n    },\n    \"optimizationWeights\": {\"cost\": 0.75, \"latency\": 0.15, \"vendorLockIn\": 0.10},\n    \"webhookUrl\": \"https://your-app.example.com/webhooks/multicloud\",\n    \"webhookSecret\": \"oci-preemptible-secret\",\n}\n\nresp = requests.post(\n    f\"{BASE_URL}/multi-cloud/explore\",\n    json=payload,\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\njob = data[\"job\"]\nprint(f\"Job started: id={job['id']}  status={job['status']}\")\nprint(f\"Poll status at: GET /api/multi-cloud/jobs/{job['id']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\npayload = {\n    \"workloadProfile\": {\n        \"computeInstances\": 4,\n        \"databaseInstances\": 1,\n        \"storageGB\": 200,\n        \"trafficRPS\": 700,\n        \"latencyRequirementMs\": 600,\n        \"primaryRegion\": \"us-ashburn-1\",\n    },\n    \"optimizationWeights\": {\"cost\": 0.75, \"latency\": 0.15, \"vendorLockIn\": 0.10},\n    \"webhookUrl\": \"https://your-app.example.com/webhooks/multicloud\",\n    \"webhookSecret\": \"oci-preemptible-secret\",\n}\n\nresp = requests.post(\n    f\"{BASE_URL}/multi-cloud/explore\",\n    json=payload,\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\njob = data[\"job\"]\nprint(f\"Job started: id={job['id']}  status={job['status']}\")\nprint(f\"Poll status at: GET /api/multi-cloud/jobs/{job['id']}\")\n"
           },
           {
             "label": "Node.js (OCI Preemptible)",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst payload = {\n  workloadProfile: {\n    computeInstances: 4,\n    databaseInstances: 1,\n    storageGB: 200,\n    trafficRPS: 700,\n    latencyRequirementMs: 600,\n    primaryRegion: \"us-ashburn-1\",\n  },\n  optimizationWeights: { cost: 0.75, latency: 0.15, vendorLockIn: 0.10 },\n  webhookUrl: \"https://your-app.example.com/webhooks/multicloud\",\n  webhookSecret: \"oci-preemptible-secret\",\n};\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/explore`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nconst data = await resp.json();\nconst { job } = data;\nconsole.log(`Job started: id=${job.id}  status=${job.status}`);\nconsole.log(`Poll status at: GET /api/multi-cloud/jobs/${job.id}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst payload = {\n  workloadProfile: {\n    computeInstances: 4,\n    databaseInstances: 1,\n    storageGB: 200,\n    trafficRPS: 700,\n    latencyRequirementMs: 600,\n    primaryRegion: \"us-ashburn-1\",\n  },\n  optimizationWeights: { cost: 0.75, latency: 0.15, vendorLockIn: 0.10 },\n  webhookUrl: \"https://your-app.example.com/webhooks/multicloud\",\n  webhookSecret: \"oci-preemptible-secret\",\n};\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/explore`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nconst data = await resp.json();\nconst { job } = data;\nconsole.log(`Job started: id=${job.id}  status=${job.status}`);\nconsole.log(`Poll status at: GET /api/multi-cloud/jobs/${job.id}`);\n"
           }
         ],
         "x-payment-info": {
@@ -9034,7 +9034,7 @@
           }
         },
         "security": [],
-        "summary": "Get multi-cloud exploration job status",
+        "summary": "Fetch multi-cloud exploration job status",
         "tags": [
           "Multi-Cloud Strategy"
         ],
@@ -9042,17 +9042,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/multi-cloud/jobs/job_abc123 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\njob = resp.json()\nprint(f\"Job {JOB_ID}  status={job['status']}  progress={job.get('progress', 0)}%  \"\n      f\"strategies={job.get('strategiesGenerated', 0)}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nresp = requests.get(\n    f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\njob = resp.json()\nprint(f\"Job {JOB_ID}  status={job['status']}  progress={job.get('progress', 0)}%  \"\n      f\"strategies={job.get('strategiesGenerated', 0)}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst job = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${job.status}  progress=${job.progress ?? 0}%  strategies=${job.strategiesGenerated ?? 0}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst job = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${job.status}  progress=${job.progress ?? 0}%  strategies=${job.strategiesGenerated ?? 0}`);\n"
           }
         ]
       },
@@ -9437,7 +9437,7 @@
           }
         },
         "security": [],
-        "summary": "Get partial multi-cloud exploration results while a job is running",
+        "summary": "Fetch partial multi-cloud results from a running job",
         "tags": [
           "Multi-Cloud Strategy"
         ],
@@ -9445,12 +9445,12 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "while true; do\n  DATA=$(curl -s \"https://your-production-domain.com/api/multi-cloud/jobs/job_abc123/partial-results\" \\\n    -H \"Authorization: Bearer $API_KEY\")\n  echo \"$DATA\" | jq '{strategies: (.allStrategies | length), isComplete: .isComplete}'\n  [ \"$(echo \"$DATA\" | jq -r '.isComplete')\" = \"true\" ] && break\n  sleep 2\ndone\n"
+            "source": "while true; do\n  DATA=$(curl -s \"https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123/partial-results\" \\\n    -H \"Authorization: Bearer $API_KEY\")\n  echo \"$DATA\" | jq '{strategies: (.allStrategies | length), isComplete: .isComplete}'\n  [ \"$(echo \"$DATA\" | jq -r '.isComplete')\" = \"true\" ] && break\n  sleep 2\ndone\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nasync function pollPartialResults(jobId) {\n  while (true) {\n    const resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/partial-results`, {\n      headers: { \"Authorization\": `Bearer ${API_KEY}` },\n    });\n    const data = await resp.json();\n    console.log(`strategies so far: ${data.allStrategies?.length ?? 0}, isComplete: ${data.isComplete}`);\n    if (data.isComplete) break;\n    await new Promise(r => setTimeout(r, 2000));\n  }\n  // Fetch full ranked results once complete\n  const full = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/results`, {\n    headers: { \"Authorization\": `Bearer ${API_KEY}` },\n  });\n  return full.json();\n}\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nasync function pollPartialResults(jobId) {\n  while (true) {\n    const resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/partial-results`, {\n      headers: { \"Authorization\": `Bearer ${API_KEY}` },\n    });\n    const data = await resp.json();\n    console.log(`strategies so far: ${data.allStrategies?.length ?? 0}, isComplete: ${data.isComplete}`);\n    if (data.isComplete) break;\n    await new Promise(r => setTimeout(r, 2000));\n  }\n  // Fetch full ranked results once complete\n  const full = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/results`, {\n    headers: { \"Authorization\": `Bearer ${API_KEY}` },\n  });\n  return full.json();\n}\n"
           }
         ]
       },
@@ -10496,7 +10496,7 @@
           }
         },
         "security": [],
-        "summary": "Get multi-cloud exploration results",
+        "summary": "Fetch multi-cloud exploration results",
         "tags": [
           "Multi-Cloud Strategy"
         ],
@@ -10504,17 +10504,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "until curl -sf \"https://your-production-domain.com/api/multi-cloud/jobs/job_abc123\" \\\n  -H \"Authorization: Bearer $API_KEY\" | grep -q '\"status\":\"completed\"'; do\n  sleep 2\ndone\n\ncurl \"https://your-production-domain.com/api/multi-cloud/jobs/job_abc123/results\" \\\n  -H \"Authorization: Bearer $API_KEY\"\n\ncurl \"https://your-production-domain.com/api/multi-cloud/jobs/job_abc123/results?providers=digitalocean,aws\" \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "until curl -sf \"https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123\" \\\n  -H \"Authorization: Bearer $API_KEY\" | grep -q '\"status\":\"completed\"'; do\n  sleep 2\ndone\n\ncurl \"https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123/results\" \\\n  -H \"Authorization: Bearer $API_KEY\"\n\ncurl \"https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123/results?providers=digitalocean,aws\" \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import time\nimport requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\nHEADERS = {\"Authorization\": f\"Bearer {API_KEY}\"}\n\nwhile True:\n    status = requests.get(\n        f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}\", headers=HEADERS,\n    ).json()\n    if status[\"status\"] in (\"completed\", \"failed\", \"cancelled\"):\n        break\n    time.sleep(2)\n\nresp = requests.get(\n    f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}/results\",\n    headers=HEADERS,\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Job {JOB_ID}  status={data['status']}  \"\n      f\"complete={data['isComplete']}  strategies={data['strategiesGenerated']}\")\nfor strategy in data.get(\"topStrategies\", []):\n    cost = strategy[\"metrics\"][\"monthlyCost\"]\n    latency = strategy[\"metrics\"][\"avgLatencyMs\"]\n    print(f\"  {strategy['name']}  cost=${cost}/mo  latency={latency}ms\")\n"
+            "source": "import time\nimport requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\nHEADERS = {\"Authorization\": f\"Bearer {API_KEY}\"}\n\nwhile True:\n    status = requests.get(\n        f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}\", headers=HEADERS,\n    ).json()\n    if status[\"status\"] in (\"completed\", \"failed\", \"cancelled\"):\n        break\n    time.sleep(2)\n\nresp = requests.get(\n    f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}/results\",\n    headers=HEADERS,\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Job {JOB_ID}  status={data['status']}  \"\n      f\"complete={data['isComplete']}  strategies={data['strategiesGenerated']}\")\nfor strategy in data.get(\"topStrategies\", []):\n    cost = strategy[\"metrics\"][\"monthlyCost\"]\n    latency = strategy[\"metrics\"][\"avgLatencyMs\"]\n    print(f\"  {strategy['name']}  cost=${cost}/mo  latency={latency}ms\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\nconst HEADERS = { \"Authorization\": `Bearer ${API_KEY}` };\n\n// Poll status until the job is finished. /results returns 400 while\n// the job is still pending or running; use /partial-results to read\n// strategies as they accumulate during a run.\nlet status;\ndo {\n  await new Promise(r => setTimeout(r, 2000));\n  status = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n    headers: HEADERS,\n  }).then(r => r.json());\n} while (![\"completed\", \"failed\", \"cancelled\"].includes(status.status));\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/results`, {\n  headers: HEADERS,\n});\nconst data = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${data.status}  complete=${data.isComplete}  strategies=${data.strategiesGenerated}`);\nfor (const strategy of data.topStrategies ?? []) {\n  const { monthlyCost, avgLatencyMs } = strategy.metrics;\n  console.log(`  ${strategy.name}  cost=$${monthlyCost}/mo  latency=${avgLatencyMs}ms`);\n}\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\nconst HEADERS = { \"Authorization\": `Bearer ${API_KEY}` };\n\n// Poll status until the job is finished. /results returns 400 while\n// the job is still pending or running; use /partial-results to read\n// strategies as they accumulate during a run.\nlet status;\ndo {\n  await new Promise(r => setTimeout(r, 2000));\n  status = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n    headers: HEADERS,\n  }).then(r => r.json());\n} while (![\"completed\", \"failed\", \"cancelled\"].includes(status.status));\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/results`, {\n  headers: HEADERS,\n});\nconst data = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${data.status}  complete=${data.isComplete}  strategies=${data.strategiesGenerated}`);\nfor (const strategy of data.topStrategies ?? []) {\n  const { monthlyCost, avgLatencyMs } = strategy.metrics;\n  console.log(`  ${strategy.name}  cost=$${monthlyCost}/mo  latency=${avgLatencyMs}ms`);\n}\n"
           }
         ]
       },
@@ -10629,7 +10629,7 @@
           }
         },
         "security": [],
-        "summary": "Stream multi-cloud exploration results in real-time",
+        "summary": "Fetch a real-time stream of multi-cloud exploration results",
         "tags": [
           "Multi-Cloud Strategy"
         ],
@@ -10637,17 +10637,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -N https://your-production-domain.com/api/multi-cloud/jobs/job_abc123/stream \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Accept: text/event-stream\"\n"
+            "source": "curl -N https://www.cloudworldmodel.ai/api/multi-cloud/jobs/job_abc123/stream \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Accept: text/event-stream\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import httpx\nimport json\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nurl = f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}/stream\"\nheaders = {\"Authorization\": f\"Bearer {API_KEY}\", \"Accept\": \"text/event-stream\"}\n\nwith httpx.stream(\"GET\", url, headers=headers, timeout=None) as response:\n    response.raise_for_status()\n    buffer = \"\"\n    for chunk in response.iter_text():\n        buffer += chunk\n        *frames, buffer = buffer.split(\"\\n\\n\")\n        for frame in frames:\n            event_type, data_str = \"message\", None\n            for line in frame.splitlines():\n                if line.startswith(\"event:\"):\n                    event_type = line[len(\"event:\"):].strip()\n                elif line.startswith(\"data:\"):\n                    data_str = line[len(\"data:\"):].strip()\n            if not data_str:\n                continue\n            payload = json.loads(data_str)\n            if event_type == \"progressUpdate\":\n                print(f\"Progress: {payload['progress']}%\")\n            elif event_type == \"strategyGenerated\":\n                s = payload[\"strategy\"]\n                print(f\"Strategy: {s['name']}  cost=${s['metrics']['monthlyCost']}/mo\")\n            elif event_type == \"completed\":\n                top = payload.get(\"topStrategy\", {})\n                print(f\"Done. Top strategy: {top.get('name')}\")\n                break\n"
+            "source": "import httpx\nimport json\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nJOB_ID = \"job_abc123\"\n\nurl = f\"{BASE_URL}/multi-cloud/jobs/{JOB_ID}/stream\"\nheaders = {\"Authorization\": f\"Bearer {API_KEY}\", \"Accept\": \"text/event-stream\"}\n\nwith httpx.stream(\"GET\", url, headers=headers, timeout=None) as response:\n    response.raise_for_status()\n    buffer = \"\"\n    for chunk in response.iter_text():\n        buffer += chunk\n        *frames, buffer = buffer.split(\"\\n\\n\")\n        for frame in frames:\n            event_type, data_str = \"message\", None\n            for line in frame.splitlines():\n                if line.startswith(\"event:\"):\n                    event_type = line[len(\"event:\"):].strip()\n                elif line.startswith(\"data:\"):\n                    data_str = line[len(\"data:\"):].strip()\n            if not data_str:\n                continue\n            payload = json.loads(data_str)\n            if event_type == \"progressUpdate\":\n                print(f\"Progress: {payload['progress']}%\")\n            elif event_type == \"strategyGenerated\":\n                s = payload[\"strategy\"]\n                print(f\"Strategy: {s['name']}  cost=${s['metrics']['monthlyCost']}/mo\")\n            elif event_type == \"completed\":\n                top = payload.get(\"topStrategy\", {})\n                print(f\"Done. Top strategy: {top.get('name')}\")\n                break\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst response = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/stream`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Accept\": \"text/event-stream\" },\n});\nif (!response.ok) throw new Error(`HTTP ${response.status}`);\n\nconst reader = response.body.getReader();\nconst decoder = new TextDecoder();\nlet buffer = \"\";\n\nwhile (true) {\n  const { value, done } = await reader.read();\n  if (done) break;\n  buffer += decoder.decode(value, { stream: true });\n  const frames = buffer.split(/\\n\\n/);\n  buffer = frames.pop();\n  for (const frame of frames) {\n    const eventLine = frame.match(/^event:\\s*(.+)$/m);\n    const dataLine  = frame.match(/^data:\\s*(.+)$/m);\n    if (!dataLine) continue;\n    const eventType = eventLine ? eventLine[1].trim() : \"message\";\n    const payload   = JSON.parse(dataLine[1]);\n    if (eventType === \"progressUpdate\") {\n      console.log(`Progress: ${payload.progress}%`);\n    } else if (eventType === \"strategyGenerated\") {\n      const s = payload.strategy;\n      console.log(`Strategy: ${s.name}  cost=$${s.metrics.monthlyCost}/mo`);\n    } else if (eventType === \"completed\") {\n      console.log(\"Done. Top strategy:\", payload.topStrategy?.name);\n      reader.cancel();\n    }\n  }\n}\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst response = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/stream`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Accept\": \"text/event-stream\" },\n});\nif (!response.ok) throw new Error(`HTTP ${response.status}`);\n\nconst reader = response.body.getReader();\nconst decoder = new TextDecoder();\nlet buffer = \"\";\n\nwhile (true) {\n  const { value, done } = await reader.read();\n  if (done) break;\n  buffer += decoder.decode(value, { stream: true });\n  const frames = buffer.split(/\\n\\n/);\n  buffer = frames.pop();\n  for (const frame of frames) {\n    const eventLine = frame.match(/^event:\\s*(.+)$/m);\n    const dataLine  = frame.match(/^data:\\s*(.+)$/m);\n    if (!dataLine) continue;\n    const eventType = eventLine ? eventLine[1].trim() : \"message\";\n    const payload   = JSON.parse(dataLine[1]);\n    if (eventType === \"progressUpdate\") {\n      console.log(`Progress: ${payload.progress}%`);\n    } else if (eventType === \"strategyGenerated\") {\n      const s = payload.strategy;\n      console.log(`Strategy: ${s.name}  cost=$${s.metrics.monthlyCost}/mo`);\n    } else if (eventType === \"completed\") {\n      console.log(\"Done. Top strategy:\", payload.topStrategy?.name);\n      reader.cancel();\n    }\n  }\n}\n"
           }
         ]
       },
@@ -11040,7 +11040,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Find optimal autoscaling thresholds",
+        "summary": "Generate optimal autoscaling thresholds",
         "tags": [
           "Optimize & Predict"
         ],
@@ -11048,17 +11048,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/predictions/optimize-thresholds \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-aws-ec2-prod\",\n    \"trafficForecast\": {\n      \"name\": \"Black Friday 2025\",\n      \"dataPoints\": [\n        {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n        {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n        {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"}\n      ]\n    },\n    \"testSteps\": 100\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/predictions/optimize-thresholds \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-aws-ec2-prod\",\n    \"trafficForecast\": {\n      \"name\": \"Black Friday 2025\",\n      \"dataPoints\": [\n        {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n        {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n        {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"}\n      ]\n    },\n    \"testSteps\": 100\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/predictions/optimize-thresholds\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-aws-ec2-prod\",\n        \"trafficForecast\": {\n            \"name\": \"Black Friday 2025\",\n            \"dataPoints\": [\n                {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n                {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n                {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"},\n            ],\n        },\n        \"testSteps\": 100,\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/predictions/optimize-thresholds\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-aws-ec2-prod\",\n        \"trafficForecast\": {\n            \"name\": \"Black Friday 2025\",\n            \"dataPoints\": [\n                {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n                {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n                {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"},\n            ],\n        },\n        \"testSteps\": 100,\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/predictions/optimize-thresholds`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-aws-ec2-prod\",\n    trafficForecast: {\n      name: \"Black Friday 2025\",\n      dataPoints: [\n        { timestamp: 0, rps: 2000, label: \"Baseline\" },\n        { timestamp: 60, rps: 12000, label: \"Peak\" },\n        { timestamp: 100, rps: 2500, label: \"Return to baseline\" },\n      ],\n    },\n    testSteps: 100,\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/predictions/optimize-thresholds`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-aws-ec2-prod\",\n    trafficForecast: {\n      name: \"Black Friday 2025\",\n      dataPoints: [\n        { timestamp: 0, rps: 2000, label: \"Baseline\" },\n        { timestamp: 60, rps: 12000, label: \"Peak\" },\n        { timestamp: 100, rps: 2500, label: \"Return to baseline\" },\n      ],\n    },\n    testSteps: 100,\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
           }
         ],
         "x-payment-info": {
@@ -11631,17 +11631,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/predictions/validate \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-aws-ec2-prod\",\n    \"trafficForecast\": {\n      \"name\": \"Black Friday 2025\",\n      \"dataPoints\": [\n        {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n        {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n        {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"}\n      ]\n    },\n    \"testSteps\": 100\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/predictions/validate \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"sim-aws-ec2-prod\",\n    \"trafficForecast\": {\n      \"name\": \"Black Friday 2025\",\n      \"dataPoints\": [\n        {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n        {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n        {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"}\n      ]\n    },\n    \"testSteps\": 100\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/predictions/validate\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-aws-ec2-prod\",\n        \"trafficForecast\": {\n            \"name\": \"Black Friday 2025\",\n            \"dataPoints\": [\n                {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n                {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n                {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"},\n            ],\n        },\n        \"testSteps\": 100,\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/predictions/validate\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"sim-aws-ec2-prod\",\n        \"trafficForecast\": {\n            \"name\": \"Black Friday 2025\",\n            \"dataPoints\": [\n                {\"timestamp\": 0, \"rps\": 2000, \"label\": \"Baseline\"},\n                {\"timestamp\": 60, \"rps\": 12000, \"label\": \"Peak\"},\n                {\"timestamp\": 100, \"rps\": 2500, \"label\": \"Return to baseline\"},\n            ],\n        },\n        \"testSteps\": 100,\n    },\n)\nresp.raise_for_status()\njob = resp.json()[\"job\"]\nprint(\"Job ID:\", job[\"id\"], \"Status:\", job[\"status\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/predictions/validate`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-aws-ec2-prod\",\n    trafficForecast: {\n      name: \"Black Friday 2025\",\n      dataPoints: [\n        { timestamp: 0, rps: 2000, label: \"Baseline\" },\n        { timestamp: 60, rps: 12000, label: \"Peak\" },\n        { timestamp: 100, rps: 2500, label: \"Return to baseline\" },\n      ],\n    },\n    testSteps: 100,\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/predictions/validate`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"sim-aws-ec2-prod\",\n    trafficForecast: {\n      name: \"Black Friday 2025\",\n      dataPoints: [\n        { timestamp: 0, rps: 2000, label: \"Baseline\" },\n        { timestamp: 60, rps: 12000, label: \"Peak\" },\n        { timestamp: 100, rps: 2500, label: \"Return to baseline\" },\n      ],\n    },\n    testSteps: 100,\n  }),\n});\nconst { job } = await resp.json();\nconsole.log(\"Job ID:\", job.id, \"Status:\", job.status);\n"
           }
         ],
         "x-payment-info": {
@@ -11881,17 +11881,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/rl/environments \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"episodeConfig\": {\n      \"maxSteps\": 200,\n      \"targetTrafficPattern\": \"wave\",\n      \"initialTraffic\": 1500,\n      \"targetSLA\": { \"maxLatencyP95\": 180, \"maxErrorRate\": 1.0 },\n      \"costBudgetPerHour\": 3.50,\n      \"enableFailures\": false\n    }\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/rl/environments \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    \"episodeConfig\": {\n      \"maxSteps\": 200,\n      \"targetTrafficPattern\": \"wave\",\n      \"initialTraffic\": 1500,\n      \"targetSLA\": { \"maxLatencyP95\": 180, \"maxErrorRate\": 1.0 },\n      \"costBudgetPerHour\": 3.50,\n      \"enableFailures\": false\n    }\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"episodeConfig\": {\n            \"maxSteps\": 200,\n            \"targetTrafficPattern\": \"wave\",\n            \"initialTraffic\": 1500,\n            \"targetSLA\": {\"maxLatencyP95\": 180, \"maxErrorRate\": 1.0},\n            \"costBudgetPerHour\": 3.50,\n            \"enableFailures\": False,\n        },\n    },\n)\nresp.raise_for_status()\ndata = resp.json()\nenv_id = data[\"environment\"][\"id\"]\nprint(f\"Created RL environment: {env_id}\")\nprint(f\"Initial CPU: {data['observation']['metrics']['cpuUsage']}%\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"simulationId\": \"a638caad-7423-40a3-bb09-f91235d9392d\",\n        \"episodeConfig\": {\n            \"maxSteps\": 200,\n            \"targetTrafficPattern\": \"wave\",\n            \"initialTraffic\": 1500,\n            \"targetSLA\": {\"maxLatencyP95\": 180, \"maxErrorRate\": 1.0},\n            \"costBudgetPerHour\": 3.50,\n            \"enableFailures\": False,\n        },\n    },\n)\nresp.raise_for_status()\ndata = resp.json()\nenv_id = data[\"environment\"][\"id\"]\nprint(f\"Created RL environment: {env_id}\")\nprint(f\"Initial CPU: {data['observation']['metrics']['cpuUsage']}%\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    episodeConfig: {\n      maxSteps: 200,\n      targetTrafficPattern: \"wave\",\n      initialTraffic: 1500,\n      targetSLA: { maxLatencyP95: 180, maxErrorRate: 1.0 },\n      costBudgetPerHour: 3.50,\n      enableFailures: false,\n    },\n  }),\n});\nconst data = await resp.json();\nconst envId = data.environment.id;\nconsole.log(`Created RL environment: ${envId}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    episodeConfig: {\n      maxSteps: 200,\n      targetTrafficPattern: \"wave\",\n      initialTraffic: 1500,\n      targetSLA: { maxLatencyP95: 180, maxErrorRate: 1.0 },\n      costBudgetPerHour: 3.50,\n      enableFailures: false,\n    },\n  }),\n});\nconst data = await resp.json();\nconst envId = data.environment.id;\nconsole.log(`Created RL environment: ${envId}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
           }
         ]
       },
@@ -12001,7 +12001,7 @@
           }
         },
         "security": [],
-        "summary": "Inspect an RL environment",
+        "summary": "Fetch an RL training environment",
         "tags": [
           "Create"
         ],
@@ -12009,17 +12009,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/rl/environments/env-aws-001 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001 \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.get(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\nenv = resp.json()\nprint(f\"Environment {env['id']}  isActive={env['isActive']}  \"\n      f\"step={env['currentStep']}/{env['maxSteps']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.get(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\nenv = resp.json()\nprint(f\"Environment {env['id']}  isActive={env['isActive']}  \"\n      f\"step={env['currentStep']}/{env['maxSteps']}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst env = await resp.json();\nconsole.log(`Environment ${env.id}  isActive=${env.isActive}  step=${env.currentStep}/${env.maxSteps}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst env = await resp.json();\nconsole.log(`Environment ${env.id}  isActive=${env.isActive}  step=${env.currentStep}/${env.maxSteps}`);\n"
           }
         ]
       },
@@ -12785,7 +12785,7 @@
           }
         },
         "security": [],
-        "summary": "Execute multiple actions in a single request",
+        "summary": "Run multiple RL actions in a single request",
         "tags": [
           "RL Environments"
         ],
@@ -12793,17 +12793,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/rl/environments/env-aws-001/batch-step \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"steps\": [\n      {\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}},\n      {\"action\": {\"type\": \"no_op\",     \"parameters\": {}}},\n      {\"action\": {\"type\": \"no_op\",     \"parameters\": {}}}\n    ]\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001/batch-step \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"steps\": [\n      {\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}},\n      {\"action\": {\"type\": \"no_op\",     \"parameters\": {}}},\n      {\"action\": {\"type\": \"no_op\",     \"parameters\": {}}}\n    ]\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import time, requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef batch_step(steps: list[dict], max_retries: int = 5) -> dict:\n    for attempt in range(max_retries):\n        resp = session.post(\n            f\"{BASE_URL}/rl/environments/{ENV_ID}/batch-step\",\n            json={\"steps\": steps},\n        )\n        if resp.status_code == 429:\n            retry_after = int(resp.headers.get(\"Retry-After\", 60))\n            print(f\"Rate limited — waiting {retry_after}s\")\n            time.sleep(retry_after)\n            continue\n        resp.raise_for_status()\n        return resp.json()\n    raise RuntimeError(\"Exceeded max retries\")\n\nNO_OP = {\"action\": {\"type\": \"no_op\", \"parameters\": {}}}\nSCALE_OUT = {\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}}\n\nwarmup = batch_step([{**NO_OP, \"tick_seconds\": 300}] * 30)\nprint(f\"Warm-up complete: {len(warmup['results'])} steps\")\n\ntotal_reward = 0.0\nwhile True:\n    result = batch_step([SCALE_OUT] + [NO_OP] * 9)\n    for step_result in result[\"results\"]:\n        total_reward += step_result[\"reward\"]\n        if step_result[\"done\"]:\n            print(f\"Episode complete — total reward: {total_reward:.2f}\")\n            break\n    else:\n        continue\n    break\n"
+            "source": "import time, requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef batch_step(steps: list[dict], max_retries: int = 5) -> dict:\n    for attempt in range(max_retries):\n        resp = session.post(\n            f\"{BASE_URL}/rl/environments/{ENV_ID}/batch-step\",\n            json={\"steps\": steps},\n        )\n        if resp.status_code == 429:\n            retry_after = int(resp.headers.get(\"Retry-After\", 60))\n            print(f\"Rate limited — waiting {retry_after}s\")\n            time.sleep(retry_after)\n            continue\n        resp.raise_for_status()\n        return resp.json()\n    raise RuntimeError(\"Exceeded max retries\")\n\nNO_OP = {\"action\": {\"type\": \"no_op\", \"parameters\": {}}}\nSCALE_OUT = {\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}}\n\nwarmup = batch_step([{**NO_OP, \"tick_seconds\": 300}] * 30)\nprint(f\"Warm-up complete: {len(warmup['results'])} steps\")\n\ntotal_reward = 0.0\nwhile True:\n    result = batch_step([SCALE_OUT] + [NO_OP] * 9)\n    for step_result in result[\"results\"]:\n        total_reward += step_result[\"reward\"]\n        if step_result[\"done\"]:\n            print(f\"Episode complete — total reward: {total_reward:.2f}\")\n            break\n    else:\n        continue\n    break\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function batchStep(steps, maxRetries = 5) {\n  for (let attempt = 0; attempt < maxRetries; attempt++) {\n    const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/batch-step`, {\n      method: \"POST\",\n      headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ steps }),\n    });\n    if (resp.status === 429) {\n      const retryAfter = parseInt(resp.headers.get(\"Retry-After\") ?? \"60\", 10);\n      console.log(`Rate limited — waiting ${retryAfter}s`);\n      await new Promise(r => setTimeout(r, retryAfter * 1000));\n      continue;\n    }\n    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);\n    return resp.json();\n  }\n  throw new Error(\"Exceeded max retries\");\n}\n\nconst NO_OP   = { action: { type: \"no_op\",     parameters: {} } };\nconst SCALE_OUT = { action: { type: \"scale_out\", parameters: { instanceCount: 1 } } };\n\n// 30-step warm-up at 300 s ticks\nconst warmup = await batchStep(Array(30).fill({ ...NO_OP, tick_seconds: 300 }));\nconsole.log(`Warm-up complete: ${warmup.results.length} steps`);\n\n// Training loop using 10-step batches\nlet totalReward = 0;\nlet done = false;\nwhile (!done) {\n  const { results } = await batchStep([SCALE_OUT, ...Array(9).fill(NO_OP)]);\n  for (const r of results) {\n    totalReward += r.reward;\n    if (r.done) { done = true; break; }\n  }\n}\nconsole.log(`Episode complete — total reward: ${totalReward.toFixed(2)}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function batchStep(steps, maxRetries = 5) {\n  for (let attempt = 0; attempt < maxRetries; attempt++) {\n    const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/batch-step`, {\n      method: \"POST\",\n      headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ steps }),\n    });\n    if (resp.status === 429) {\n      const retryAfter = parseInt(resp.headers.get(\"Retry-After\") ?? \"60\", 10);\n      console.log(`Rate limited — waiting ${retryAfter}s`);\n      await new Promise(r => setTimeout(r, retryAfter * 1000));\n      continue;\n    }\n    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);\n    return resp.json();\n  }\n  throw new Error(\"Exceeded max retries\");\n}\n\nconst NO_OP   = { action: { type: \"no_op\",     parameters: {} } };\nconst SCALE_OUT = { action: { type: \"scale_out\", parameters: { instanceCount: 1 } } };\n\n// 30-step warm-up at 300 s ticks\nconst warmup = await batchStep(Array(30).fill({ ...NO_OP, tick_seconds: 300 }));\nconsole.log(`Warm-up complete: ${warmup.results.length} steps`);\n\n// Training loop using 10-step batches\nlet totalReward = 0;\nlet done = false;\nwhile (!done) {\n  const { results } = await batchStep([SCALE_OUT, ...Array(9).fill(NO_OP)]);\n  for (const r of results) {\n    totalReward += r.reward;\n    if (r.done) { done = true; break; }\n  }\n}\nconsole.log(`Episode complete — total reward: ${totalReward.toFixed(2)}`);\n"
           }
         ]
       },
@@ -13011,7 +13011,7 @@
           }
         },
         "security": [],
-        "summary": "Submit an eval-episode job (async by default; ?sync=true for inline)",
+        "summary": "Submit an eval-episode job for asynchronous execution",
         "tags": [
           "RL Environments"
         ],
@@ -13019,12 +13019,12 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/rl/environments/env-aws-001/eval-episodes \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"actions\": [\n      [\n        {\"type\": \"no_op\", \"parameters\": {}},\n        {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}},\n        {\"type\": \"no_op\", \"parameters\": {}}\n      ]\n    ],\n    \"evalCostOverrides\": {\"egress\": 0.5, \"cross_az_traffic\": 0.3},\n    \"collapseThreshold\": 0.20\n  }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001/eval-episodes \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"actions\": [\n      [\n        {\"type\": \"no_op\", \"parameters\": {}},\n        {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}},\n        {\"type\": \"no_op\", \"parameters\": {}}\n      ]\n    ],\n    \"evalCostOverrides\": {\"egress\": 0.5, \"cross_az_traffic\": 0.3},\n    \"collapseThreshold\": 0.20\n  }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/eval-episodes\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"actions\": [\n            [{\"type\": \"no_op\", \"parameters\": {}}] * 10\n        ],\n        \"evalCostOverrides\": {\"egress\": 0.5, \"cross_az_traffic\": 0.3},\n        \"collapseThreshold\": 0.20,\n    },\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"reward_collapse={data['reward_collapse']}  mean_eval={data['meanEvalReward']:.3f}  training={data['trainingTotalReward']:.3f}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/eval-episodes\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"actions\": [\n            [{\"type\": \"no_op\", \"parameters\": {}}] * 10\n        ],\n        \"evalCostOverrides\": {\"egress\": 0.5, \"cross_az_traffic\": 0.3},\n        \"collapseThreshold\": 0.20,\n    },\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"reward_collapse={data['reward_collapse']}  mean_eval={data['meanEvalReward']:.3f}  training={data['trainingTotalReward']:.3f}\")\n"
           }
         ]
       },
@@ -13137,7 +13137,7 @@
           }
         },
         "security": [],
-        "summary": "Retrieve an eval-episode job result",
+        "summary": "Fetch an eval-episode job result",
         "tags": [
           "RL Environments"
         ]
@@ -13351,7 +13351,7 @@
           }
         },
         "security": [],
-        "summary": "Get the current observation without executing an action",
+        "summary": "Fetch the current observation without executing an action",
         "tags": [
           "RL Environments"
         ],
@@ -13359,17 +13359,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/rl/environments/env-aws-001/observation \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001/observation \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.get(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/observation\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nobs, metrics = data[\"obs\"], data[\"metrics\"]\nprint(f\"Step {obs['currentTime']}  CPU: {obs['cpu_util']:.1%}  \"\n      f\"P95: {metrics['latency_p95']} ms  cost: ${metrics['cost_usd_hr']:.2f}/hr\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.get(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/observation\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nobs, metrics = data[\"obs\"], data[\"metrics\"]\nprint(f\"Step {obs['currentTime']}  CPU: {obs['cpu_util']:.1%}  \"\n      f\"P95: {metrics['latency_p95']} ms  cost: ${metrics['cost_usd_hr']:.2f}/hr\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/observation`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { obs, metrics } = await resp.json();\nconsole.log(`Step ${obs.currentTime}  CPU: ${(obs.cpu_util * 100).toFixed(1)}%  ` +\n            `P95: ${metrics.latency_p95} ms  cost: $${metrics.cost_usd_hr.toFixed(2)}/hr`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/observation`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { obs, metrics } = await resp.json();\nconsole.log(`Step ${obs.currentTime}  CPU: ${(obs.cpu_util * 100).toFixed(1)}%  ` +\n            `P95: ${metrics.latency_p95} ms  cost: $${metrics.cost_usd_hr.toFixed(2)}/hr`);\n"
           }
         ]
       },
@@ -13803,7 +13803,7 @@
           }
         },
         "security": [],
-        "summary": "Reset an RL environment to start a new episode",
+        "summary": "Start a new RL episode by resetting the environment",
         "tags": [
           "RL Environments"
         ],
@@ -13811,17 +13811,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/rl/environments/env-aws-001/reset \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001/reset \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/reset\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Environment reset — step: {data['environment']['currentStep']}\")\nprint(f\"Initial CPU: {data['observation']['metrics']['cpuUsage']}%\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/reset\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Environment reset — step: {data['environment']['currentStep']}\")\nprint(f\"Initial CPU: {data['observation']['metrics']['cpuUsage']}%\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/reset`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nconsole.log(`Environment reset — step: ${data.environment.currentStep}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/reset`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nconsole.log(`Environment reset — step: ${data.environment.currentStep}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
           }
         ]
       },
@@ -14417,7 +14417,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Execute an RL action and advance one step",
+        "summary": "Run an RL action and advance one step",
         "tags": [
           "Execute"
         ],
@@ -14425,37 +14425,37 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/rl/environments/env-aws-001/step \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/rl/environments/env-aws-001/step \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"t={data['t']}  reward={data['reward']:.3f}  done={data['done']}\")\nprint(f\"CPU: {data['obs']['cpu_util']:.1%}  P95: {data['metrics']['latency_p95']} ms  \"\n      f\"cost: ${data['metrics']['cost_usd_hr']:.2f}/hr\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"action\": {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"t={data['t']}  reward={data['reward']:.3f}  done={data['done']}\")\nprint(f\"CPU: {data['obs']['cpu_util']:.1%}  P95: {data['metrics']['latency_p95']} ms  \"\n      f\"cost: ${data['metrics']['cost_usd_hr']:.2f}/hr\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ action: { type: \"scale_out\", parameters: { instanceCount: 1 } } }),\n});\nconst data = await resp.json();\nconsole.log(`t=${data.t}  reward=${data.reward.toFixed(3)}  done=${data.done}`);\nconsole.log(`CPU: ${(data.obs.cpu_util * 100).toFixed(1)}%  P95: ${data.metrics.latency_p95} ms  cost: $${data.metrics.cost_usd_hr.toFixed(2)}/hr`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ action: { type: \"scale_out\", parameters: { instanceCount: 1 } } }),\n});\nconst data = await resp.json();\nconsole.log(`t=${data.t}  reward=${data.reward.toFixed(3)}  done=${data.done}`);\nconsole.log(`CPU: ${(data.obs.cpu_util * 100).toFixed(1)}%  P95: ${data.metrics.latency_p95} ms  cost: $${data.metrics.cost_usd_hr.toFixed(2)}/hr`);\n"
           },
           {
             "label": "Python – warm-up/training",
             "lang": "Python",
-            "source": "\"\"\"\nTwo-phase training loop: fast warm-up followed by fine-grained training.\n\nPhase 1 – Warm-up (300 s ticks)\n  Use large tick_seconds to fast-forward through startup noise before the\n  agent starts making meaningful autoscaling decisions. Each step advances\n  the simulation clock by 5 minutes, so 20 warm-up steps cover ~1.7 hours\n  of simulated time in seconds of wall time.\n\nPhase 2 – Training (60 s ticks)\n  Switch to 1-minute ticks for precise autoscaling control. The agent now\n  observes and reacts to traffic on a per-minute basis, matching the\n  granularity of real autoscaling cooldown windows (e.g. AWS default: 300 s).\n\"\"\"\nimport requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef step(action: dict, tick_seconds: int) -> dict:\n    resp = session.post(\n        f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n        json={\"action\": action, \"tick_seconds\": tick_seconds},\n    )\n    resp.raise_for_status()\n    return resp.json()\n\nNO_OP = {\"type\": \"no_op\", \"parameters\": {}}\n\nWARMUP_STEPS = 20\nprint(\"=== Warm-up phase (300 s ticks) ===\")\nfor i in range(WARMUP_STEPS):\n    data = step(NO_OP, tick_seconds=300)\n    print(\n        f\"  warmup {i+1:2d}/{WARMUP_STEPS}  \"\n        f\"sim={data['sim_time_human']:>8s}  \"\n        f\"cpu={data['obs']['cpu_util']:.1%}  \"\n        f\"instances={data['obs']['instances']}\"\n    )\n    if data[\"done\"]:\n        print(\"  Episode ended during warm-up — reset and retry.\")\n        break\n\nprint(\"\\n=== Training phase (60 s ticks) ===\")\ndone = False\nwhile not done:\n    cpu = data[\"obs\"][\"cpu_util\"]\n    if cpu > 0.75:\n        action = {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}\n    elif cpu < 0.30 and data[\"obs\"][\"instances\"] > 1:\n        action = {\"type\": \"scale_in\", \"parameters\": {\"instanceCount\": 1}}\n    else:\n        action = NO_OP\n\n    data = step(action, tick_seconds=60)\n    done = data[\"done\"]\n    obs = data[\"obs\"]\n    rps_per_node = obs.get(\"routedRps_per_node\", obs[\"rps\"] / max(obs[\"instances\"], 1))\n    print(\n        f\"  t={data['t']:4d}  sim={data['sim_time_human']:>8s}  \"\n        f\"reward={data['reward']:+.3f}  \"\n        f\"cpu={data['obs']['cpu_util']:.1%}  \"\n        f\"rps/node={rps_per_node:.1f}  \"\n        f\"p95={data['metrics']['latency_p95']} ms  \"\n        f\"cost=${data['metrics']['cost_usd_hr']:.2f}/hr  \"\n        f\"done={done}\"\n    )\n"
+            "source": "\"\"\"\nTwo-phase training loop: fast warm-up followed by fine-grained training.\n\nPhase 1 – Warm-up (300 s ticks)\n  Use large tick_seconds to fast-forward through startup noise before the\n  agent starts making meaningful autoscaling decisions. Each step advances\n  the simulation clock by 5 minutes, so 20 warm-up steps cover ~1.7 hours\n  of simulated time in seconds of wall time.\n\nPhase 2 – Training (60 s ticks)\n  Switch to 1-minute ticks for precise autoscaling control. The agent now\n  observes and reacts to traffic on a per-minute basis, matching the\n  granularity of real autoscaling cooldown windows (e.g. AWS default: 300 s).\n\"\"\"\nimport requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef step(action: dict, tick_seconds: int) -> dict:\n    resp = session.post(\n        f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n        json={\"action\": action, \"tick_seconds\": tick_seconds},\n    )\n    resp.raise_for_status()\n    return resp.json()\n\nNO_OP = {\"type\": \"no_op\", \"parameters\": {}}\n\nWARMUP_STEPS = 20\nprint(\"=== Warm-up phase (300 s ticks) ===\")\nfor i in range(WARMUP_STEPS):\n    data = step(NO_OP, tick_seconds=300)\n    print(\n        f\"  warmup {i+1:2d}/{WARMUP_STEPS}  \"\n        f\"sim={data['sim_time_human']:>8s}  \"\n        f\"cpu={data['obs']['cpu_util']:.1%}  \"\n        f\"instances={data['obs']['instances']}\"\n    )\n    if data[\"done\"]:\n        print(\"  Episode ended during warm-up — reset and retry.\")\n        break\n\nprint(\"\\n=== Training phase (60 s ticks) ===\")\ndone = False\nwhile not done:\n    cpu = data[\"obs\"][\"cpu_util\"]\n    if cpu > 0.75:\n        action = {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}\n    elif cpu < 0.30 and data[\"obs\"][\"instances\"] > 1:\n        action = {\"type\": \"scale_in\", \"parameters\": {\"instanceCount\": 1}}\n    else:\n        action = NO_OP\n\n    data = step(action, tick_seconds=60)\n    done = data[\"done\"]\n    obs = data[\"obs\"]\n    rps_per_node = obs.get(\"routedRps_per_node\", obs[\"rps\"] / max(obs[\"instances\"], 1))\n    print(\n        f\"  t={data['t']:4d}  sim={data['sim_time_human']:>8s}  \"\n        f\"reward={data['reward']:+.3f}  \"\n        f\"cpu={data['obs']['cpu_util']:.1%}  \"\n        f\"rps/node={rps_per_node:.1f}  \"\n        f\"p95={data['metrics']['latency_p95']} ms  \"\n        f\"cost=${data['metrics']['cost_usd_hr']:.2f}/hr  \"\n        f\"done={done}\"\n    )\n"
           },
           {
             "label": "Node.js – warm-up/training",
             "lang": "Node.js",
-            "source": "/**\n * Two-phase training loop: fast warm-up followed by fine-grained training.\n *\n * Phase 1 – Warm-up (300 s ticks)\n *   Use large tick_seconds to fast-forward through startup noise before the\n *   agent starts making meaningful autoscaling decisions. Each step advances\n *   the simulation clock by 5 minutes, so 20 warm-up steps cover ~1.7 hours\n *   of simulated time in seconds of wall time.\n *\n * Phase 2 – Training (60 s ticks)\n *   Switch to 1-minute ticks for precise autoscaling control. The agent now\n *   observes and reacts to traffic on a per-minute basis, matching the\n *   granularity of real autoscaling cooldown windows (e.g. AWS default: 300 s).\n */\nconst BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function step(action, tickSeconds) {\n  const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n    method: \"POST\",\n    headers: {\n      \"Authorization\": `Bearer ${API_KEY}`,\n      \"Content-Type\": \"application/json\",\n    },\n    body: JSON.stringify({ action, tick_seconds: tickSeconds }),\n  });\n  if (!resp.ok) throw new Error(`step failed: ${resp.status}`);\n  return resp.json();\n}\n\nconst NO_OP = { type: \"no_op\", parameters: {} };\n\n// --- Phase 1: Warm-up (300 s / 5-minute ticks) ---\nconst WARMUP_STEPS = 20;\nconsole.log(\"=== Warm-up phase (300 s ticks) ===\");\nlet data;\nfor (let i = 0; i < WARMUP_STEPS; i++) {\n  data = await step(NO_OP, 300);\n  console.log(\n    `  warmup ${String(i + 1).padStart(2)}/${WARMUP_STEPS}` +\n    `  sim=${data.sim_time_human.padStart(8)}` +\n    `  cpu=${(data.obs.cpu_util * 100).toFixed(1)}%` +\n    `  instances=${data.obs.instances}`\n  );\n  if (data.done) {\n    console.log(\"  Episode ended during warm-up — reset and retry.\");\n    break;\n  }\n}\n\n// --- Phase 2: Training (60 s / 1-minute ticks) ---\nconsole.log(\"\\n=== Training phase (60 s ticks) ===\");\nlet done = false;\nwhile (!done) {\n  const cpu = data.obs.cpu_util;\n  let action;\n  if (cpu > 0.75) {\n    action = { type: \"scale_out\", parameters: { instanceCount: 1 } };\n  } else if (cpu < 0.30 && data.obs.instances > 1) {\n    action = { type: \"scale_in\", parameters: { instanceCount: 1 } };\n  } else {\n    action = NO_OP;\n  }\n\n  data = await step(action, 60);\n  done = data.done;\n  console.log(\n    `  t=${String(data.t).padStart(4)}  sim=${data.sim_time_human.padStart(8)}` +\n    `  reward=${data.reward >= 0 ? \"+\" : \"\"}${data.reward.toFixed(3)}` +\n    `  cpu=${(data.obs.cpu_util * 100).toFixed(1)}%` +\n    `  p95=${data.metrics.latency_p95} ms` +\n    `  cost=$${data.metrics.cost_usd_hr.toFixed(2)}/hr` +\n    `  done=${done}`\n  );\n}\n"
+            "source": "/**\n * Two-phase training loop: fast warm-up followed by fine-grained training.\n *\n * Phase 1 – Warm-up (300 s ticks)\n *   Use large tick_seconds to fast-forward through startup noise before the\n *   agent starts making meaningful autoscaling decisions. Each step advances\n *   the simulation clock by 5 minutes, so 20 warm-up steps cover ~1.7 hours\n *   of simulated time in seconds of wall time.\n *\n * Phase 2 – Training (60 s ticks)\n *   Switch to 1-minute ticks for precise autoscaling control. The agent now\n *   observes and reacts to traffic on a per-minute basis, matching the\n *   granularity of real autoscaling cooldown windows (e.g. AWS default: 300 s).\n */\nconst BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function step(action, tickSeconds) {\n  const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n    method: \"POST\",\n    headers: {\n      \"Authorization\": `Bearer ${API_KEY}`,\n      \"Content-Type\": \"application/json\",\n    },\n    body: JSON.stringify({ action, tick_seconds: tickSeconds }),\n  });\n  if (!resp.ok) throw new Error(`step failed: ${resp.status}`);\n  return resp.json();\n}\n\nconst NO_OP = { type: \"no_op\", parameters: {} };\n\n// --- Phase 1: Warm-up (300 s / 5-minute ticks) ---\nconst WARMUP_STEPS = 20;\nconsole.log(\"=== Warm-up phase (300 s ticks) ===\");\nlet data;\nfor (let i = 0; i < WARMUP_STEPS; i++) {\n  data = await step(NO_OP, 300);\n  console.log(\n    `  warmup ${String(i + 1).padStart(2)}/${WARMUP_STEPS}` +\n    `  sim=${data.sim_time_human.padStart(8)}` +\n    `  cpu=${(data.obs.cpu_util * 100).toFixed(1)}%` +\n    `  instances=${data.obs.instances}`\n  );\n  if (data.done) {\n    console.log(\"  Episode ended during warm-up — reset and retry.\");\n    break;\n  }\n}\n\n// --- Phase 2: Training (60 s / 1-minute ticks) ---\nconsole.log(\"\\n=== Training phase (60 s ticks) ===\");\nlet done = false;\nwhile (!done) {\n  const cpu = data.obs.cpu_util;\n  let action;\n  if (cpu > 0.75) {\n    action = { type: \"scale_out\", parameters: { instanceCount: 1 } };\n  } else if (cpu < 0.30 && data.obs.instances > 1) {\n    action = { type: \"scale_in\", parameters: { instanceCount: 1 } };\n  } else {\n    action = NO_OP;\n  }\n\n  data = await step(action, 60);\n  done = data.done;\n  console.log(\n    `  t=${String(data.t).padStart(4)}  sim=${data.sim_time_human.padStart(8)}` +\n    `  reward=${data.reward >= 0 ? \"+\" : \"\"}${data.reward.toFixed(3)}` +\n    `  cpu=${(data.obs.cpu_util * 100).toFixed(1)}%` +\n    `  p95=${data.metrics.latency_p95} ms` +\n    `  cost=$${data.metrics.cost_usd_hr.toFixed(2)}/hr` +\n    `  done=${done}`\n  );\n}\n"
           },
           {
             "label": "Python – mid-episode cold instance (warmup_factor)",
             "lang": "Python",
-            "source": "\"\"\"\nMid-episode warmup_factor safe-access pattern.\n\nobs.warmup_factor is an optional field — it is ABSENT from the observation\nvector until the first cold compute instance exists in the episode. This happens\nin two cases:\n  1. An `add_resource` action provisions a new compute resource mid-episode.\n  2. Canvas autoscaling adds a compute replica in response to high CPU/traffic.\n\nBecause the field appears dynamically, agents building a fixed-width\nobservation vector must default to 1.0 (fully warmed) when the field is absent:\n\n  wf = obs.get(\"warmup_factor\", 1.0)\n\nA value < 1.0 means at least one compute instance is still warming up and is\nnot yet at full throughput. Use wf directly as a feature — do not re-derive it\nfrom step counters or metrics.compute[].warmup_steps_remaining.\n\nThe pattern below shows a typical episode loop that handles both the pre-warmup\nphase (field absent) and the post-add_resource warm-up window (field in (0, 1]).\n\"\"\"\nimport requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef step(action: dict) -> dict:\n    resp = session.post(\n        f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n        json={\"action\": action},\n    )\n    resp.raise_for_status()\n    return resp.json()\n\ndone = False\nwhile not done:\n    obs = step({\"type\": \"no_op\", \"parameters\": {}})[\"obs\"]\n    wf = obs.get(\"warmup_factor\", 1.0)   # 1.0 = fully warmed / no cold instance\n\n    cpu = obs[\"cpu_util\"]\n\n    effective_cpu = cpu / wf if wf > 0 else cpu\n\n    if effective_cpu > 0.75:\n        action = {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}\n    elif effective_cpu < 0.30 and obs[\"instances\"] > 1:\n        action = {\"type\": \"scale_in\", \"parameters\": {\"instanceCount\": 1}}\n    else:\n        action = {\"type\": \"no_op\", \"parameters\": {}}\n\n    data = step(action)\n    done = data[\"done\"]\n    print(\n        f\"  t={data['t']:4d}  wf={wf:.2f}  \"\n        f\"cpu={cpu:.1%}  effective_cpu={effective_cpu:.1%}  \"\n        f\"reward={data['reward']:+.3f}  done={done}\"\n    )\n"
+            "source": "\"\"\"\nMid-episode warmup_factor safe-access pattern.\n\nobs.warmup_factor is an optional field — it is ABSENT from the observation\nvector until the first cold compute instance exists in the episode. This happens\nin two cases:\n  1. An `add_resource` action provisions a new compute resource mid-episode.\n  2. Canvas autoscaling adds a compute replica in response to high CPU/traffic.\n\nBecause the field appears dynamically, agents building a fixed-width\nobservation vector must default to 1.0 (fully warmed) when the field is absent:\n\n  wf = obs.get(\"warmup_factor\", 1.0)\n\nA value < 1.0 means at least one compute instance is still warming up and is\nnot yet at full throughput. Use wf directly as a feature — do not re-derive it\nfrom step counters or metrics.compute[].warmup_steps_remaining.\n\nThe pattern below shows a typical episode loop that handles both the pre-warmup\nphase (field absent) and the post-add_resource warm-up window (field in (0, 1]).\n\"\"\"\nimport requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nsession = requests.Session()\nsession.headers.update({\"Authorization\": f\"Bearer {API_KEY}\"})\n\ndef step(action: dict) -> dict:\n    resp = session.post(\n        f\"{BASE_URL}/rl/environments/{ENV_ID}/step\",\n        json={\"action\": action},\n    )\n    resp.raise_for_status()\n    return resp.json()\n\ndone = False\nwhile not done:\n    obs = step({\"type\": \"no_op\", \"parameters\": {}})[\"obs\"]\n    wf = obs.get(\"warmup_factor\", 1.0)   # 1.0 = fully warmed / no cold instance\n\n    cpu = obs[\"cpu_util\"]\n\n    effective_cpu = cpu / wf if wf > 0 else cpu\n\n    if effective_cpu > 0.75:\n        action = {\"type\": \"scale_out\", \"parameters\": {\"instanceCount\": 1}}\n    elif effective_cpu < 0.30 and obs[\"instances\"] > 1:\n        action = {\"type\": \"scale_in\", \"parameters\": {\"instanceCount\": 1}}\n    else:\n        action = {\"type\": \"no_op\", \"parameters\": {}}\n\n    data = step(action)\n    done = data[\"done\"]\n    print(\n        f\"  t={data['t']:4d}  wf={wf:.2f}  \"\n        f\"cpu={cpu:.1%}  effective_cpu={effective_cpu:.1%}  \"\n        f\"reward={data['reward']:+.3f}  done={done}\"\n    )\n"
           },
           {
             "label": "Node.js – mid-episode cold instance (warmup_factor)",
             "lang": "Node.js",
-            "source": "/**\n * Mid-episode warmup_factor safe-access pattern.\n *\n * obs.warmup_factor is an optional field — it is ABSENT from the observation\n * vector until the first cold compute instance exists in the episode. This\n * happens in two cases:\n *   1. An `add_resource` action provisions a new compute resource mid-episode.\n *   2. Canvas autoscaling adds a compute replica in response to high CPU/traffic.\n *\n * Because the field appears dynamically, agents building a fixed-width\n * observation vector must default to 1.0 (fully warmed) when the field is absent:\n *\n *   const wf = data.obs.warmup_factor ?? 1.0;\n *\n * A value < 1.0 means at least one compute instance is still warming up.\n * Use wf directly as a feature — do not re-derive it from\n * metrics.compute[].warmup_steps_remaining.\n */\nconst BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function step(action) {\n  const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n    method: \"POST\",\n    headers: {\n      \"Authorization\": `Bearer ${API_KEY}`,\n      \"Content-Type\": \"application/json\",\n    },\n    body: JSON.stringify({ action }),\n  });\n  if (!resp.ok) throw new Error(`step failed: ${resp.status}`);\n  return resp.json();\n}\n\nlet done = false;\nlet data = await step({ type: \"no_op\", parameters: {} });\nwhile (!done) {\n  // --- build observation vector (always safe even if field absent) ---\n  const obs = data.obs;\n  const wf = obs.warmup_factor ?? 1.0;  // 1.0 = fully warmed / no cold instance\n\n  const cpu = obs.cpu_util;\n  // penalise decisions made while a cold instance is still warming up\n  const effectiveCpu = wf > 0 ? cpu / wf : cpu;\n\n  let action;\n  if (effectiveCpu > 0.75) {\n    action = { type: \"scale_out\", parameters: { instanceCount: 1 } };\n  } else if (effectiveCpu < 0.30 && obs.instances > 1) {\n    action = { type: \"scale_in\", parameters: { instanceCount: 1 } };\n  } else {\n    action = { type: \"no_op\", parameters: {} };\n  }\n\n  data = await step(action);\n  done = data.done;\n  console.log(\n    `  t=${String(data.t).padStart(4)}  wf=${wf.toFixed(2)}` +\n    `  cpu=${(cpu * 100).toFixed(1)}%  effectiveCpu=${(effectiveCpu * 100).toFixed(1)}%` +\n    `  reward=${data.reward >= 0 ? \"+\" : \"\"}${data.reward.toFixed(3)}  done=${done}`\n  );\n}\n"
+            "source": "/**\n * Mid-episode warmup_factor safe-access pattern.\n *\n * obs.warmup_factor is an optional field — it is ABSENT from the observation\n * vector until the first cold compute instance exists in the episode. This\n * happens in two cases:\n *   1. An `add_resource` action provisions a new compute resource mid-episode.\n *   2. Canvas autoscaling adds a compute replica in response to high CPU/traffic.\n *\n * Because the field appears dynamically, agents building a fixed-width\n * observation vector must default to 1.0 (fully warmed) when the field is absent:\n *\n *   const wf = data.obs.warmup_factor ?? 1.0;\n *\n * A value < 1.0 means at least one compute instance is still warming up.\n * Use wf directly as a feature — do not re-derive it from\n * metrics.compute[].warmup_steps_remaining.\n */\nconst BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function step(action) {\n  const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/step`, {\n    method: \"POST\",\n    headers: {\n      \"Authorization\": `Bearer ${API_KEY}`,\n      \"Content-Type\": \"application/json\",\n    },\n    body: JSON.stringify({ action }),\n  });\n  if (!resp.ok) throw new Error(`step failed: ${resp.status}`);\n  return resp.json();\n}\n\nlet done = false;\nlet data = await step({ type: \"no_op\", parameters: {} });\nwhile (!done) {\n  // --- build observation vector (always safe even if field absent) ---\n  const obs = data.obs;\n  const wf = obs.warmup_factor ?? 1.0;  // 1.0 = fully warmed / no cold instance\n\n  const cpu = obs.cpu_util;\n  // penalise decisions made while a cold instance is still warming up\n  const effectiveCpu = wf > 0 ? cpu / wf : cpu;\n\n  let action;\n  if (effectiveCpu > 0.75) {\n    action = { type: \"scale_out\", parameters: { instanceCount: 1 } };\n  } else if (effectiveCpu < 0.30 && obs.instances > 1) {\n    action = { type: \"scale_in\", parameters: { instanceCount: 1 } };\n  } else {\n    action = { type: \"no_op\", parameters: {} };\n  }\n\n  data = await step(action);\n  done = data.done;\n  console.log(\n    `  t=${String(data.t).padStart(4)}  wf=${wf.toFixed(2)}` +\n    `  cpu=${(cpu * 100).toFixed(1)}%  effectiveCpu=${(effectiveCpu * 100).toFixed(1)}%` +\n    `  reward=${data.reward >= 0 ? \"+\" : \"\"}${data.reward.toFixed(3)}  done=${done}`\n  );\n}\n"
           }
         ],
         "x-payment-info": {
@@ -14496,7 +14496,7 @@
           }
         },
         "security": [],
-        "summary": "List available simulation templates",
+        "summary": "Search available simulation templates",
         "tags": [
           "Discover"
         ]
@@ -14912,7 +14912,7 @@
           }
         },
         "security": [],
-        "summary": "Inspect a simulation by ID",
+        "summary": "Fetch a simulation by ID",
         "tags": [
           "Create"
         ]
@@ -15128,7 +15128,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Identify performance bottlenecks with AI",
+        "summary": "Generate an AI analysis of performance bottlenecks",
         "tags": [
           "Understand"
         ],
@@ -15136,17 +15136,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/analyze-bottlenecks \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/analyze-bottlenecks \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/analyze-bottlenecks\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(data[\"analysis\"])\nif data.get(\"doRecommendation\"):\n    print(\"DO recommendation:\", data[\"doRecommendation\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/analyze-bottlenecks\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(data[\"analysis\"])\nif data.get(\"doRecommendation\"):\n    print(\"DO recommendation:\", data[\"doRecommendation\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/analyze-bottlenecks`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.analysis);\nif (data.doRecommendation) {\n  console.log(\"DO recommendation:\", data.doRecommendation);\n}\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/analyze-bottlenecks`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.analysis);\nif (data.doRecommendation) {\n  console.log(\"DO recommendation:\", data.doRecommendation);\n}\n"
           }
         ],
         "x-payment-info": {
@@ -15282,7 +15282,7 @@
           }
         },
         "security": [],
-        "summary": "Apply a right-sizing hint to a single resource",
+        "summary": "Update a resource using a right-sizing hint",
         "tags": [
           "Simulations"
         ],
@@ -15290,17 +15290,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/apply-right-sizing \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceId\": \"res-1\", \"recommendedSlug\": \"t3.small\"}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/apply-right-sizing \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceId\": \"res-1\", \"recommendedSlug\": \"t3.small\"}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nhint_resp = requests.get(\n    f\"{BASE_URL}/simulations/sim-abc123/right-sizing-hint\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nhint = hint_resp.json()[\"hints\"][0]\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/apply-right-sizing\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"resourceId\": hint[\"affectedResourceId\"], \"recommendedSlug\": hint[\"recommendedSlug\"]},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Applied {data['appliedSlug']} to {data['resourceName']}\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nhint_resp = requests.get(\n    f\"{BASE_URL}/simulations/sim-abc123/right-sizing-hint\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nhint = hint_resp.json()[\"hints\"][0]\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/apply-right-sizing\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"resourceId\": hint[\"affectedResourceId\"], \"recommendedSlug\": hint[\"recommendedSlug\"]},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Applied {data['appliedSlug']} to {data['resourceName']}\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\n// Step 1: get the hint\nconst hintResp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { hints } = await hintResp.json();\nconst hint = hints[0];\n\n// Step 2: apply it in one call\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/apply-right-sizing`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ resourceId: hint.affectedResourceId, recommendedSlug: hint.recommendedSlug }),\n});\nconst data = await resp.json();\nconsole.log(`Applied ${data.appliedSlug} to ${data.resourceName}`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\n// Step 1: get the hint\nconst hintResp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { hints } = await hintResp.json();\nconst hint = hints[0];\n\n// Step 2: apply it in one call\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/apply-right-sizing`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ resourceId: hint.affectedResourceId, recommendedSlug: hint.recommendedSlug }),\n});\nconst data = await resp.json();\nconsole.log(`Applied ${data.appliedSlug} to ${data.resourceName}`);\n"
           }
         ]
       },
@@ -15404,7 +15404,7 @@
           }
         },
         "security": [],
-        "summary": "Resize all compute resources to a new DigitalOcean Droplet size",
+        "summary": "Update all compute resources to a new DigitalOcean Droplet size",
         "tags": [
           "Simulations"
         ],
@@ -15412,17 +15412,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/bulk-resize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"dropletSize\": \"s-4vcpu-8gb\"}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/bulk-resize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"dropletSize\": \"s-4vcpu-8gb\"}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/bulk-resize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"dropletSize\": \"s-4vcpu-8gb\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Resized {data['resizedCount']} compute resource(s) to s-4vcpu-8gb\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/bulk-resize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"dropletSize\": \"s-4vcpu-8gb\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"Resized {data['resizedCount']} compute resource(s) to s-4vcpu-8gb\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/bulk-resize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ dropletSize: \"s-4vcpu-8gb\" }),\n});\nconst data = await resp.json();\nconsole.log(`Resized ${data.resizedCount} compute resource(s) to s-4vcpu-8gb`);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/bulk-resize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ dropletSize: \"s-4vcpu-8gb\" }),\n});\nconst data = await resp.json();\nconsole.log(`Resized ${data.resizedCount} compute resource(s) to s-4vcpu-8gb`);\n"
           }
         ]
       },
@@ -15556,7 +15556,7 @@
           }
         },
         "security": [],
-        "summary": "Get the latest per-resource cost breakdown",
+        "summary": "Fetch the latest per-resource cost breakdown",
         "tags": [
           "Simulations"
         ]
@@ -15667,7 +15667,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Explain simulation behaviour in natural language",
+        "summary": "Generate a natural-language explanation of simulation behaviour",
         "tags": [
           "Understand"
         ],
@@ -15675,17 +15675,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/explain \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/explain \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/explain\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\nprint(resp.json()[\"explanation\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/explain\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\nprint(resp.json()[\"explanation\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/explain`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.explanation);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/explain`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.explanation);\n"
           }
         ],
         "x-payment-info": {
@@ -15887,7 +15887,7 @@
           }
         },
         "security": [],
-        "summary": "Schedule a failure injection",
+        "summary": "Create a scheduled failure injection",
         "tags": [
           "Simulations"
         ],
@@ -15895,17 +15895,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/failures \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"AZ Outage — us-east-1a\", \"type\": \"az_outage\", \"startTime\": 5, \"endTime\": 25, \"targetZone\": \"us-east-1a\", \"isActive\": true}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/failures \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"AZ Outage — us-east-1a\", \"type\": \"az_outage\", \"startTime\": 5, \"endTime\": 25, \"targetZone\": \"us-east-1a\", \"isActive\": true}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/failures\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"name\": \"AZ Outage — us-east-1a\",\n        \"type\": \"az_outage\",\n        \"startTime\": 5,\n        \"endTime\": 25,\n        \"targetZone\": \"us-east-1a\",\n        \"isActive\": True,\n    },\n)\nresp.raise_for_status()\nfailure = resp.json()\nprint(\"Created failure injection:\", failure[\"id\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/failures\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"name\": \"AZ Outage — us-east-1a\",\n        \"type\": \"az_outage\",\n        \"startTime\": 5,\n        \"endTime\": 25,\n        \"targetZone\": \"us-east-1a\",\n        \"isActive\": True,\n    },\n)\nresp.raise_for_status()\nfailure = resp.json()\nprint(\"Created failure injection:\", failure[\"id\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/failures`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    name: \"AZ Outage — us-east-1a\",\n    type: \"az_outage\",\n    startTime: 5,\n    endTime: 25,\n    targetZone: \"us-east-1a\",\n    isActive: true,\n  }),\n});\nconst failure = await resp.json();\nconsole.log(\"Created failure injection:\", failure.id);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/failures`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    name: \"AZ Outage — us-east-1a\",\n    type: \"az_outage\",\n    startTime: 5,\n    endTime: 25,\n    targetZone: \"us-east-1a\",\n    isActive: true,\n  }),\n});\nconst failure = await resp.json();\nconsole.log(\"Created failure injection:\", failure.id);\n"
           }
         ],
         "x-x402-call-type": "simulation.inject_failure_create",
@@ -16058,7 +16058,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Fail a specific node by resourceId or resourceName (deterministic, recommended)",
+        "summary": "Submit a targeted node failure injection",
         "tags": [
           "Simulations"
         ],
@@ -16066,17 +16066,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/inject-failure \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"resourceName\": \"web-server-01\" }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/inject-failure \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"resourceName\": \"web-server-01\" }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/inject-failure\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"resourceName\": \"web-server-01\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"Failure event:\", data[\"event\"][\"message\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/inject-failure\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"resourceName\": \"web-server-01\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"Failure event:\", data[\"event\"][\"message\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/inject-failure`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({ resourceName: \"web-server-01\" }),\n});\nconst data = await resp.json();\nconsole.log(\"Failure event:\", data.event.message);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/inject-failure`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({ resourceName: \"web-server-01\" }),\n});\nconst data = await resp.json();\nconsole.log(\"Failure event:\", data.event.message);\n"
           }
         ],
         "x-payment-info": {
@@ -16264,7 +16264,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Inject traffic into a simulation (deterministic targetRps or deltaPercent recommended)",
+        "summary": "Submit a deterministic traffic injection for a simulation",
         "tags": [
           "Simulations"
         ],
@@ -16272,17 +16272,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/inject-traffic \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"targetRps\": 700 }'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/inject-traffic \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"targetRps\": 700 }'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/inject-traffic\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"targetRps\": 700},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"Traffic event:\", data[\"event\"][\"message\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/inject-traffic\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"targetRps\": 700},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"Traffic event:\", data[\"event\"][\"message\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/inject-traffic`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({ targetRps: 700 }),\n});\nconst data = await resp.json();\nconsole.log(\"Traffic event:\", data.event.message);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/inject-traffic`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({ targetRps: 700 }),\n});\nconst data = await resp.json();\nconsole.log(\"Traffic event:\", data.event.message);\n"
           }
         ],
         "x-payment-info": {
@@ -16402,7 +16402,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Get AI optimization suggestions for the simulation",
+        "summary": "Generate AI optimization suggestions for a simulation",
         "tags": [
           "Understand"
         ],
@@ -16410,17 +16410,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/optimize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/optimize \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"beginnerMode\": false}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/optimize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\nprint(resp.json()[\"suggestions\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/optimize\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"beginnerMode\": False},\n)\nresp.raise_for_status()\nprint(resp.json()[\"suggestions\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/optimize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.suggestions);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/optimize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ beginnerMode: false }),\n});\nconst data = await resp.json();\nconsole.log(data.suggestions);\n"
           }
         ],
         "x-payment-info": {
@@ -16552,7 +16552,7 @@
           }
         },
         "security": [],
-        "summary": "Recover a single failed resource",
+        "summary": "Run recovery for a single failed resource",
         "tags": [
           "Simulations"
         ],
@@ -16560,7 +16560,7 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/recover-resource \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceName\": \"app-server-01\"}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/recover-resource \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceName\": \"app-server-01\"}'\n"
           }
         ]
       },
@@ -16770,7 +16770,7 @@
           }
         },
         "security": [],
-        "summary": "Get right-sizing recommendations",
+        "summary": "Fetch right-sizing recommendations",
         "tags": [
           "Simulations"
         ],
@@ -16778,17 +16778,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl https://your-production-domain.com/api/simulations/sim-abc123/right-sizing-hint \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
+            "source": "curl https://www.cloudworldmodel.ai/api/simulations/sim-abc123/right-sizing-hint \\\n  -H \"Authorization: Bearer $API_KEY\"\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.get(\n    f\"{BASE_URL}/simulations/sim-abc123/right-sizing-hint\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nif data.get(\"hasHint\"):\n    for hint in data[\"hints\"]:\n        print(f\"Resize {hint['affectedResourceName']} → {hint['recommendedSlug']} (save ~{hint['estimatedSavingsPct']}%)\")\nelse:\n    print(\"Simulation is appropriately sized — no downsizing recommended.\")\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.get(\n    f\"{BASE_URL}/simulations/sim-abc123/right-sizing-hint\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n)\nresp.raise_for_status()\ndata = resp.json()\nif data.get(\"hasHint\"):\n    for hint in data[\"hints\"]:\n        print(f\"Resize {hint['affectedResourceName']} → {hint['recommendedSlug']} (save ~{hint['estimatedSavingsPct']}%)\")\nelse:\n    print(\"Simulation is appropriately sized — no downsizing recommended.\")\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nif (data.hasHint) {\n  for (const hint of data.hints) {\n    console.log(`Resize ${hint.affectedResourceName} → ${hint.recommendedSlug} (save ~${hint.estimatedSavingsPct}%)`);\n  }\n} else {\n  console.log(\"Simulation is appropriately sized — no downsizing recommended.\");\n}\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nif (data.hasHint) {\n  for (const hint of data.hints) {\n    console.log(`Resize ${hint.affectedResourceName} → ${hint.recommendedSlug} (save ~${hint.estimatedSavingsPct}%)`);\n  }\n} else {\n  console.log(\"Simulation is appropriately sized — no downsizing recommended.\");\n}\n"
           }
         ]
       },
@@ -17106,7 +17106,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Advance simulation one step (hybrid ML + rules)",
+        "summary": "Run one hybrid ML and rules simulation step",
         "tags": [
           "Execute"
         ],
@@ -17114,17 +17114,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/step-hybrid \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"config\": {\"mlWeight\": 0.6, \"confidenceThreshold\": 0.5}}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/step-hybrid \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"config\": {\"mlWeight\": 0.6, \"confidenceThreshold\": 0.5}}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/step-hybrid\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"config\": {\"mlWeight\": 0.6, \"confidenceThreshold\": 0.5}},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"ML confidence:\", data[\"hybridDecision\"][\"mlPrediction\"][\"overallConfidence\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/step-hybrid\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"config\": {\"mlWeight\": 0.6, \"confidenceThreshold\": 0.5}},\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(\"ML confidence:\", data[\"hybridDecision\"][\"mlPrediction\"][\"overallConfidence\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/step-hybrid`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ config: { mlWeight: 0.6, confidenceThreshold: 0.5 } }),\n});\nconst data = await resp.json();\nconsole.log(\"ML confidence:\", data.hybridDecision.mlPrediction.overallConfidence);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/step-hybrid`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ config: { mlWeight: 0.6, confidenceThreshold: 0.5 } }),\n});\nconst data = await resp.json();\nconsole.log(\"ML confidence:\", data.hybridDecision.mlPrediction.overallConfidence);\n"
           }
         ],
         "x-payment-info": {
@@ -17257,7 +17257,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Troubleshoot a simulation issue with AI guidance",
+        "summary": "Generate AI troubleshooting guidance for a simulation issue",
         "tags": [
           "Understand"
         ],
@@ -17265,17 +17265,17 @@
           {
             "label": "curl",
             "lang": "curl",
-            "source": "curl -X POST https://your-production-domain.com/api/simulations/sim-abc123/troubleshoot \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"issue\": \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\"}'\n"
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/troubleshoot \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"issue\": \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\"}'\n"
           },
           {
             "label": "Python",
             "lang": "Python",
-            "source": "import requests\n\nBASE_URL = \"https://your-production-domain.com/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/troubleshoot\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"issue\": \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\"},\n)\nresp.raise_for_status()\nprint(resp.json()[\"guidance\"])\n"
+            "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\n\nresp = requests.post(\n    f\"{BASE_URL}/simulations/sim-abc123/troubleshoot\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\"issue\": \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\"},\n)\nresp.raise_for_status()\nprint(resp.json()[\"guidance\"])\n"
           },
           {
             "label": "Node.js",
             "lang": "Node.js",
-            "source": "const BASE_URL = \"https://your-production-domain.com/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/troubleshoot`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    issue: \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\",\n  }),\n});\nconst data = await resp.json();\nconsole.log(data.guidance);\n"
+            "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/troubleshoot`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    issue: \"Latency spikes every 30 seconds and error rate climbs to 5% during spikes\",\n  }),\n});\nconst data = await resp.json();\nconsole.log(data.guidance);\n"
           }
         ],
         "x-payment-info": {
@@ -17857,7 +17857,7 @@
           }
         },
         "security": [],
-        "summary": "Validate simulation performance accuracy against provider benchmarks",
+        "summary": "Validate performance accuracy against provider benchmarks",
         "tags": [
           "Simulations"
         ]
@@ -17940,7 +17940,7 @@
           }
         },
         "security": [],
-        "summary": "Request an EIP-191 sign-in challenge",
+        "summary": "Generate an EIP-191 sign-in challenge",
         "tags": [
           "Wallet Auth"
         ]
@@ -18028,7 +18028,7 @@
           }
         },
         "security": [],
-        "summary": "Verify an EIP-191 signature and receive a session token",
+        "summary": "Generate a session token from an EIP-191 signature",
         "tags": [
           "Wallet Auth"
         ]
@@ -18111,7 +18111,7 @@
             "x402Solana": []
           }
         ],
-        "summary": "Issue a wallet session JWT via x402 micro-payment",
+        "summary": "Generate a wallet session JWT via x402 micro-payment",
         "tags": [
           "Wallet Auth"
         ]
@@ -18123,10 +18123,6 @@
     {
       "description": "Production",
       "url": "https://www.cloudworldmodel.ai/api"
-    },
-    {
-      "description": "Local development",
-      "url": "http://localhost:5000/api"
     }
   ]
 }
