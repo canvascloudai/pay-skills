@@ -103,9 +103,13 @@
                         "type": "string"
                       },
                       "asset": {
-                        "description": "USDC contract address on the Base network.",
+                        "description": "USDC contract or mint address on the selected network.",
                         "example": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
                         "type": "string"
+                      },
+                      "extra": {
+                        "description": "Network-specific x402 details. Solana options include\n`feePayer`, the PayAI wallet that sponsors the transaction fee.\n",
+                        "type": "object"
                       },
                       "maxTimeoutSeconds": {
                         "example": 300,
@@ -117,7 +121,7 @@
                         "type": "string"
                       },
                       "payTo": {
-                        "description": "EVM wallet address receiving the payment.",
+                        "description": "Recipient wallet address on the selected network.",
                         "type": "string"
                       },
                       "scheme": {
@@ -182,7 +186,7 @@
             }
           }
         },
-        "description": "Payment required — the endpoint is metered and no API key was provided.\n\nThe response body follows the [x402 v2 protocol](https://x402.org) and describes\nthe USDC-on-Base payment that the caller must make before retrying the request.\nAfter paying on Base, re-send the original request with an `X-PAYMENT` header\ncontaining the signed payment payload. The server will verify the payment against\nthe PayAI facilitator at `https://facilitator.payai.network`.\n\nThe `PAYMENT-REQUIRED` response header carries this entire JSON body as a\nbase64-encoded string for protocol-aware clients.\n\nCall `GET /api/billing/x402/config` to retrieve the current price table and wallet\naddress before constructing a payment.\n"
+        "description": "Payment required — the endpoint is metered and no API key was provided.\n\nThe response body follows the [x402 v2 protocol](https://x402.org) and describes\none or more USDC payment options that the caller can select before retrying the request.\nBase is always the first option and uses `X-PAYMENT`. When an `accepts` entry for Solana\nis present, it is an additional USDC-SPL option that uses `PAYMENT-SIGNATURE` and its\n`extra.feePayer` value. The server verifies either payment through the PayAI facilitator\nat `https://facilitator.payai.network`.\n\nThe `PAYMENT-REQUIRED` response header carries this entire JSON body as a\nbase64-encoded string for protocol-aware clients.\n\nCall `GET /api/billing/x402/config` to retrieve the current price table and wallet\naddress and `paymentOptions` before constructing a payment.\n"
       }
     },
     "schemas": {
@@ -1354,6 +1358,267 @@
         },
         "type": "object"
       },
+      "KubernetesMemoryTelemetry": {
+        "description": "Per-replica Kubernetes memory-pressure/OOM evaluation for one simulation step. This telemetry is separate from aggregate memoryUsage and never mutates the immutable normalization receipt.",
+        "properties": {
+          "autoscaleDriver": {
+            "enum": [
+              "cpu",
+              "memory",
+              "both",
+              "none"
+            ],
+            "type": "string"
+          },
+          "capacityCeilingRps": {
+            "description": "Effective Kubernetes serving ceiling after the memory-pressure effect.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "capacityStatus": {
+            "enum": [
+              "enforced",
+              "no_ceiling"
+            ],
+            "type": "string"
+          },
+          "capacityStatusReason": {
+            "description": "Explicit explanation of the capacity status.",
+            "type": "string"
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "type": "string"
+          },
+          "cpuUsagePercent": {
+            "type": "number"
+          },
+          "effectiveCapacityFraction": {
+            "description": "Effective serving capacity fraction after the memory-pressure effect.",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "effectiveServingReplicas": {
+            "description": "Backwards-compatible alias for postEffectServingReplicas.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "evaluated": {
+            "type": "boolean"
+          },
+          "evaluationBasis": {
+            "description": "native_configuration_only reports observed manifest configuration without evaluating runtime demand or OOM behavior.",
+            "enum": [
+              "explicit_memory_profile",
+              "missing_memory_profile",
+              "unsupported_multi_pool_topology",
+              "native_configuration_only"
+            ],
+            "type": "string"
+          },
+          "evaluationStatus": {
+            "enum": [
+              "not_evaluated",
+              "within_limit",
+              "limit_exceeded"
+            ],
+            "type": "string"
+          },
+          "extrapolationPolicy": {
+            "enum": [
+              "clamp",
+              "linear"
+            ],
+            "type": "string"
+          },
+          "headroomGiB": {
+            "type": "number"
+          },
+          "limitGiB": {
+            "description": "Configured per-replica memory limit in GiB.",
+            "type": "number"
+          },
+          "memoryAwareAutoscaling": {
+            "type": "boolean"
+          },
+          "memoryEvidence": {
+            "description": "Bounded observed memory configuration from a standard Kubernetes Deployment or StatefulSet. It is not runtime working-set evidence.",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "Deployment",
+                  "StatefulSet"
+                ],
+                "type": "string"
+              },
+              "limitGiB": {
+                "exclusiveMinimum": 0,
+                "maximum": 1024,
+                "type": "number"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "reason": {
+                "enum": [
+                  "multiple_containers",
+                  "non_literal_memory",
+                  "memory_not_declared"
+                ],
+                "type": "string"
+              },
+              "replicas": {
+                "maximum": 1000000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "requestGiB": {
+                "exclusiveMinimum": 0,
+                "maximum": 1024,
+                "type": "number"
+              },
+              "source": {
+                "enum": [
+                  "kubernetes-manifest"
+                ],
+                "type": "string"
+              },
+              "sourceFile": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "ambiguous",
+                  "missing",
+                  "non_literal"
+                ],
+                "type": "string"
+              },
+              "workload": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "source",
+              "status",
+              "kind",
+              "sourceFile",
+              "workload",
+              "namespace"
+            ],
+            "type": "object"
+          },
+          "memoryPressureRatio": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "modeledDemandPerReplicaGiB": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nodeCount": {
+            "type": "integer"
+          },
+          "offeredRps": {
+            "description": "Total RPS offered to this Kubernetes resource in this step.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "oomReplicasThisStep": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "overloadRatio": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "perReplicaRps": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "poolId": {
+            "type": "string"
+          },
+          "postEffectServingReplicas": {
+            "description": "Serving replicas after this step's OOM/restart effect.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "preEvaluationServingReplicas": {
+            "description": "Serving replicas used for demand before this step's OOM effect.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "recoveredReplicasThisStep": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "requestGiB": {
+            "description": "Configured per-replica memory request in GiB.",
+            "type": "number"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "restartingReplicas": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "routingRule": {
+            "description": "Existing traffic-distribution rule that produced offeredRps.",
+            "enum": [
+              "single_resource",
+              "even_split",
+              "unbalanced_80_20"
+            ],
+            "type": "string"
+          },
+          "servedRps": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "shedRps": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "source": {
+            "enum": [
+              "user-provided",
+              "calibrated",
+              "external"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceId",
+          "name",
+          "nodeCount",
+          "evaluated",
+          "evaluationStatus",
+          "evaluationBasis",
+          "offeredRps",
+          "routingRule",
+          "memoryAwareAutoscaling",
+          "effectiveCapacityFraction",
+          "capacityStatus",
+          "capacityStatusReason",
+          "message"
+        ],
+        "type": "object"
+      },
       "MultiCloudJob": {
         "description": "A multi-cloud exploration job. All cost and latency figures in the job results are flight-simulator-style planning estimates reflecting baseline on-demand rates under typical load — **not actual billing data**. Internet egress is estimated and included in each strategy's `totalCostPerHour` via `egressCostPerHour`, after deducting each provider's free monthly egress allowance (OCI 10,000 GB/month, DigitalOcean 1,000 GB/instance/month, AWS 100 GB/month, GCP 200 GB/month, Azure 5 GB/month). Still excluded: monitoring/support surcharges, non-egress free-tier credits, reserved-instance discounts, and spot/preemptible pricing. Validate top-ranked strategies by materialising them as owned simulations before making infrastructure commitments.\n",
         "properties": {
@@ -1518,6 +1783,226 @@
         },
         "type": "object"
       },
+      "NormalizationReceipt": {
+        "description": "Immutable, versioned receipt stored at creation and returned unchanged by\ncreate, get, and step responses. It records each material assumption's\nsource: human/API input, MCP/agent input, platform default, catalog\nresolution, engine inference, or unsupported fallback. It makes\nnormalized Kubernetes inputs comparable without requiring equivalent\nnatural-language prompts.\n",
+        "properties": {
+          "creationPolicy": {
+            "properties": {
+              "canonicalOrdering": {
+                "type": "string"
+              },
+              "warmup": {
+                "properties": {
+                  "applied": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "kubernetes": {
+            "items": {
+              "properties": {
+                "effective": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "capacity": {
+                      "description": "Resolved Kubernetes worker serving capacity. For a multi-pool cluster, sum `pools[].capacityRps` to reconstruct `clusterMaxThroughputRps`; each `pools[].capacityShare` is the pool's share of that cluster ceiling and sums to approximately 1.0.",
+                      "properties": {
+                        "clusterMaxThroughputRps": {
+                          "description": "Immutable pre-effect Kubernetes cluster serving ceiling in requests per second. This is the reconstruction target for the sum of `pools[].capacityRps`.",
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "perNodeRps": {
+                          "description": "Uniform-equivalent per-node capacity in requests per second. For pool-aware capacity, use the pool-level `perNodeRps` values instead.",
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "pools": {
+                          "description": "Per-pool capacity contributions. Present only for multi-pool Kubernetes resources. `capacityWeight` is the pool's node-count-weighted capacity, `capacityShare` is `capacityWeight` divided by the sum of all pool weights, and `capacityRps` is `clusterMaxThroughputRps × capacityShare`.",
+                          "items": {
+                            "properties": {
+                              "capacityRps": {
+                                "description": "This pool's serving-capacity contribution in requests per second; sum this field across pools to reconstruct the cluster ceiling.",
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              "capacityShare": {
+                                "description": "Fraction of the cluster ceiling assigned to this pool.",
+                                "maximum": 1,
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              "capacityWeight": {
+                                "description": "Capacity weight used to calculate this pool's share. It is `nodeCount × per-node maxThroughput` when declared, otherwise the node count for the uniform fallback.",
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              "name": {
+                                "description": "Resolved node-pool name.",
+                                "type": "string"
+                              },
+                              "nodeCount": {
+                                "description": "Resolved current worker-node count for this pool.",
+                                "minimum": 1,
+                                "type": "integer"
+                              },
+                              "perNodeRps": {
+                                "description": "This pool's capacity contribution divided by its node count.",
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              "poolId": {
+                                "description": "Stable unique identifier for this node pool.",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "poolId",
+                              "name",
+                              "nodeCount",
+                              "capacityWeight",
+                              "capacityShare",
+                              "capacityRps",
+                              "perNodeRps"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "representation": {
+                          "description": "Whether the capacity is broken down using heterogeneous node-pool weights or represented as a uniform per-node equivalent.",
+                          "enum": [
+                            "pool-aware",
+                            "uniform-equivalent"
+                          ],
+                          "type": "string"
+                        },
+                        "source": {
+                          "description": "How the cluster ceiling was resolved.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "perNodeRps",
+                        "clusterMaxThroughputRps",
+                        "representation"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "fields": {
+                  "additionalProperties": {
+                    "properties": {
+                      "detail": {
+                        "type": "string"
+                      },
+                      "effective": {},
+                      "provenance": {
+                        "enum": [
+                          "human-provided",
+                          "agent-supplied",
+                          "platform-defaulted",
+                          "catalog-sourced",
+                          "engine-inferred",
+                          "unsupported/fallback"
+                        ],
+                        "type": "string"
+                      },
+                      "requested": {}
+                    },
+                    "required": [
+                      "effective",
+                      "provenance",
+                      "detail"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "pricing": {
+                  "properties": {
+                    "costExcludedFromTotals": {
+                      "type": "boolean"
+                    },
+                    "fidelity": {
+                      "enum": [
+                        "catalog",
+                        "estimated",
+                        "excluded"
+                      ],
+                      "type": "string"
+                    },
+                    "warning": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "fidelity",
+                    "costExcludedFromTotals"
+                  ],
+                  "type": "object"
+                },
+                "requested": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "resourceId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceId",
+                "requested",
+                "effective",
+                "fields",
+                "pricing"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "modelingScope": {
+            "description": "Explicit generic-Kubernetes limitations. CWM models worker-node capacity, CPU/utilization, autoscaling, and recovery only. The control-plane management fee is cost-only; CWM does not simulate or report control-plane CPU, master/API throttling, or control-plane cooldown. memoryUsage is synthetic aggregate utilization and cannot establish per-pod GiB, working-set demand, OOM timing, cgroup limits, eviction, or OOMKill behavior.\n",
+            "properties": {
+              "controlPlane": {
+                "type": "string"
+              },
+              "kubernetesWorkerCapacity": {
+                "type": "string"
+              },
+              "memoryUsage": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "version": {
+            "enum": [
+              "gke-normalization-receipt/v2"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "creationPolicy",
+          "modelingScope",
+          "kubernetes"
+        ],
+        "type": "object"
+      },
       "NormalizedConfig": {
         "description": "Read-only introspection of what CWM actually modelled from the creation\npayload. Returned on `POST /api/simulations` (201) and\n`GET /api/simulations/{simulationId}` so a consumer can verify the\nresolved billing and capacity values per resource — e.g. why two\npayloads that look identical produce different costs (different\nresolved `size`, GPU SKU, or cost multiplier). Every value is derived\nwith the same resolution functions the billing/autoscale engine uses.\n",
         "properties": {
@@ -1604,7 +2089,7 @@
             "type": "integer"
           },
           "controlPlaneFeePerHour": {
-            "description": "Cluster control-plane management fee, USD/hr.",
+            "description": "Cost-only cluster control-plane management fee, USD/hr. It is not control-plane CPU, API-throttling, or cooldown telemetry.",
             "type": "number"
           },
           "currentNodesCostPerHour": {
@@ -1671,6 +2156,29 @@
             },
             "type": "array"
           },
+          "openshiftOffering": {
+            "description": "Resolved OpenShift distribution overlay, when present.",
+            "enum": [
+              "rosa-hcp",
+              "rosa-classic",
+              "aro",
+              "openshift-dedicated",
+              "self-managed"
+            ],
+            "type": "string"
+          },
+          "openshiftPlatformFeePerHour": {
+            "description": "Additive OpenShift platform or license fee in USD/hr. For per-4-vCPU offerings this is prorated across the resolved worker vCPU capacity.",
+            "type": "number"
+          },
+          "openshiftPricingStatus": {
+            "description": "Provenance of the resolved OpenShift platform/license amount. ARO is official only for a resource explicitly located in Azure East US; other or missing regions are estimated reference use of the East US published line.",
+            "enum": [
+              "official",
+              "estimated"
+            ],
+            "type": "string"
+          },
           "perNodeRatePerHour": {
             "description": "Per-worker-node hourly rate the cluster bills at, USD/hr (single-pool kubernetes).",
             "type": "number"
@@ -1714,7 +2222,10 @@
                 "enum": [
                   "large-sku",
                   "entry-level-fallback",
-                  "base-rate-multiplier"
+                  "base-rate-multiplier",
+                  "fargate-task-vcpu-memory",
+                  "cloud-run-request-based",
+                  "request-serving-usage-based"
                 ],
                 "type": "string"
               }
@@ -1725,6 +2236,87 @@
               "lastVerified",
               "region"
             ],
+            "type": "object"
+          },
+          "requestServing": {
+            "description": "Provider request-serving configuration (Cloud Run, functions, Azure Container Apps, or ECS/Fargate) derived from the same characteristics used by capacity and billing. Usage-based cost excludes provider free tiers,\n networking, logging, and discounts unless noted by the service policy.\n",
+            "properties": {
+              "billingGranularitySeconds": {
+                "description": "ECS/Fargate per-second billing granularity.",
+                "type": "number"
+              },
+              "concurrency": {
+                "type": "integer"
+              },
+              "containerCpu": {
+                "type": "number"
+              },
+              "containerMemoryGiB": {
+                "type": "number"
+              },
+              "desiredTaskCount": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "idleMinimumCostPerHour": {
+                "type": "number"
+              },
+              "maxInstances": {
+                "type": "integer"
+              },
+              "maxTaskCount": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "minInstances": {
+                "type": "integer"
+              },
+              "minTaskCount": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "minimumBillableSeconds": {
+                "description": "ECS/Fargate minimum billable task start duration.",
+                "type": "number"
+              },
+              "perInstanceCapacityRps": {
+                "type": "number"
+              },
+              "perTaskCapacityRps": {
+                "type": "number"
+              },
+              "provisionedInstances": {
+                "type": "integer"
+              },
+              "requestDurationSeconds": {
+                "type": "number"
+              },
+              "serviceFamily": {
+                "example": "lambda",
+                "type": "string"
+              },
+              "serviceKind": {
+                "enum": [
+                  "function",
+                  "container"
+                ],
+                "type": "string"
+              },
+              "taskMemoryGibHourRate": {
+                "description": "ECS/Fargate Linux on-demand us-east-1 GB-hour rate.",
+                "type": "number"
+              },
+              "taskScaleDownSeconds": {
+                "type": "number"
+              },
+              "taskStartupSeconds": {
+                "type": "number"
+              },
+              "taskVcpuHourRate": {
+                "description": "ECS/Fargate Linux on-demand us-east-1 vCPU-hour rate.",
+                "type": "number"
+              }
+            },
             "type": "object"
           },
           "resolvedConnectionLimit": {
@@ -1892,6 +2484,340 @@
           "resources",
           "traffic",
           "currentTime"
+        ],
+        "type": "object"
+      },
+      "OpenShiftAccuracyScenario": {
+        "properties": {
+          "architecture": {
+            "type": "string"
+          },
+          "componentFidelity": {
+            "properties": {
+              "cost": {
+                "enum": [
+                  "estimated",
+                  "extrapolated",
+                  "measured"
+                ],
+                "type": "string"
+              },
+              "cpu": {
+                "enum": [
+                  "estimated",
+                  "extrapolated",
+                  "measured"
+                ],
+                "type": "string"
+              },
+              "errorRate": {
+                "enum": [
+                  "estimated",
+                  "extrapolated",
+                  "measured"
+                ],
+                "type": "string"
+              },
+              "latency": {
+                "enum": [
+                  "estimated",
+                  "extrapolated",
+                  "measured"
+                ],
+                "type": "string"
+              },
+              "throughput": {
+                "enum": [
+                  "estimated",
+                  "extrapolated",
+                  "measured"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "cost",
+              "latency",
+              "cpu",
+              "throughput",
+              "errorRate"
+            ],
+            "type": "object"
+          },
+          "expectedCost": {
+            "properties": {
+              "behavior": {
+                "type": "string"
+              },
+              "platformFeePerHour": {
+                "type": "number"
+              },
+              "workerCharges": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "platformFeePerHour",
+              "workerCharges",
+              "behavior"
+            ],
+            "type": "object"
+          },
+          "expectedLatency": {
+            "properties": {
+              "behavior": {
+                "type": "string"
+              },
+              "platformOverheadMs": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "platformOverheadMs",
+              "behavior"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "loadTest": {
+            "properties": {
+              "referencePoints": {
+                "items": {
+                  "$ref": "#/components/schemas/OpenShiftLoadTestPoint"
+                },
+                "type": "array"
+              },
+              "region": {
+                "type": "string"
+              },
+              "runs": {
+                "items": {
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "points": {
+                      "items": {
+                        "$ref": "#/components/schemas/OpenShiftLoadTestPoint"
+                      },
+                      "type": "array"
+                    },
+                    "sourceDate": {
+                      "type": "string"
+                    },
+                    "sourceUrl": {
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "sourceDate",
+                    "sourceUrl",
+                    "points"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "tool": {
+                "type": "string"
+              },
+              "topology": {
+                "properties": {
+                  "computeCount": {
+                    "type": "integer"
+                  },
+                  "computeType": {
+                    "type": "string"
+                  },
+                  "dbType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "computeCount",
+                  "computeType",
+                  "dbType"
+                ],
+                "type": "object"
+              },
+              "workload": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "tool",
+              "workload",
+              "topology",
+              "region",
+              "runs",
+              "referencePoints"
+            ],
+            "type": "object"
+          },
+          "measuredCost": {
+            "properties": {
+              "citation": {
+                "type": "string"
+              },
+              "platformFeePerHour": {
+                "type": "number"
+              },
+              "region": {
+                "type": "string"
+              },
+              "sourceDate": {
+                "type": "string"
+              },
+              "topology": {
+                "properties": {
+                  "computeCount": {
+                    "type": "integer"
+                  },
+                  "computeType": {
+                    "type": "string"
+                  },
+                  "dbType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "computeCount",
+                  "computeType",
+                  "dbType"
+                ],
+                "type": "object"
+              },
+              "totalCostPerHour": {
+                "type": "number"
+              },
+              "url": {
+                "format": "uri",
+                "type": "string"
+              }
+            },
+            "required": [
+              "totalCostPerHour",
+              "platformFeePerHour",
+              "region",
+              "topology",
+              "sourceDate",
+              "citation",
+              "url"
+            ],
+            "type": "object"
+          },
+          "offering": {
+            "enum": [
+              "rosa-hcp",
+              "rosa-classic",
+              "aro",
+              "openshift-dedicated",
+              "self-managed"
+            ],
+            "type": "string"
+          },
+          "provider": {
+            "enum": [
+              "aws",
+              "gcp",
+              "azure",
+              "oci",
+              "digitalocean"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "scorecard": {
+            "properties": {
+              "included": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "included",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "sourceDate": {
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "properties": {
+                "citation": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "string"
+                },
+                "url": {
+                  "format": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "metric",
+                "citation",
+                "url"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "offering",
+          "provider",
+          "region",
+          "sourceDate",
+          "architecture",
+          "expectedCost",
+          "expectedLatency",
+          "componentFidelity",
+          "scorecard",
+          "sources"
+        ],
+        "type": "object"
+      },
+      "OpenShiftLoadTestPoint": {
+        "properties": {
+          "cpuPct": {
+            "type": "number"
+          },
+          "errorRatePct": {
+            "type": "number"
+          },
+          "latencyP50Ms": {
+            "type": "number"
+          },
+          "latencyP95Ms": {
+            "type": "number"
+          },
+          "throughputRps": {
+            "type": "number"
+          },
+          "trafficRps": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "trafficRps",
+          "latencyP50Ms",
+          "latencyP95Ms",
+          "cpuPct",
+          "throughputRps",
+          "errorRatePct"
         ],
         "type": "object"
       },
@@ -4782,10 +5708,39 @@
                 "example": 100,
                 "type": "number"
               },
+              "concurrency": {
+                "description": "Request-serving compute only — maximum simultaneous requests per active instance or replica. Capacity is derived from this value\n and requestDurationSeconds; Lambda is constrained to 1.\n",
+                "example": 80,
+                "maximum": 1000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "containerCpu": {
+                "description": "Request-serving compute only — runtime CPU allocation in vCPUs. Used by Cloud Run, functions where the allocation is known, and Azure Container Apps to price active and warm capacity.\n",
+                "example": 2,
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "containerMemoryGiB": {
+                "description": "Request-serving compute only — runtime memory allocation in GiB. Used by every request-serving provider policy for execution billing.\n",
+                "example": 1,
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "desiredTaskCount": {
+                "description": "ECS/Fargate only — initial desired running task count. Traffic may change this count within minTaskCount/maxTaskCount; Fargate never uses generic compute cloning.",
+                "minimum": 0,
+                "type": "integer"
+              },
               "eventNotificationsEnabled": {
                 "description": "Storage event notifications — when true the engine models event notification delivery latency: baseline 1 500 ms, rising by 1 ms per 10 RPS above 5 000 RPS, capped at 30 000 ms. The latency penalty is propagated to downstream serverless compute resources (Lambda for S3, Cloud Functions for GCS, Azure Functions for Azure Blob via Event Grid, OCI Functions for OCI Object Storage). A `notification_delayed` warning event is emitted once when simulation traffic exceeds 20 000 RPS and cleared when traffic drops back below that threshold. Supported providers: `aws` (S3), `gcp` (GCS), `azure` (Blob Storage), `oci` (Object Storage). Ignored on non-storage resources and OCI block-volume resources.\n",
                 "example": true,
                 "type": "boolean"
+              },
+              "idleTimeoutSeconds": {
+                "description": "Idle period before a scale-to-zero eligible service releases non-required warm capacity.",
+                "minimum": 0,
+                "type": "number"
               },
               "includesControlPlane": {
                 "description": "Kubernetes only — when `true`, the managed platform's node rate already bundles the Kubernetes control plane, so the per-hour managed-K8s cluster fee is skipped at every billing surface. Set by DGX Cloud resources; absent/false preserves standard provider billing.\n",
@@ -4824,6 +5779,202 @@
                 "example": "nvlink-nvswitch",
                 "type": "string"
               },
+              "kubernetesMemoryEvidence": {
+                "description": "Observed configuration from a standard Kubernetes Deployment or StatefulSet. These source-labelled request/limit facts are never treated as runtime working-set demand and do not activate OOM, restart, capacity, latency, error, autoscaling, or billing effects.",
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "Deployment",
+                      "StatefulSet"
+                    ],
+                    "type": "string"
+                  },
+                  "limitGiB": {
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "namespace": {
+                    "maxLength": 256,
+                    "type": "string"
+                  },
+                  "reason": {
+                    "enum": [
+                      "multiple_containers",
+                      "non_literal_memory",
+                      "memory_not_declared"
+                    ],
+                    "type": "string"
+                  },
+                  "replicas": {
+                    "maximum": 1000000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "requestGiB": {
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "source": {
+                    "enum": [
+                      "kubernetes-manifest"
+                    ],
+                    "type": "string"
+                  },
+                  "sourceFile": {
+                    "maxLength": 512,
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "complete",
+                      "partial",
+                      "ambiguous",
+                      "missing",
+                      "non_literal"
+                    ],
+                    "type": "string"
+                  },
+                  "workload": {
+                    "maxLength": 256,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source",
+                  "sourceFile",
+                  "kind",
+                  "workload",
+                  "namespace",
+                  "status"
+                ],
+                "type": "object"
+              },
+              "kubernetesMemoryProfile": {
+                "description": "Opt-in per-replica Kubernetes memory-pressure/OOM contract. CWM never infers per-pod memory, OOM likelihood, or working-set demand from the aggregate `memoryUsage` metric, CPU, RPS, or the configured limit alone. Absent by default — kubernetes resources without a profile explicitly report `evaluationStatus: \"not_evaluated\"` in `metrics.kubernetesMemory`. Single-pool clusters emit one row; a cluster with `nodePools` emits one row per pool and evaluates only pools that provide their own profile. Node/replica billing is unaffected.",
+                "properties": {
+                  "baselineWorkingSetGiB": {
+                    "description": "Declared idle/floor per-replica working set.",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "burstWorkingSetGiB": {
+                    "description": "Declared transient/burst working set applied only while the replica is still warming up. Must be at least `baselineWorkingSetGiB`.",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ],
+                    "type": "string"
+                  },
+                  "extrapolation": {
+                    "default": "linear",
+                    "description": "Behavior above the highest declared loadBreakpoint. \"linear\" (default, preserves pre-existing behavior) extrapolates the final declared segment's slope beyond the last breakpoint. \"clamp\" holds demand flat at the last breakpoint's `workingSetGiB` value for any RPS beyond it — for curves known to plateau (e.g. a connection-pool- or cache-bounded working set). Only governs the region above the last breakpoint; the below-first-breakpoint ramp is unaffected either way.",
+                    "enum": [
+                      "clamp",
+                      "linear"
+                    ],
+                    "type": "string"
+                  },
+                  "headroomGiB": {
+                    "default": 0,
+                    "description": "Additional declared safety margin folded into the demand/limit comparison.",
+                    "maximum": 1024,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "limitGiB": {
+                    "description": "Configured `resources.limits.memory` per replica, in GiB.",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "loadBreakpoints": {
+                    "description": "Declared working-set curve keyed on per-replica RPS, in strictly ascending `perReplicaRps` order. CWM interpolates linearly between breakpoints, and below the first breakpoint ramps linearly from the idle `baselineWorkingSetGiB` anchor up to the first breakpoint's declared value. Above the last breakpoint, behavior is governed by `extrapolation` — it never assumes a linear RPS-to-memory relationship beyond what is declared or implied by that policy.",
+                    "items": {
+                      "properties": {
+                        "perReplicaRps": {
+                          "exclusiveMinimum": 0,
+                          "type": "number"
+                        },
+                        "workingSetGiB": {
+                          "exclusiveMinimum": 0,
+                          "maximum": 1024,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "perReplicaRps",
+                        "workingSetGiB"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 20,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "maxConcurrentRestartFraction": {
+                    "default": 0.3333333333333333,
+                    "description": "Upper bound on the fraction of replicas that may be mid-restart at once, modeling k8s's staggered pod eviction/restart behavior.",
+                    "maximum": 1,
+                    "minimum": 0.05,
+                    "type": "number"
+                  },
+                  "memoryAwareAutoscaling": {
+                    "description": "Opt-in: when true, the modeled memory-pressure ratio can also trigger HPA scale-out alongside the existing CPU-only default. Leaving this unset/false keeps CPU-only scale-out decisions byte-identical.",
+                    "type": "boolean"
+                  },
+                  "memoryScaleOutThresholdRatio": {
+                    "default": 0.85,
+                    "description": "Demand/limit ratio at or above which memory-aware scale-out engages. Only consulted when `memoryAwareAutoscaling` is true.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "requestGiB": {
+                    "description": "Configured `resources.requests.memory` per replica, in GiB.",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  },
+                  "restartDelaySeconds": {
+                    "deprecated": true,
+                    "description": "Deprecated compatibility input. This historical spelling is normalized as simulation steps, not wall-clock seconds; use restartDelaySteps.",
+                    "maximum": 600,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  "restartDelaySteps": {
+                    "description": "Bounded restart/readiness delay measured in simulation steps before an OOMKilled replica rejoins serving capacity.",
+                    "maximum": 600,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  "source": {
+                    "enum": [
+                      "user-provided",
+                      "calibrated",
+                      "external"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "limitGiB",
+                  "baselineWorkingSetGiB",
+                  "loadBreakpoints",
+                  "source",
+                  "confidence"
+                ],
+                "type": "object"
+              },
               "managedComputePlatform": {
                 "description": "Kubernetes + `inferenceMode` only — managed AI platform overlay running on top of the underlying cloud provider. When set to `nvidia-dgx-cloud`, the resource is an NVIDIA DGX Cloud node (e.g. `dgx-h200`, `dgx-b200`, `gb200-nvl72`) hosted on the provider named in `provider` (azure/gcp/oci) — the provider drives region and base pricing while the platform drives billing semantics (bundled control plane and fabric networking). `nvidia-dgx-cloud-lepton` is reserved for future multi-provider placement.\n",
                 "enum": [
@@ -4839,7 +5990,7 @@
                 "type": "number"
               },
               "maxInstances": {
-                "description": "Compute only — hard per-resource ceiling for RL `scale_out` actions. When set, the effective maximum is `min(autoscalingConfig.maxInstances, characteristics.maxInstances)`, giving individual compute resources a tighter cap than the simulation-wide autoscaling config. Ignored on non-compute resource types.\n",
+                "description": "Compute only — hard per-resource ceiling for RL `scale_out`. For request-serving services, this is the maximum active instances, replicas, or Lambda concurrent execution environments; it caps capacity and sheds excess demand rather than creating VM clones. For regular compute, it constrains the effective maximum below the simulation-wide autoscaling limit.\n",
                 "example": 5,
                 "minimum": 1,
                 "type": "integer"
@@ -4854,12 +6005,17 @@
                 "example": 10,
                 "type": "number"
               },
+              "maxTaskCount": {
+                "description": "ECS/Fargate only — hard task-fleet ceiling. Offered traffic above total task capacity queues and can produce latency/errors.",
+                "minimum": 1,
+                "type": "integer"
+              },
               "maxThroughput": {
                 "example": 2000,
                 "type": "number"
               },
               "minInstances": {
-                "description": "Compute only — hard per-resource floor for RL `scale_in` actions. When set, the effective minimum is `max(autoscalingConfig.minInstances, characteristics.minInstances)`, preventing scale-in below this floor even when the simulation-wide autoscaling config would allow it. Ignored on non-compute resource types.\n",
+                "description": "Compute only — hard per-resource floor for RL `scale_in`. For request-serving services, this is the minimum warm instance or replica floor (raised by `provisionedInstances` when larger). For regular compute, it prevents scale-in below the declared floor.\n",
                 "example": 2,
                 "minimum": 0,
                 "type": "integer"
@@ -4868,6 +6024,11 @@
                 "description": "Kubernetes only — the minimum number of worker nodes the node pool will scale in to. Defaults to the provider autoscaling profile minimum when omitted.\n",
                 "example": 2,
                 "type": "number"
+              },
+              "minTaskCount": {
+                "description": "ECS/Fargate only — smallest running task fleet, including zero for scale-to-zero services.",
+                "minimum": 0,
+                "type": "integer"
               },
               "nodeCount": {
                 "description": "Kubernetes only — the current number of worker nodes in the managed node pool. The cluster's `maxThroughput` and hourly cost scale proportionally with this count as autoscaling adds/removes nodes.\n",
@@ -4908,11 +6069,29 @@
                       "example": 0.096,
                       "exclusiveMinimum": 0,
                       "type": "number"
+                    },
+                    "workerVcpu": {
+                      "description": "Kubernetes OpenShift only — vCPU capacity of each worker node in this pool for published per-4-vCPU platform or license fee proration. Falls back to the cluster-level workerVcpu, recognized size, or 2 vCPU.\n",
+                      "example": 8,
+                      "exclusiveMinimum": 0,
+                      "type": "number"
                     }
                   },
                   "type": "object"
                 },
                 "type": "array"
+              },
+              "openshiftOffering": {
+                "description": "Kubernetes-only distribution overlay. The resource `provider` remains the backing substrate for regions, network behavior, worker-node pricing, and provider latency. `rosa-hcp` and `rosa-classic` require AWS; `aro` requires Azure; `openshift-dedicated` supports AWS or GCP; and `self-managed` supports any existing CWM backing provider. Platform/licensing charges are additive to worker-node charges, and cost breakdowns identify worker, platform, and control-plane rows separately. AWS publishes ROSA's $0.171 per 4-vCPU worker service fee uniformly across supported standard regions and its ROSA HCP $0.25 per-cluster-hour fee. Azure publishes the ARO D4s v3 East US license line at $124.830/month ($0.171/hour using 730 hours/month). That ARO platform rate is marked\n `official` only when the resource location is Azure East US;\n resources in another region, or without a region, retain the\n East US amount as an estimate/reference assumption. OpenShift\n Dedicated and self-managed subscription allocations remain\n estimated where no comparable universal hourly line is\n published. Omit this field for byte-compatible generic\n Kubernetes.\n",
+                "enum": [
+                  "rosa-hcp",
+                  "rosa-classic",
+                  "aro",
+                  "openshift-dedicated",
+                  "self-managed"
+                ],
+                "example": "rosa-hcp",
+                "type": "string"
               },
               "partitionCount": {
                 "description": "Azure Event Hubs only — number of partitions provisioned on the event hub. Each partition processes up to `partitionWriteRps` write records/s (defaults to 1 000 records/s per partition when omitted). When write throughput exceeds total partition capacity the engine accumulates `partitionLag` (seconds) in resource metadata and emits a `partition_lag` warning event when lag exceeds 30 s. Ignored on non-eventhub resources.\n",
@@ -4930,6 +6109,11 @@
                 "exclusiveMinimum": 0,
                 "type": "number"
               },
+              "perTaskCapacityRps": {
+                "description": "ECS/Fargate only — application serving capacity of one running task in requests per second.",
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
               "pricingModel": {
                 "description": "Compute and Kubernetes only — the pricing model for worker instances. `on-demand` (default) uses standard pay-as-you-go rates. `spot` applies the provider's spot/preemptible discount to reduce instance cost significantly (AWS/GCP/Azure: ~60% off on-demand; OCI: exactly 50% off) at the cost of potential interruption when the cloud provider needs capacity back. Non-compute resource types (database, storage, network, etc.) and DigitalOcean resources (which have no spot offering) ignore this field.\n",
                 "enum": [
@@ -4939,8 +6123,114 @@
                 "example": "on-demand",
                 "type": "string"
               },
+              "provisionedInstances": {
+                "description": "Explicit ready capacity. It raises the warm floor and accrues the provider's warm/provisioned capacity charge.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requestDurationSeconds": {
+                "description": "Request-serving compute only — modeled request duration in seconds. Each provider policy applies its documented billing granularity\n separately from capacity calculations.\n",
+                "example": 0.25,
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "requestServingKind": {
+                "description": "Declares whether this request-serving resource follows function or HTTP container lifecycle semantics.",
+                "enum": [
+                  "function",
+                  "container"
+                ],
+                "type": "string"
+              },
+              "runtimeMemoryProfile": {
+                "description": "Optional explicit per-instance application working-set assumption. CWM never infers it from configured memory, CPU, RPS, aggregate memory telemetry, or synthetic latency. It does not alter allocated memory billing.",
+                "properties": {
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ],
+                    "type": "string"
+                  },
+                  "limitExceededProbability": {
+                    "description": "Only calibrated/external profiles may provide a probability.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "onLimitExceeded": {
+                    "description": "Optional bounded consequences; omitted means CWM reports only the threshold condition.",
+                    "properties": {
+                      "failedWorkFraction": {
+                        "description": "Required when termination is declared; the explicit bounded fraction of work stranded by that termination.",
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "latencyPenaltyMs": {
+                        "maximum": 60000,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "retryCostPerMillionRequests": {
+                        "maximum": 100000,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "retryMultiplier": {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "number"
+                      },
+                      "termination": {
+                        "enum": [
+                          "terminate",
+                          "restart"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "source": {
+                    "enum": [
+                      "user-provided",
+                      "calibrated",
+                      "external"
+                    ],
+                    "type": "string"
+                  },
+                  "workingSetGiB": {
+                    "example": 0.78125,
+                    "exclusiveMinimum": 0,
+                    "maximum": 1024,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "workingSetGiB",
+                  "source",
+                  "confidence"
+                ],
+                "type": "object"
+              },
+              "scaleInCpuThreshold": {
+                "description": "Compute or Kubernetes — overrides the simulation-wide CPU autoscaling scale-in target (`autoscalingConfig.scaleInCpuThreshold`) for THIS resource's scale decisions only. Absent → this resource follows the simulation-wide default.\n",
+                "example": 25,
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
+              "scaleOutCpuThreshold": {
+                "description": "Compute or Kubernetes — overrides the simulation-wide CPU autoscaling scale-out target (`autoscalingConfig.scaleOutCpuThreshold`, also settable via the top-level `autoscalingTargetCpu` / `scaleOutCpuThreshold` / `scaleOutCpuPercent` / `autoscaleTargetCpuPercent` aliases) for THIS resource's scale decisions only — every other resource in the simulation keeps using the simulation-wide default. Lets, for example, one GKE cluster scale out at 60% while an EC2 fleet in the same simulation scales out at 80%. Absent → this resource follows the simulation-wide default (byte-identical to before this field existed).\n",
+                "example": 60,
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
               "serviceFamily": {
-                "description": "Provider-specific service family identifier. AWS values include: `ec2`, `rds`, `aurora-postgresql`, `aurora-dsql`, `aurora-serverless`, `dynamodb`, `s3`, `elb`, `cloudfront`, `lambda`. GCP values include: `gce`, `cloud-sql`, `cloud-spanner`, `bigtable-ssd`, `bigtable-hdd`, `cloud-run`, `gcs`, `cloud-load-balancing`. Azure values include: `azure_vm`, `azure-sql`, `azure-functions`, `blob-storage`, `azure-lb`, `eventhub`. OCI values include: `oci_vm`, `autonomous-db`, `oci-container`, `oci-lb`, `oci-streaming`. DigitalOcean values include: `droplets`, `managed_postgresql`, `spaces`, `load_balancer`.\nIdle / residual-billing families (billed a flat rate regardless of traffic — see `characteristics.billingState`): AWS: `nat-gateway`, `vpc-endpoint`, `eip-detached`, `ebs-snapshot`, `alb-idle`. GCP: `cloud-nat`, `psc-endpoint`, `static-ip`, `pd-snapshot`, `clb-idle`. Azure: `azure-nat-gw`, `private-endpoint`, `azure-static-ip`, `disk-snapshot`, `azure-lb-idle`. OCI: `oci-reserved-ip`, `block-backup`, `oci-lb-idle`. DigitalOcean: `do-reserved-ip`, `do-vol-snapshot`, `do-lb-idle`. Snapshot/backup families bill per GB-month × `capacityGB` ÷ 730.\n",
+                "description": "Provider-specific service family identifier. AWS values include: `ec2`, `rds`, `aurora-postgresql`, `aurora-dsql`, `aurora-serverless`, `dynamodb`, `s3`, `elb`, `cloudfront`, `lambda`. GCP values include: `gce`, `cloud-sql`, `cloud-spanner`, `bigtable-ssd`, `bigtable-hdd`, `cloudRun`, `cloudFunctions`, `gcs`, `cloud-load-balancing`. Azure values include: `azure_vm`, `azure-sql`, `azureFunctions`, `azureContainerApps`, `blob-storage`, `azure-lb`, `eventhub`. OCI values include: `oci_vm`, `ociFunctions`, `autonomous-db`, `oci-container`, `oci-lb`, `oci-streaming`. DigitalOcean values include: `droplets`, `managed_postgresql`, `spaces`, `load_balancer`.\nIdle / residual-billing families (billed a flat rate regardless of traffic — see `characteristics.billingState`): AWS: `nat-gateway`, `vpc-endpoint`, `eip-detached`, `ebs-snapshot`, `alb-idle`. GCP: `cloud-nat`, `psc-endpoint`, `static-ip`, `pd-snapshot`, `clb-idle`. Azure: `azure-nat-gw`, `private-endpoint`, `azure-static-ip`, `disk-snapshot`, `azure-lb-idle`. OCI: `oci-reserved-ip`, `block-backup`, `oci-lb-idle`. DigitalOcean: `do-reserved-ip`, `do-vol-snapshot`, `do-lb-idle`. Snapshot/backup families bill per GB-month × `capacityGB` ÷ 730.\n",
                 "example": "ec2",
                 "type": "string"
               },
@@ -4961,6 +6251,16 @@
               "streamWriteRps": {
                 "description": "DynamoDB only — explicit write throughput (records/s) for the DynamoDB Stream. When omitted the engine estimates write load as 10 % of the current simulation traffic. Providing an explicit value is useful when the stream write pattern is decoupled from the simulated request traffic (e.g. bulk imports or batch pipelines that run independently). Ignored when `streamShardsCount` is 0 or absent.\n",
                 "example": 3500,
+                "type": "number"
+              },
+              "taskScaleDownSeconds": {
+                "description": "ECS/Fargate only — modeled quiet-period wait before a Fargate task is stopped.",
+                "minimum": 0,
+                "type": "number"
+              },
+              "taskStartupSeconds": {
+                "description": "ECS/Fargate only — modeled task startup wait in simulation steps (approximately seconds).",
+                "minimum": 0,
                 "type": "number"
               },
               "tokensPerRequest": {
@@ -5013,6 +6313,12 @@
                 "example": 5,
                 "minimum": 1,
                 "type": "integer"
+              },
+              "workerVcpu": {
+                "description": "Kubernetes OpenShift only — vCPU capacity of each worker node used to prorate published platform or license fees billed per 4 vCPU-hours. Defaults to the canonical 2-vCPU worker when no size is recognized; set explicitly for custom shapes.\n",
+                "example": 4,
+                "exclusiveMinimum": 0,
+                "type": "number"
               }
             },
             "type": "object"
@@ -5642,6 +6948,9 @@
           "name": {
             "type": "string"
           },
+          "normalizationReceipt": {
+            "$ref": "#/components/schemas/NormalizationReceipt"
+          },
           "normalizedConfig": {
             "$ref": "#/components/schemas/NormalizedConfig"
           },
@@ -5663,6 +6972,61 @@
             "type": "number"
           }
         },
+        "type": "object"
+      },
+      "SnapshotDiffKubernetesMemory": {
+        "description": "Kubernetes memory telemetry comparison. Rows are matched by resourceId and poolId; each changed row includes the complete before and after KubernetesMemoryTelemetry payload, including memory-pressure, OOM/restart, capacity, autoscaling, and extrapolation-policy fields.\n",
+        "properties": {
+          "added": {
+            "description": "Rows present now but absent at pin time.",
+            "items": {
+              "$ref": "#/components/schemas/KubernetesMemoryTelemetry"
+            },
+            "type": "array"
+          },
+          "changed": {
+            "description": "Rows whose supported Kubernetes memory telemetry fields changed.",
+            "items": {
+              "properties": {
+                "after": {
+                  "$ref": "#/components/schemas/KubernetesMemoryTelemetry"
+                },
+                "before": {
+                  "$ref": "#/components/schemas/KubernetesMemoryTelemetry"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "poolId": {
+                  "type": "string"
+                },
+                "resourceId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceId",
+                "name",
+                "before",
+                "after"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "removed": {
+            "description": "Rows present at pin time but absent now.",
+            "items": {
+              "$ref": "#/components/schemas/KubernetesMemoryTelemetry"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "added",
+          "removed",
+          "changed"
+        ],
         "type": "object"
       },
       "SnapshotDiffMetricField": {
@@ -6386,13 +7750,13 @@
         "type": "http"
       },
       "x402": {
-        "description": "x402 v2 micropayment protocol. Agents send a signed USDC micro-payment\non the Base network in the `X-PAYMENT` header and get full\naccess to the metered endpoint in a single round-trip — no account,\nno API key, no sign-up required.\n\n**402 → pay → retry loop:**\n1. Call the endpoint without an `X-PAYMENT` header.\n2. Receive a `402 Payment Required` response. The body is a\n   standard JSON `PaymentRequired` object. The same payload is also\n   echoed as a base64-encoded string in the `PAYMENT-REQUIRED`\n   response header for clients that cannot access the body.\n3. Decode the `PaymentRequired` body (or the `PAYMENT-REQUIRED`\n   header) to read the exact `payTo` wallet,\n   USDC amount, network, and facilitator URL.\n4. Construct and sign the payment with your x402 client library.\n5. Retry the Base request with the `X-PAYMENT` header — the server\n   verifies via `https://facilitator.payai.network` and responds `200`.\n\n**Solana compatibility:** The service also accepts `PAYMENT-SIGNATURE`\nfor Solana payment payloads. Use `X-PAYMENT` for Base, as shown by this\nOpenAPI security scheme.\n\n**Discovery:** `GET /api/billing/x402/config` returns the live `payTo`\naddress, per-call-type USDC amounts, facilitator URL, and the\ncredits-per-USDC conversion rate. Always fetch this before hardcoding\nany amounts.\n\n**Price range:** $0.0010 per step/RL call — $0.0050 per\nanalysis/chaos/multi-cloud call (see `x-x402-price-usdc` on each\noperation for the exact amount).\n\n**Facilitator:** `https://facilitator.payai.network` (PayAI-operated,\nsettles on Base mainnet).\n",
+        "description": "x402 v2 Base micropayment option. Select the Base entry from\n`GET /api/billing/x402/config` `paymentOptions`, then send its signed USDC\nmicro-payment in the `X-PAYMENT` header to get full access to the metered\nendpoint in a single round-trip — no account, no API key, no sign-up required.\n\n**402 → pay → retry loop:**\n1. Call the endpoint without an `X-PAYMENT` header.\n2. Receive a `402 Payment Required` response. The body is a\n   standard JSON `PaymentRequired` object. The same payload is also\n   echoed as a base64-encoded string in the `PAYMENT-REQUIRED`\n   response header for clients that cannot access the body.\n3. Decode the `PaymentRequired` body (or the `PAYMENT-REQUIRED`\n   header) to read the exact `payTo` wallet,\n   USDC amount, network, and facilitator URL.\n4. Construct and sign the payment with your x402 client library.\n5. Retry the Base request with the `X-PAYMENT` header — the server\n   verifies via `https://facilitator.payai.network` and responds `200`.\n\n**Optional Solana:** When `paymentOptions` advertises a Solana entry, callers\nmay instead select it and use `PAYMENT-SIGNATURE`. Solana is an additional\noption; use `X-PAYMENT` for the Base option shown by this security scheme.\n\n**Discovery:** `GET /api/billing/x402/config` returns the live `payTo`\naddress, canonical `paymentOptions`, per-call-type USDC amounts, facilitator\nURL, and the credits-per-USDC conversion rate. Always fetch this before\nhardcoding any amounts or a payment header.\n\n**Price range:** $0.0010 per step/RL call — $0.0050 per\nanalysis/chaos/multi-cloud call (see `x-x402-price-usdc` on each\noperation for the exact amount).\n\n**Facilitator:** `https://facilitator.payai.network` (PayAI-operated,\nverifies the advertised Base and optional Solana options).\n",
         "in": "header",
         "name": "X-PAYMENT",
         "type": "apiKey"
       },
       "x402Solana": {
-        "description": "x402 v2 Solana payment alternative. Use this security option when the\npayment challenge selects the Solana network, and send the signed Solana\nUSDC payment payload in the `PAYMENT-SIGNATURE` header.\n\nFor Base payments, select the `x402` security option instead and send\nits signed payment payload in the `X-PAYMENT` header.\n",
+        "description": "Optional x402 v2 Solana payment alternative. Use this security option only\nwhen `GET /api/billing/x402/config` `paymentOptions` advertises a Solana\nnetwork, then send its signed Solana USDC payment payload in the\n`PAYMENT-SIGNATURE` header. Include the option's `feePayer` detail when\nconstructing the transaction.\n\nFor the primary Base payment option, select the `x402` security option\ninstead and send its signed payment payload in the `X-PAYMENT` header.\n",
         "in": "header",
         "name": "PAYMENT-SIGNATURE",
         "type": "apiKey"
@@ -6700,7 +8064,9 @@
         "summary": "Fetch the current AI job status",
         "tags": [
           "AI Jobs"
-        ]
+        ],
+        "x-x402-call-type": "ai.status",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -7383,7 +8749,7 @@
     },
     "/billing/x402/config": {
       "get": {
-        "description": "Returns the x402 payment configuration for this server, including the USDC-on-Base\nwallet address, network, asset contract, facilitator URL, and per-call-type price table.\n\nAI agents can use this endpoint to discover whether x402 anonymous pay-per-request is\nenabled, and to obtain the exact USDC amounts required before sending an `X-PAYMENT`\nheader on a Base-metered endpoint.\n\nThis endpoint requires no authentication and is always public.\n",
+        "description": "Returns the x402 payment configuration for this server, including canonical\n`paymentOptions`, the legacy Base-primary fields, facilitator URL, and per-call-type\nprice table. Base USDC is the primary option. Solana USDC-SPL is an additional option\nonly when it appears in `paymentOptions`; it does not replace the Base option.\n\nAI agents can use this endpoint to discover whether x402 anonymous pay-per-request is\nenabled, choose an advertised network, and obtain the exact USDC amounts required before\nsending the option's required payment header (`X-PAYMENT` for Base or\n`PAYMENT-SIGNATURE` for optional Solana) to a metered endpoint.\n\nThis endpoint requires no authentication and is always public.\n",
         "operationId": "getX402Config",
         "responses": {
           "200": {
@@ -7465,10 +8831,93 @@
                       "nullable": true,
                       "type": "string"
                     },
+                    "paymentOptions": {
+                      "description": "Canonical list of payment methods that can satisfy a live 402 challenge.\nBase is listed first when x402 is enabled. Solana is listed only when its\nrecipient wallet is configured, as an additional option rather than a\nreplacement for Base.\n",
+                      "example": [
+                        {
+                          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                          "header": "X-PAYMENT",
+                          "network": "eip155:8453",
+                          "payTo": "0xYourWalletAddress"
+                        },
+                        {
+                          "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                          "feePayer": "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4",
+                          "header": "PAYMENT-SIGNATURE",
+                          "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+                          "payTo": "YourSolanaWalletAddress"
+                        }
+                      ],
+                      "items": {
+                        "properties": {
+                          "asset": {
+                            "description": "USDC token contract or mint address on `network`.",
+                            "example": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                            "type": "string"
+                          },
+                          "feePayer": {
+                            "description": "Solana-only PayAI wallet that sponsors the transaction fee; absent for Base.",
+                            "example": "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4",
+                            "type": "string"
+                          },
+                          "header": {
+                            "description": "Required request header containing the signed x402 payment payload.",
+                            "enum": [
+                              "X-PAYMENT",
+                              "PAYMENT-SIGNATURE"
+                            ],
+                            "example": "X-PAYMENT",
+                            "type": "string"
+                          },
+                          "network": {
+                            "description": "CAIP-2 network identifier, matching a 402 `accepts[].network` value.",
+                            "example": "eip155:8453",
+                            "type": "string"
+                          },
+                          "payTo": {
+                            "description": "Recipient wallet address on `network`, matching a 402 `accepts[].payTo` value.",
+                            "example": "0xYourWalletAddress",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "network",
+                          "asset",
+                          "payTo",
+                          "header"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
                     "simulationRetentionDays": {
                       "description": "Number of days an x402-wallet-owned simulation is retained after its\nlast activity (step, update). Every `/step-hybrid` call on a simulation\nresets this rolling window. After the window expires, the simulation and\nall its metrics are permanently deleted by the server's cleanup sweep.\n",
                       "example": 90,
                       "type": "integer"
+                    },
+                    "solana": {
+                      "description": "Legacy optional Solana payment details. Prefer `paymentOptions` for new integrations.",
+                      "nullable": true,
+                      "properties": {
+                        "asset": {
+                          "example": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                          "type": "string"
+                        },
+                        "network": {
+                          "example": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+                          "type": "string"
+                        },
+                        "payTo": {
+                          "example": "YourSolanaWalletAddress",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "network",
+                        "asset",
+                        "payTo"
+                      ],
+                      "type": "object"
                     }
                   },
                   "required": [
@@ -7476,6 +8925,7 @@
                     "network",
                     "asset",
                     "payTo",
+                    "paymentOptions",
                     "facilitatorUrl",
                     "creditsPerUsdc",
                     "callPrices"
@@ -9054,7 +10504,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst job = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${job.status}  progress=${job.progress ?? 0}%  strategies=${job.strategiesGenerated ?? 0}`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "multicloud.status",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -9452,7 +10904,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nasync function pollPartialResults(jobId) {\n  while (true) {\n    const resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/partial-results`, {\n      headers: { \"Authorization\": `Bearer ${API_KEY}` },\n    });\n    const data = await resp.json();\n    console.log(`strategies so far: ${data.allStrategies?.length ?? 0}, isComplete: ${data.isComplete}`);\n    if (data.isComplete) break;\n    await new Promise(r => setTimeout(r, 2000));\n  }\n  // Fetch full ranked results once complete\n  const full = await fetch(`${BASE_URL}/multi-cloud/jobs/${jobId}/results`, {\n    headers: { \"Authorization\": `Bearer ${API_KEY}` },\n  });\n  return full.json();\n}\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "multicloud_partial_results",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -10516,7 +11970,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\nconst HEADERS = { \"Authorization\": `Bearer ${API_KEY}` };\n\n// Poll status until the job is finished. /results returns 400 while\n// the job is still pending or running; use /partial-results to read\n// strategies as they accumulate during a run.\nlet status;\ndo {\n  await new Promise(r => setTimeout(r, 2000));\n  status = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}`, {\n    headers: HEADERS,\n  }).then(r => r.json());\n} while (![\"completed\", \"failed\", \"cancelled\"].includes(status.status));\n\nconst resp = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/results`, {\n  headers: HEADERS,\n});\nconst data = await resp.json();\nconsole.log(`Job ${JOB_ID}  status=${data.status}  complete=${data.isComplete}  strategies=${data.strategiesGenerated}`);\nfor (const strategy of data.topStrategies ?? []) {\n  const { monthlyCost, avgLatencyMs } = strategy.metrics;\n  console.log(`  ${strategy.name}  cost=$${monthlyCost}/mo  latency=${avgLatencyMs}ms`);\n}\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "multicloud_results",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -10649,7 +12105,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst JOB_ID = \"job_abc123\";\n\nconst response = await fetch(`${BASE_URL}/multi-cloud/jobs/${JOB_ID}/stream`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Accept\": \"text/event-stream\" },\n});\nif (!response.ok) throw new Error(`HTTP ${response.status}`);\n\nconst reader = response.body.getReader();\nconst decoder = new TextDecoder();\nlet buffer = \"\";\n\nwhile (true) {\n  const { value, done } = await reader.read();\n  if (done) break;\n  buffer += decoder.decode(value, { stream: true });\n  const frames = buffer.split(/\\n\\n/);\n  buffer = frames.pop();\n  for (const frame of frames) {\n    const eventLine = frame.match(/^event:\\s*(.+)$/m);\n    const dataLine  = frame.match(/^data:\\s*(.+)$/m);\n    if (!dataLine) continue;\n    const eventType = eventLine ? eventLine[1].trim() : \"message\";\n    const payload   = JSON.parse(dataLine[1]);\n    if (eventType === \"progressUpdate\") {\n      console.log(`Progress: ${payload.progress}%`);\n    } else if (eventType === \"strategyGenerated\") {\n      const s = payload.strategy;\n      console.log(`Strategy: ${s.name}  cost=$${s.metrics.monthlyCost}/mo`);\n    } else if (eventType === \"completed\") {\n      console.log(\"Done. Top strategy:\", payload.topStrategy?.name);\n      reader.cancel();\n    }\n  }\n}\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "multicloud_stream",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -11893,7 +13351,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({\n    simulationId: \"a638caad-7423-40a3-bb09-f91235d9392d\",\n    episodeConfig: {\n      maxSteps: 200,\n      targetTrafficPattern: \"wave\",\n      initialTraffic: 1500,\n      targetSLA: { maxLatencyP95: 180, maxErrorRate: 1.0 },\n      costBudgetPerHour: 3.50,\n      enableFailures: false,\n    },\n  }),\n});\nconst data = await resp.json();\nconst envId = data.environment.id;\nconsole.log(`Created RL environment: ${envId}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl_env_create",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -11969,7 +13429,9 @@
         "summary": "Delete an RL training environment",
         "tags": [
           "Create"
-        ]
+        ],
+        "x-x402-call-type": "rl_env_delete",
+        "x-x402-price-usdc": "$0.0010"
       },
       "get": {
         "description": "Retrieve the current state and configuration of an RL environment",
@@ -12021,7 +13483,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst env = await resp.json();\nconsole.log(`Environment ${env.id}  isActive=${env.isActive}  step=${env.currentStep}/${env.maxSteps}`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl_env_get",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -12805,7 +14269,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nasync function batchStep(steps, maxRetries = 5) {\n  for (let attempt = 0; attempt < maxRetries; attempt++) {\n    const resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/batch-step`, {\n      method: \"POST\",\n      headers: { \"Authorization\": `Bearer ${API_KEY}`, \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ steps }),\n    });\n    if (resp.status === 429) {\n      const retryAfter = parseInt(resp.headers.get(\"Retry-After\") ?? \"60\", 10);\n      console.log(`Rate limited — waiting ${retryAfter}s`);\n      await new Promise(r => setTimeout(r, retryAfter * 1000));\n      continue;\n    }\n    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);\n    return resp.json();\n  }\n  throw new Error(\"Exceeded max retries\");\n}\n\nconst NO_OP   = { action: { type: \"no_op\",     parameters: {} } };\nconst SCALE_OUT = { action: { type: \"scale_out\", parameters: { instanceCount: 1 } } };\n\n// 30-step warm-up at 300 s ticks\nconst warmup = await batchStep(Array(30).fill({ ...NO_OP, tick_seconds: 300 }));\nconsole.log(`Warm-up complete: ${warmup.results.length} steps`);\n\n// Training loop using 10-step batches\nlet totalReward = 0;\nlet done = false;\nwhile (!done) {\n  const { results } = await batchStep([SCALE_OUT, ...Array(9).fill(NO_OP)]);\n  for (const r of results) {\n    totalReward += r.reward;\n    if (r.done) { done = true; break; }\n  }\n}\nconsole.log(`Episode complete — total reward: ${totalReward.toFixed(2)}`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl.batch_step",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -13026,7 +14492,9 @@
             "lang": "Python",
             "source": "import requests\n\nBASE_URL = \"https://www.cloudworldmodel.ai/api\"\nAPI_KEY = \"your-api-key\"\nENV_ID = \"env-aws-001\"\n\nresp = requests.post(\n    f\"{BASE_URL}/rl/environments/{ENV_ID}/eval-episodes\",\n    headers={\"Authorization\": f\"Bearer {API_KEY}\"},\n    json={\n        \"actions\": [\n            [{\"type\": \"no_op\", \"parameters\": {}}] * 10\n        ],\n        \"evalCostOverrides\": {\"egress\": 0.5, \"cross_az_traffic\": 0.3},\n        \"collapseThreshold\": 0.20,\n    },\n)\nresp.raise_for_status()\ndata = resp.json()\nprint(f\"reward_collapse={data['reward_collapse']}  mean_eval={data['meanEvalReward']:.3f}  training={data['trainingTotalReward']:.3f}\")\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl.eval",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -13140,7 +14608,9 @@
         "summary": "Fetch an eval-episode job result",
         "tags": [
           "RL Environments"
-        ]
+        ],
+        "x-x402-call-type": "rl_eval_status",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -13371,7 +14841,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/observation`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { obs, metrics } = await resp.json();\nconsole.log(`Step ${obs.currentTime}  CPU: ${(obs.cpu_util * 100).toFixed(1)}%  ` +\n            `P95: ${metrics.latency_p95} ms  cost: $${metrics.cost_usd_hr.toFixed(2)}/hr`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl_env_observation",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -13823,7 +15295,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\nconst ENV_ID = \"env-aws-001\";\n\nconst resp = await fetch(`${BASE_URL}/rl/environments/${ENV_ID}/reset`, {\n  method: \"POST\",\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nconsole.log(`Environment reset — step: ${data.environment.currentStep}`);\nconsole.log(`Initial CPU: ${data.observation.metrics.cpuUsage}%`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "rl_env_reset",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -14590,7 +16064,9 @@
         "summary": "List simulations for the authenticated caller",
         "tags": [
           "Simulations"
-        ]
+        ],
+        "x-x402-call-type": "simulation_list",
+        "x-x402-price-usdc": "$0.0010"
       },
       "post": {
         "description": "Creates a simulation with cloud resources (compute, network, database, storage).\nThe simulation serves as the environment for RL training.\n\n**Ownership:** If an `Authorization: Bearer <key>` header is provided, the\nnew simulation is immediately assigned to that API key and is fully write-accessible\nwithout any additional steps. Without authentication the simulation is created\nas a \"demo\" simulation (`apiKeyId: null`), subject to a 20-step limit; use\n`POST /simulations/{simulationId}/claim` to adopt it once you have a key.\n",
@@ -14771,6 +16247,20 @@
               },
               "schema": {
                 "properties": {
+                  "autoscaleTargetCpuPercent": {
+                    "description": "Grok-compatible alias for `autoscalingTargetCpu`.",
+                    "example": 70,
+                    "maximum": 100,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "autoscalingTargetCpu": {
+                    "description": "Canonical CPU HPA scale-out target. This targeted override wins over the provider default while CWM synthesizes all unrelated autoscaling defaults. If more than one supported target name is sent, every value must agree. Simulation-wide by default: sent at this top level, the engine applies one CPU threshold identically to every resource's scale decision. To override the threshold for ONE resource only, nest the same canonical name (or one of its three aliases) under that resource's `characteristics` as `scaleOutCpuThreshold` instead — every other resource keeps using the simulation-wide default. A misplaced or misnamed CPU-target field name (e.g. `autoscalingTargetCpuPercent`, `targetCPUUtilizationPercentage`) is rejected with 400 at either level, never silently dropped and defaulted.\n",
+                    "example": 70,
+                    "maximum": 100,
+                    "minimum": 0,
+                    "type": "number"
+                  },
                   "connections": {
                     "default": [],
                     "description": "Network connections between resources",
@@ -14815,6 +16305,20 @@
                       "$ref": "#/components/schemas/Resource"
                     },
                     "type": "array"
+                  },
+                  "scaleOutCpuPercent": {
+                    "description": "Grok-compatible alias for `autoscalingTargetCpu`.",
+                    "example": 70,
+                    "maximum": 100,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "scaleOutCpuThreshold": {
+                    "description": "Equivalent alias for `autoscalingTargetCpu`.",
+                    "example": 70,
+                    "maximum": 100,
+                    "minimum": 0,
+                    "type": "number"
                   },
                   "traffic": {
                     "default": 1000,
@@ -14872,7 +16376,9 @@
         "summary": "Create a cloud simulation",
         "tags": [
           "Create"
-        ]
+        ],
+        "x-x402-call-type": "simulation_create",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -14915,7 +16421,9 @@
         "summary": "Fetch a simulation by ID",
         "tags": [
           "Create"
-        ]
+        ],
+        "x-x402-call-type": "simulation_get",
+        "x-x402-price-usdc": "$0.0010"
       },
       "parameters": [
         {
@@ -15302,7 +16810,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\n// Step 1: get the hint\nconst hintResp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst { hints } = await hintResp.json();\nconst hint = hints[0];\n\n// Step 2: apply it in one call\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/apply-right-sizing`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ resourceId: hint.affectedResourceId, recommendedSlug: hint.recommendedSlug }),\n});\nconst data = await resp.json();\nconsole.log(`Applied ${data.appliedSlug} to ${data.resourceName}`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "simulation.apply_right_sizing",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -15424,7 +16934,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/bulk-resize`, {\n  method: \"POST\",\n  headers: {\n    \"Authorization\": `Bearer ${API_KEY}`,\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify({ dropletSize: \"s-4vcpu-8gb\" }),\n});\nconst data = await resp.json();\nconsole.log(`Resized ${data.resizedCount} compute resource(s) to s-4vcpu-8gb`);\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "simulation.resize",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -15559,7 +17071,9 @@
         "summary": "Fetch the latest per-resource cost breakdown",
         "tags": [
           "Simulations"
-        ]
+        ],
+        "x-x402-call-type": "simulation_cost_breakdown",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     },
@@ -16562,7 +18076,9 @@
             "lang": "curl",
             "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/recover-resource \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceName\": \"app-server-01\"}'\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "simulation.recover_resource",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -16790,7 +18306,9 @@
             "lang": "Node.js",
             "source": "const BASE_URL = \"https://www.cloudworldmodel.ai/api\";\nconst API_KEY = \"your-api-key\";\n\nconst resp = await fetch(`${BASE_URL}/simulations/sim-abc123/right-sizing-hint`, {\n  headers: { \"Authorization\": `Bearer ${API_KEY}` },\n});\nconst data = await resp.json();\nif (data.hasHint) {\n  for (const hint of data.hints) {\n    console.log(`Resize ${hint.affectedResourceName} → ${hint.recommendedSlug} (save ~${hint.estimatedSavingsPct}%)`);\n  }\n} else {\n  console.log(\"Simulation is appropriately sized — no downsizing recommended.\");\n}\n"
           }
-        ]
+        ],
+        "x-x402-call-type": "right_sizing_hint",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -17547,7 +19065,9 @@
         "summary": "Validate both cost and performance accuracy",
         "tags": [
           "Simulations"
-        ]
+        ],
+        "x-x402-call-type": "benchmark.validate",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -17701,7 +19221,9 @@
         "summary": "Validate simulation cost accuracy against provider benchmarks",
         "tags": [
           "Simulations"
-        ]
+        ],
+        "x-x402-call-type": "validate_cost_accuracy",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -17860,7 +19382,9 @@
         "summary": "Validate performance accuracy against provider benchmarks",
         "tags": [
           "Simulations"
-        ]
+        ],
+        "x-x402-call-type": "validate_performance_accuracy",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "experimental"
     },
@@ -18114,7 +19638,9 @@
         "summary": "Generate a wallet session JWT via x402 micro-payment",
         "tags": [
           "Wallet Auth"
-        ]
+        ],
+        "x-x402-call-type": "wallet_session",
+        "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
     }
