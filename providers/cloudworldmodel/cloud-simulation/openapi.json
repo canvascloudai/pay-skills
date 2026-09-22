@@ -727,7 +727,8 @@
               "database_overload",
               "cpu_spike",
               "memory_pressure",
-              "zone_outage"
+              "zone_outage",
+              "eks_spot_interruption"
             ],
             "example": "kill_instance",
             "type": "string"
@@ -930,6 +931,692 @@
         "required": [
           "sourceId",
           "targetId"
+        ],
+        "type": "object"
+      },
+      "DataIntegrityEvidence": {
+        "description": "Explicit per-resource data durability, independent of service health. Infrastructure recovery never restores permanently lost data.",
+        "items": {
+          "properties": {
+            "dataState": {
+              "enum": [
+                "intact",
+                "temporarily_unavailable",
+                "permanently_lost"
+              ],
+              "type": "string"
+            },
+            "recoverySource": {
+              "enum": [
+                "none",
+                "surviving_backup",
+                "surviving_replica"
+              ],
+              "type": "string"
+            },
+            "recoverySourceResourceId": {
+              "type": "string"
+            },
+            "resourceId": {
+              "type": "string"
+            },
+            "resourceName": {
+              "type": "string"
+            },
+            "serviceAvailability": {
+              "enum": [
+                "available",
+                "degraded",
+                "unavailable"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourceId",
+            "resourceName",
+            "serviceAvailability",
+            "dataState",
+            "recoverySource"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "EksSpotEvaluationFieldProvenance": {
+        "description": "Field-level source classification for seeded migration evaluation evidence. recorded is direct model/runtime evidence, derived identifies source fields, and unavailable includes an explicit reason.",
+        "properties": {
+          "kind": {
+            "enum": [
+              "recorded",
+              "derived",
+              "unavailable"
+            ],
+            "type": "string"
+          },
+          "reason": {
+            "description": "Present for unavailable evidence and explains the missing runtime evidence.",
+            "type": "string"
+          },
+          "sourceFields": {
+            "description": "Present for a derived value and names its recorded source fields.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      "EksSpotInterruptionCheckpointEvidence": {
+        "additionalProperties": false,
+        "description": "Persisted seeded-EKS per-metric checkpoint evidence. engineInputStepIndex is the engine input-step timestamp, not seconds; simulationSeconds is derived using the recorded tick. Traffic values remain in the outer metric, and the provenance fields name those outer metric paths.",
+        "properties": {
+          "engineInputStepIndex": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "fieldProvenance": {
+            "additionalProperties": false,
+            "properties": {
+              "engineInputStepIndex": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "intervalAttribution": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "pointRateSemantics": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "simulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "tickDurationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              }
+            },
+            "required": [
+              "engineInputStepIndex",
+              "simulationSeconds",
+              "tickDurationSeconds",
+              "pointRateSemantics",
+              "intervalAttribution"
+            ],
+            "type": "object"
+          },
+          "intervalAttribution": {
+            "description": "No interval attribution is persisted for this post-step point rate.",
+            "type": "null"
+          },
+          "pointRateSemantics": {
+            "enum": [
+              "post_step_point_rate"
+            ],
+            "type": "string"
+          },
+          "simulationSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "tickDurationSeconds": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "trafficFieldProvenance": {
+            "additionalProperties": false,
+            "properties": {
+              "errorRatePercent": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "latencyP50Ms": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "offeredRps": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "throughputRps": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              }
+            },
+            "required": [
+              "throughputRps",
+              "offeredRps",
+              "errorRatePercent",
+              "latencyP50Ms"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "engineInputStepIndex",
+          "simulationSeconds",
+          "tickDurationSeconds",
+          "pointRateSemantics",
+          "intervalAttribution",
+          "fieldProvenance",
+          "trafficFieldProvenance"
+        ],
+        "type": "object"
+      },
+      "EksSpotInterruptionTelemetry": {
+        "description": "Per-step bounded AWS EKS Spot interruption migration state. The optional migrationEvaluation is the authoritative seeded characteristics.eksSpotInterruption deadline evidence; it is additive so legacy persisted interruption records can remain evaluation-free.",
+        "properties": {
+          "affectedWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "checkpointEvidence": {
+            "$ref": "#/components/schemas/EksSpotInterruptionCheckpointEvidence"
+          },
+          "drainProgress": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "elapsedNoticeSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "imagePullProgress": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "interruptionNotice": {
+            "type": "boolean"
+          },
+          "migrationEvaluation": {
+            "$ref": "#/components/schemas/EksSpotMigrationEvaluation"
+          },
+          "missedDeadlineWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "noticeWindowSeconds": {
+            "const": 120,
+            "type": "integer"
+          },
+          "pendingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "phase": {
+            "enum": [
+              "armed",
+              "notice",
+              "terminated",
+              "complete"
+            ],
+            "type": "string"
+          },
+          "pullingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "readyWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "remainingDeadlineSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "replacementNodeCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "startingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "startupProgress": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "triggerAtStep": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "unavailableNodeCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "workloads": {
+            "items": {
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "missedDeadline": {
+                  "description": "Historical deadline miss marker; live state may later become ready.",
+                  "type": "boolean"
+                },
+                "node": {
+                  "enum": [
+                    "interrupted",
+                    "surviving",
+                    "replacement"
+                  ],
+                  "type": "string"
+                },
+                "remainingSeconds": {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "state": {
+                  "enum": [
+                    "pending",
+                    "pulling",
+                    "starting",
+                    "ready",
+                    "missed_deadline"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "state",
+                "remainingSeconds"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "resourceId",
+          "name",
+          "phase",
+          "interruptionNotice",
+          "triggerAtStep",
+          "noticeWindowSeconds",
+          "elapsedNoticeSeconds",
+          "remainingDeadlineSeconds",
+          "affectedWorkloadCount",
+          "pendingWorkloadCount",
+          "pullingWorkloadCount",
+          "startingWorkloadCount",
+          "readyWorkloadCount",
+          "missedDeadlineWorkloadCount",
+          "drainProgress",
+          "imagePullProgress",
+          "startupProgress",
+          "unavailableNodeCount",
+          "replacementNodeCount",
+          "workloads"
+        ],
+        "type": "object"
+      },
+      "EksSpotMigrationEvaluation": {
+        "description": "Additive immutable deadline evaluation for one seeded characteristics.eksSpotInterruption lifecycle. It is independent of the resource phase and later service health. All times use the simulation clock, never HTTP retrieval or event wall-clock time. migrationDurationSeconds is derived only as allAffectedWorkloadsReadyAtSimulationSeconds minus interruptionNoticeAtSimulationSeconds when both recorded milestones exist; otherwise it is null.",
+        "properties": {
+          "affectedWorkloadCount": {
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "allAffectedWorkloadsReadyAtSimulationSeconds": {
+            "nullable": true,
+            "type": "number"
+          },
+          "deadlineAtSimulationSeconds": {
+            "nullable": true,
+            "type": "number"
+          },
+          "deadlineMet": {
+            "description": "Null until evaluation completes; frozen once evaluated.",
+            "nullable": true,
+            "type": "boolean"
+          },
+          "deadlineSeconds": {
+            "const": 120,
+            "type": "integer"
+          },
+          "evaluatedAtSimulationSeconds": {
+            "nullable": true,
+            "type": "number"
+          },
+          "fieldProvenance": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+            },
+            "description": "Field-name keyed provenance for every exposed evaluation value.",
+            "properties": {
+              "affectedWorkloadCount": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "allAffectedWorkloadsReadyAtSimulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "deadlineAtSimulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "deadlineMet": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "deadlineSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "evaluatedAtSimulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "interruptionNoticeAtSimulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "limitingReasons": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "migrationDurationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "migrationStartedAtSimulationSeconds": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "missedDeadlineWorkloadCount": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "readyWorkloadCountAtDeadline": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              },
+              "status": {
+                "$ref": "#/components/schemas/EksSpotEvaluationFieldProvenance"
+              }
+            },
+            "required": [
+              "status",
+              "interruptionNoticeAtSimulationSeconds",
+              "deadlineAtSimulationSeconds",
+              "migrationStartedAtSimulationSeconds",
+              "allAffectedWorkloadsReadyAtSimulationSeconds",
+              "migrationDurationSeconds",
+              "deadlineSeconds",
+              "deadlineMet",
+              "affectedWorkloadCount",
+              "readyWorkloadCountAtDeadline",
+              "missedDeadlineWorkloadCount",
+              "evaluatedAtSimulationSeconds",
+              "limitingReasons"
+            ],
+            "type": "object"
+          },
+          "interruptionNoticeAtSimulationSeconds": {
+            "nullable": true,
+            "type": "number"
+          },
+          "limitingReasons": {
+            "items": {
+              "$ref": "#/components/schemas/EksSpotMigrationEvaluationReason"
+            },
+            "type": "array"
+          },
+          "migrationDurationSeconds": {
+            "description": "Derived notice-to-all-ready duration; null when all-ready was not recorded.",
+            "minimum": 0,
+            "nullable": true,
+            "type": "number"
+          },
+          "migrationStartedAtSimulationSeconds": {
+            "nullable": true,
+            "type": "number"
+          },
+          "missedDeadlineWorkloadCount": {
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "readyWorkloadCountAtDeadline": {
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "not_started",
+              "in_progress",
+              "completed"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "interruptionNoticeAtSimulationSeconds",
+          "deadlineAtSimulationSeconds",
+          "migrationStartedAtSimulationSeconds",
+          "allAffectedWorkloadsReadyAtSimulationSeconds",
+          "migrationDurationSeconds",
+          "deadlineSeconds",
+          "deadlineMet",
+          "affectedWorkloadCount",
+          "readyWorkloadCountAtDeadline",
+          "missedDeadlineWorkloadCount",
+          "evaluatedAtSimulationSeconds",
+          "limitingReasons",
+          "fieldProvenance"
+        ],
+        "type": "object"
+      },
+      "EksSpotMigrationEvaluationReason": {
+        "description": "Evidence-backed contributor to a seeded EKS Spot deadline result.",
+        "properties": {
+          "code": {
+            "description": "Stable reason code based on recorded residual pull/startup/scheduling work.",
+            "enum": [
+              "no_reschedule",
+              "scheduling_capacity_exhausted",
+              "image_pull_incomplete",
+              "startup_incomplete",
+              "unclassified_runtime_work_remaining"
+            ],
+            "type": "string"
+          },
+          "interruptionHandling": {
+            "enum": [
+              "reschedule",
+              "drain-only",
+              "fail-fast"
+            ],
+            "type": "string"
+          },
+          "pendingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "provenance": {
+            "const": "recorded",
+            "type": "string"
+          },
+          "pullingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "residualPullSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "residualStartupSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "schedulingCapacity": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "startingWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "workloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "workloadCount",
+          "pendingWorkloadCount",
+          "pullingWorkloadCount",
+          "startingWorkloadCount",
+          "residualPullSeconds",
+          "residualStartupSeconds",
+          "schedulingCapacity",
+          "interruptionHandling",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "EksSpotMigrationEvent": {
+        "properties": {
+          "deadlineSeconds": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "migrationDurationSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "outcome": {
+            "enum": [
+              "hit",
+              "miss"
+            ],
+            "type": "string"
+          },
+          "readyWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "remainingDeadlineSeconds": {
+            "type": "number"
+          },
+          "replacementNodeCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "resourceName": {
+            "type": "string"
+          },
+          "timestampSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "type": {
+            "enum": [
+              "interruption_notice",
+              "migration_deadline",
+              "workload_migration_started",
+              "workload_ready",
+              "deadline_outcome"
+            ],
+            "type": "string"
+          },
+          "workloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "type",
+          "timestampSeconds",
+          "resourceId",
+          "resourceName",
+          "deadlineSeconds",
+          "workloadCount",
+          "readyWorkloadCount",
+          "migrationDurationSeconds",
+          "remainingDeadlineSeconds"
+        ],
+        "type": "object"
+      },
+      "EksSpotMigrationState": {
+        "description": "Current bounded EKS Spot interruption migration state. This evidence describes migration completion against the 120-second deadline and is separate from sustained service-health recovery.\n",
+        "properties": {
+          "deadlineAtSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "migrationDurationSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "migrationStartedAtSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "noticeAtSeconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "outcome": {
+            "enum": [
+              "hit",
+              "miss"
+            ],
+            "type": "string"
+          },
+          "readyWorkloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "remainingDeadlineSeconds": {
+            "type": "number"
+          },
+          "replacementNodeCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "resourceName": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not_started",
+              "notice",
+              "migrating",
+              "ready",
+              "deadline_hit",
+              "deadline_missed"
+            ],
+            "type": "string"
+          },
+          "unavailableCapacity": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "workloadCount": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "resourceId",
+          "resourceName",
+          "status",
+          "noticeAtSeconds",
+          "deadlineAtSeconds",
+          "migrationStartedAtSeconds",
+          "migrationDurationSeconds",
+          "workloadCount",
+          "readyWorkloadCount",
+          "remainingDeadlineSeconds",
+          "unavailableCapacity"
         ],
         "type": "object"
       },
@@ -2156,6 +2843,14 @@
             },
             "type": "array"
           },
+          "openshiftControlPlanePricingStatus": {
+            "description": "Provenance of the backing-provider or OpenShift-specific control-plane charge. For ARO this is estimated because the control-plane charge is modeled from Azure Kubernetes pricing and is included in the aggregate rather than represented as an excluded aro/managed resource.",
+            "enum": [
+              "official",
+              "estimated"
+            ],
+            "type": "string"
+          },
           "openshiftOffering": {
             "description": "Resolved OpenShift distribution overlay, when present.",
             "enum": [
@@ -2191,7 +2886,7 @@
             "type": "string"
           },
           "rateProvenance": {
-            "description": "Provenance of the resolved rate — present whenever `resolvedHourlyRate` or `resolvedGpuRatePerNode` is emitted. Tells consumers what pricing basis the constant reflects, which lookup path resolved it, and when it was last cross-checked against the provider's published pricing page (static metadata from the pricing constants, not fetched live).",
+            "description": "Provenance of the resolved rate — present whenever `resolvedHourlyRate` or `resolvedGpuRatePerNode` is emitted. Tells consumers what pricing basis the constant reflects, which lookup path resolved it, and when it was last cross-checked against the provider's published pricing page (static metadata from the pricing constants, not fetched live). AWS M7, M8, and M9 entries such as `m7g.large`, `m8g.large`, and `m9g.large` use `basis: on-demand` and `resolution: exact-catalog` when their resolved hourly value matches the canonical AWS EC2 Price List catalog. This certifies price provenance only; EC2 performance characteristics remain CWM-modeled unless separately marked by a performance source.",
             "properties": {
               "basis": {
                 "description": "Pricing basis — `on-demand` for published list-price constants, `estimated` for fallback/approximation constants.",
@@ -2218,8 +2913,9 @@
                 ]
               },
               "resolution": {
-                "description": "Lookup path taken — exact premium GPU SKU match, provider entry-level GPU fallback, or the general base-rate × multiplier path.",
+                "description": "Lookup path taken — exact first-party catalog SKU (for example AWS M7, M8, or M9), exact premium GPU SKU, provider entry-level GPU fallback, or the general base-rate × multiplier path.",
                 "enum": [
+                  "exact-catalog",
                   "large-sku",
                   "entry-level-fallback",
                   "base-rate-multiplier",
@@ -2227,6 +2923,16 @@
                   "cloud-run-request-based",
                   "request-serving-usage-based"
                 ],
+                "type": "string"
+              },
+              "sku": {
+                "description": "Exact provider catalog SKU when resolution is exact-catalog (for example `m7g.large`); absent for generic and GPU fallback paths.",
+                "example": "m7g.large",
+                "type": "string"
+              },
+              "source": {
+                "description": "Official pricing source recorded for an exact catalog rate; absent for generic and fallback paths.",
+                "example": "AWS EC2 Price List API (Linux, shared tenancy, on-demand)",
                 "type": "string"
               }
             },
@@ -2339,6 +3045,10 @@
             "description": "Effective per-resource max throughput (RPS) used by the CPU/capacity model, including the engine default when unset.",
             "type": "number"
           },
+          "resolvedSku": {
+            "description": "Effective resource SKU after applying the size/instanceType compatibility alias. When both are supplied they must match; an unknown explicit SKU remains visible and is reported through the normal estimated/unsupported coverage path.",
+            "type": "string"
+          },
           "resolvedSkuLabel": {
             "description": "The exact GPU SKU (`size`) that matched the premium GPU catalogue, or a fallback indicator naming the provider-level default GPU rate used instead.",
             "type": "string"
@@ -2422,7 +3132,7 @@
                 "type": "number"
               },
               "throughput": {
-                "description": "Current throughput (requests/sec)",
+                "description": "Current successful throughput/goodput (requests/sec)",
                 "example": 4500,
                 "type": "number"
               }
@@ -2484,6 +3194,233 @@
           "resources",
           "traffic",
           "currentTime"
+        ],
+        "type": "object"
+      },
+      "OpenShiftAccountingContract": {
+        "description": "Machine-readable ARO accounting contract. The published unit rate and topology-derived platform total are distinct quantities; worker and estimated control-plane charges remain separate.",
+        "properties": {
+          "controlPlane": {
+            "properties": {
+              "basis": {
+                "enum": [
+                  "backing-provider-kubernetes-control-plane",
+                  "openshift-specific-cluster-fee"
+                ],
+                "type": "string"
+              },
+              "chargeType": {
+                "enum": [
+                  "control-plane"
+                ],
+                "type": "string"
+              },
+              "included": {
+                "enum": [
+                  true
+                ],
+                "type": "boolean"
+              },
+              "pricingStatus": {
+                "enum": [
+                  "official",
+                  "estimated"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "included",
+              "chargeType",
+              "pricingStatus",
+              "basis"
+            ],
+            "type": "object"
+          },
+          "platform": {
+            "properties": {
+              "basis": {
+                "enum": [
+                  "published-hourly-equivalent",
+                  "subscription-not-included"
+                ],
+                "type": "string"
+              },
+              "billingUnit": {
+                "enum": [
+                  "4-vcpu-hour"
+                ],
+                "type": "string"
+              },
+              "billingUnitVcpu": {
+                "enum": [
+                  4
+                ],
+                "type": "number"
+              },
+              "chargeType": {
+                "enum": [
+                  "platform"
+                ],
+                "type": "string"
+              },
+              "derivedPlatformFeePerHour": {
+                "description": "Topology total: publishedUnitRatePerHour × effectiveWorkerVcpu ÷ billingUnitVcpu. Two 2-vCPU workers derive $0.171/hour; three derive $0.2565/hour.",
+                "type": "number"
+              },
+              "effectiveDate": {
+                "type": "string"
+              },
+              "included": {
+                "type": "boolean"
+              },
+              "platformFeePerHour": {
+                "description": "Backward-compatible alias of the published one-unit rate.",
+                "type": "number"
+              },
+              "pricingArithmetic": {
+                "type": "string"
+              },
+              "pricingSource": {
+                "type": "string"
+              },
+              "pricingStatus": {
+                "enum": [
+                  "official",
+                  "estimated"
+                ],
+                "type": "string"
+              },
+              "publishedUnitRatePerHour": {
+                "description": "Microsoft-published East US D4s v3 hourly equivalent; $0.171 for one 4-vCPU unit.",
+                "type": "number"
+              },
+              "referenceRegion": {
+                "type": "string"
+              },
+              "workerTopology": {
+                "properties": {
+                  "effectiveWorkerVcpu": {
+                    "type": "number"
+                  },
+                  "nodePools": {
+                    "items": {
+                      "properties": {
+                        "effectiveWorkerVcpu": {
+                          "type": "number"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "workerCount": {
+                          "type": "integer"
+                        },
+                        "workerVcpu": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "workerCount",
+                        "workerVcpu",
+                        "effectiveWorkerVcpu"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "workerCount": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "workerCount",
+                  "effectiveWorkerVcpu",
+                  "nodePools"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "included",
+              "chargeType",
+              "pricingStatus",
+              "basis",
+              "platformFeePerHour",
+              "publishedUnitRatePerHour",
+              "billingUnit",
+              "billingUnitVcpu",
+              "workerTopology",
+              "derivedPlatformFeePerHour",
+              "pricingSource",
+              "effectiveDate",
+              "referenceRegion",
+              "pricingArithmetic"
+            ],
+            "type": "object"
+          },
+          "unknownSku": {
+            "properties": {
+              "basis": {
+                "enum": [
+                  "explicit-cost-exclusion"
+                ],
+                "type": "string"
+              },
+              "chargeType": {
+                "enum": [
+                  "unknown-gpu-sku"
+                ],
+                "type": "string"
+              },
+              "included": {
+                "enum": [
+                  false
+                ],
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "included",
+              "chargeType",
+              "basis"
+            ],
+            "type": "object"
+          },
+          "workers": {
+            "properties": {
+              "basis": {
+                "enum": [
+                  "backing-provider-list-rates"
+                ],
+                "type": "string"
+              },
+              "chargeType": {
+                "enum": [
+                  "worker"
+                ],
+                "type": "string"
+              },
+              "included": {
+                "enum": [
+                  true
+                ],
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "included",
+              "chargeType",
+              "basis"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "platform",
+          "workers",
+          "controlPlane",
+          "unknownSku"
         ],
         "type": "object"
       },
@@ -4133,7 +5070,7 @@
             "type": "number"
           },
           "error_breakdown": {
-            "description": "Per-contributor breakdown of the error rate. Each field is the pre-clamp additive contribution in percentage-point units (same scale as `error_rate × 100`). `queue_absorption` is the amount removed by queue buffering (positive value = reduction). Only present when the simulation engine produces an errorBreakdown for the step. Absent on early steps or simulations without failure sources. Use these fields to build reward functions that penalise specific failure modes — for example, penalise `db_failure > 0` to discourage actions that overload the database pool, or reward reducing `capacity_overload` after a scale-out.\n",
+            "description": "Per-contributor breakdown of the error rate. Each field is the pre-clamp additive contribution in percentage-point units (same scale as `error_rate × 100`). `queue_absorption` is the amount removed by queue buffering (positive value = reduction). Only present when the simulation engine produces an errorBreakdown for the step. Absent on early steps or simulations without failure sources. Use these fields to build reward functions that penalise specific failure modes — for example, penalise `db_failure > 0` to discourage actions that overload the database pool, or reward reducing `capacity_overload` after a scale-out. `cpu_overload` is serving-CPU telemetry, not a compute-failure signal. Only active, request-serving compute and Kubernetes resources that are actually serving traffic contribute; parked or unavailable nodes are excluded from the numerator and denominator. Database and network resource CPU is separate and never contributes to `cpu_overload`. For each eligible serving resource, the engine computes `max(0, (cpuUsagePercent - 80) / 20)`, averages those per-resource excesses, and multiplies by the provider slope. Ordinary/custom AWS uses a 10 percentage-point slope: one eligible AWS node at 100% CPU contributes 10 points, while eligible nodes at 100% and 70% contribute 5 points. Adding a parked 100% node, a database at 100%, or a network resource at 100% leaves that value unchanged. Other providers currently use slope 0. The owned AWS CRUD benchmark may intentionally report zero here as an internal calibration policy; that is not a generic API rule and should not be applied to ordinary AWS responses.\n",
             "properties": {
               "capacity_overload": {
                 "description": "Error contribution from traffic exceeding compute capacity (percentage points)",
@@ -4146,7 +5083,7 @@
                 "type": "number"
               },
               "cpu_overload": {
-                "description": "Error contribution from sustained CPU saturation (percentage points)",
+                "description": "Serving CPU overload contribution in percentage points. Uses the mean per-resource CPU excess above 80% among active serving compute/Kubernetes resources, excluding parked or unavailable nodes and excluding database/network CPU. Ordinary/custom AWS uses a 10-point slope, so 100% on one eligible node contributes 10 points.\n",
                 "example": 0,
                 "type": "number"
               },
@@ -4332,6 +5269,86 @@
         ],
         "type": "object"
       },
+      "RecoveryProgress": {
+        "description": "Read-only recovery progress derived from the engine's current resource state. Poll `GET /simulations/{simulationId}` or the next step response until `state` is `healthy`; `stepsToHealthy` is only a lower-bound estimate.\n",
+        "properties": {
+          "cooldown": {
+            "properties": {
+              "completedSteps": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "remainingSteps": {
+                "description": "Qualifying cooldown steps still needed.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requiredSteps": {
+                "description": "Consecutive qualifying steps required to reach target.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "target": {
+                "description": "Status targeted by the current cooldown, or null when already healthy.",
+                "enum": [
+                  "warning",
+                  "healthy",
+                  null
+                ],
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "required": [
+              "target",
+              "completedSteps",
+              "requiredSteps",
+              "remainingSteps"
+            ],
+            "type": "object"
+          },
+          "parkWindow": {
+            "properties": {
+              "completedSteps": {
+                "description": "Park-window steps completed so far.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "remainingSteps": {
+                "description": "Park-window steps remaining before cooldown can advance.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "totalSteps": {
+                "description": "Total forced-unavailability steps for an explicitly failed compute/Kubernetes resource; zero when not applicable.",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "totalSteps",
+              "completedSteps",
+              "remainingSteps"
+            ],
+            "type": "object"
+          },
+          "state": {
+            "description": "Current recovery stage.",
+            "enum": [
+              "parked",
+              "cooling_down",
+              "healthy"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "parkWindow",
+          "cooldown"
+        ],
+        "type": "object"
+      },
       "RegistrationTokenCreatedResponse": {
         "description": "Response returned when a registration token is minted. The plain `token` value is shown only once.",
         "properties": {
@@ -4463,6 +5480,25 @@
             "type": "string"
           }
         },
+        "type": "object"
+      },
+      "ReplayIdentity": {
+        "properties": {
+          "effectiveConfigHash": {
+            "description": "Canonical SHA-256 of the effective six-control startup configuration.",
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "scenarioHash": {
+            "description": "Canonical SHA-256 of the persisted scenario graph and attached traffic-pattern order.",
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenarioHash",
+          "effectiveConfigHash"
+        ],
         "type": "object"
       },
       "ResilienceCapacityConstraint": {
@@ -4975,15 +6011,50 @@
         "type": "object"
       },
       "ResilienceMetrics": {
+        "description": "Resilience measurements over the same simulation-time request window. `availabilityPercent` is successful service over offered requests (goodput divided by offered load), not the percentage of samples below the 5% recovery-health threshold. When offered-load evidence is absent, the authoritative basis and explicit estimate are in `outcome`; no request totals are invented. `recoveryTimeSeconds` and `meanTimeToRecovery` stay numeric for legacy clients (0 means no sustained recovery); use nullable recovery milestones and `sustainPeriodCompleted` in `outcome` to distinguish unrecovered, recovered, and recovered-then-regressed runs. A 15%\n error rate with zero goodput and no offered load is unavailable, not\n 85% availability. A healthy history with no detected incident has\n baseline evidence only and no recovery milestone. In a batch, mixing\n request-backed children with a rate-only `estimated_from_error_rate`\n child makes the offered denominator unavailable; independent goodput,\n request-window duration, and duration-weighted error-rate evidence remain\n reported.\n",
         "properties": {
           "availabilityPercent": {
-            "description": "Percentage of time system was available",
-            "example": 94.3,
+            "description": "Successful service percentage over the measured request window, clamped to 0-100. With observed offered load this is successfulRequests / observedOfferedRequests × 100 (equivalently duration-weighted goodput / offered RPS); 15% error with valid offered load is approximately 85%, even when no sample is below the recovery threshold.\n",
+            "example": 85,
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          },
+          "dataLossIncidents": {
+            "description": "Count of data-loss or corruption incidents observed during the run.",
+            "example": 0,
+            "type": "number"
+          },
+          "eksSpotMigration": {
+            "$ref": "#/components/schemas/EksSpotMigrationState"
+          },
+          "eksSpotMigrationEvents": {
+            "description": "EKS Spot interruption lifecycle events; intentionally separate from sustained recovery evidence.",
+            "items": {
+              "$ref": "#/components/schemas/EksSpotMigrationEvent"
+            },
+            "type": "array"
+          },
+          "eksSpotMigrations": {
+            "description": "Per-resource EKS Spot migration evidence for concurrent active migrations.",
+            "items": {
+              "$ref": "#/components/schemas/EksSpotMigrationState"
+            },
+            "type": "array"
+          },
+          "errorRateDuringChaos": {
+            "description": "Error rate during chaos in percentage points.",
+            "example": 15,
             "type": "number"
           },
           "errorRateDuringFailure": {
-            "description": "Error rate percentage during failures",
+            "description": "Legacy alias for the error rate during failures (percentage points).",
             "example": 15.7,
+            "type": "number"
+          },
+          "gracefulDegradationScore": {
+            "description": "Graceful-degradation score (0-100).",
+            "example": 90,
             "type": "number"
           },
           "meanTimeToDetect": {
@@ -4992,16 +6063,210 @@
             "type": "number"
           },
           "meanTimeToRecover": {
-            "description": "Average time to recover from failures (seconds)",
+            "description": "Legacy numeric mean recovery time in simulation seconds. Zero when no sustained recovery was observed; consult outcome.recovery for milestones.\n",
             "example": 12.8,
             "type": "number"
           },
+          "outcome": {
+            "description": "Optional authoritative outcome evidence. The object is omitted for legacy results that predate this contract; when present, all fields below describe one common simulation-time request window. RPS fields are rates and request fields are totals over that window. A positive modeled shedding value means offered work exceeded modeled serving  capacity; it is not silently counted as an application error and is\n  never fabricated from goodput or error rate. For batch results,\n  request-backed evidence mixed with a rate-only\n  `estimated_from_error_rate` child yields\n  `availabilityBasis: \"unavailable\"` rather than combining an\n  observed subset into a denominator; goodput, duration, and error-rate\n  evidence remain independent.\n",
+            "properties": {
+              "availabilityBasis": {
+                "description": "Evidence basis for availability and offered-load values. `mixed_observed_and_estimated` combines observed offered load with goodput-and-error-rate modeled demand only. A batch that mixes request-backed evidence with a rate-only `estimated_from_error_rate` child is `unavailable`, because no relative request weight exists for that child.\n",
+                "enum": [
+                  "observed_offered_load",
+                  "estimated_from_goodput_and_error_rate",
+                  "estimated_from_error_rate",
+                  "mixed_observed_and_estimated",
+                  "unavailable"
+                ],
+                "type": "string"
+              },
+              "errorRatePercent": {
+                "description": "Error rate in percentage points over the same request window.",
+                "example": 15,
+                "maximum": 100,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "estimatedOfferedLoadRps": {
+                "deprecated": true,
+                "description": "Deprecated compatibility alias for modeledOfferedLoadRps. This value is an estimate, never observed offered load.\n",
+                "example": 1000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "estimatedOfferedRequests": {
+                "deprecated": true,
+                "description": "Deprecated compatibility alias for modeledOfferedRequests. This value is an estimate, never an observed request count.\n",
+                "example": 60000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "modeledOfferedLoadRps": {
+                "description": "Offered load rate modeled from goodput and error rate when no aggregate original-client denominator exists.\n",
+                "example": 1000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "modeledOfferedRequests": {
+                "description": "Offered request total modeled from goodput and error rate when no aggregate original-client denominator exists. This is an estimate, not an observed request count.\n",
+                "example": 60000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "modeledShedRequests": {
+                "description": "Requests explicitly shed by modeled capacity limits over the window; null when not evidenced.",
+                "example": 0,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "modeledSheddingRps": {
+                "description": "Duration-weighted request rate explicitly shed by modeled capacity limits.",
+                "example": 0,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "observedOfferedLoadRps": {
+                "description": "Observed original-client offered load rate for the window.",
+                "example": 1000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "observedOfferedRequests": {
+                "description": "Observed original-client offered request total over the window.",
+                "example": 60000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "recovery": {
+                "description": "Sustained service-health recovery evidence. Health requires positive successful service and error rate below 5% for 30 simulation seconds. A healthy blip shorter than the sustain period does not complete recovery. A later regression keeps the first recovery milestone but clears the current healthy-streak milestone until another sustained recovery; finalState becomes unhealthy and regressedAfterRecovery is true. If no incident is detected, healthy samples are baseline evidence and do not create recovery milestones.\n",
+                "properties": {
+                  "finalState": {
+                    "description": "Final observed health state at the end of the common request window.",
+                    "enum": [
+                      "healthy",
+                      "unhealthy",
+                      "unavailable"
+                    ],
+                    "type": "string"
+                  },
+                  "finalSustainedRecoveryCompletedSeconds": {
+                    "description": "Most recent completed sustain milestone for the current healthy streak; null after a relapse until another sustain period completes.\n",
+                    "nullable": true,
+                    "type": "number"
+                  },
+                  "firstHealthyStartSeconds": {
+                    "description": "First simulation-time instant at which the run entered the healthy threshold.",
+                    "nullable": true,
+                    "type": "number"
+                  },
+                  "firstRecoveryCompletedSeconds": {
+                    "description": "First sustained-recovery completion time, or null when not completed.",
+                    "nullable": true,
+                    "type": "number"
+                  },
+                  "healthErrorRateThresholdPercent": {
+                    "description": "Strict healthy-state error-rate threshold in percent.",
+                    "enum": [
+                      5
+                    ],
+                    "type": "number"
+                  },
+                  "incidentStartSeconds": {
+                    "description": "Simulation-time start of the detected incident.",
+                    "nullable": true,
+                    "type": "number"
+                  },
+                  "regressedAfterRecovery": {
+                    "description": "Whether the run became unhealthy after a sustained recovery milestone.",
+                    "type": "boolean"
+                  },
+                  "sustainPeriodCompleted": {
+                    "description": "Whether the 30-second healthy sustain period completed.",
+                    "type": "boolean"
+                  },
+                  "sustainPeriodSeconds": {
+                    "description": "Simulation-time duration below the health threshold required to complete recovery.",
+                    "enum": [
+                      30
+                    ],
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "healthErrorRateThresholdPercent",
+                  "sustainPeriodSeconds",
+                  "incidentStartSeconds",
+                  "firstHealthyStartSeconds",
+                  "firstRecoveryCompletedSeconds",
+                  "finalSustainedRecoveryCompletedSeconds",
+                  "sustainPeriodCompleted",
+                  "regressedAfterRecovery",
+                  "finalState"
+                ],
+                "type": "object"
+              },
+              "requestWindowSeconds": {
+                "description": "Exact duration of the normalized simulation-time request window, including the final sample duration. The analyzer's optional windowEndSeconds input clips the final interval to an exact exclusive boundary; this public field reports the resulting duration.\n",
+                "example": 60,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "successfulRequests": {
+                "description": "Successful request total (goodput × duration) over the window.",
+                "example": 51000,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              },
+              "successfulThroughputRps": {
+                "description": "Duration-weighted successful throughput/goodput rate over the window.",
+                "example": 850,
+                "minimum": 0,
+                "nullable": true,
+                "type": "number"
+              }
+            },
+            "required": [
+              "availabilityBasis",
+              "requestWindowSeconds",
+              "observedOfferedRequests",
+              "estimatedOfferedRequests",
+              "successfulRequests",
+              "modeledShedRequests",
+              "observedOfferedLoadRps",
+              "estimatedOfferedLoadRps",
+              "successfulThroughputRps",
+              "modeledSheddingRps",
+              "errorRatePercent",
+              "recovery"
+            ],
+            "type": "object"
+          },
           "recoveryTimeSeconds": {
-            "description": "Time to recover from failures (in simulation seconds)",
+            "description": "Legacy numeric recovery duration in simulation seconds. Zero when no sustained recovery was observed; use outcome recovery milestones for authoritative recovery status.\n",
             "example": 45.2,
             "type": "number"
           }
         },
+        "required": [
+          "recoveryTimeSeconds",
+          "availabilityPercent",
+          "dataLossIncidents",
+          "gracefulDegradationScore",
+          "meanTimeToRecovery",
+          "errorRateDuringChaos"
+        ],
         "type": "object"
       },
       "ResiliencePathMetrics": {
@@ -5502,7 +6767,34 @@
         "type": "object"
       },
       "ResilienceScore": {
+        "description": "Composite resilience result. For canonical outcome-backed results, `overall` is reproducible from the displayed breakdown components using weights recovery 0.25, availability 0.30, dataIntegrity 0.25, and gracefulDegradation 0.20 (rounded displayed components are used). Legacy payloads may omit newer breakdown components and metrics. `grade` is derived from the live weighted score when canonical evidence is present, not from static vulnerability labels. It is not a deadline verdict or a statement that an unrecovered run is production-ready; inspect `metrics.outcome` for authoritative evidence and final health state when present.\n",
         "properties": {
+          "breakdown": {
+            "description": "Score components on a 0-100 scale. The composite uses `recovery * 0.25 + availability * 0.30 + dataIntegrity * 0.25 + gracefulDegradation * 0.20`, rounded to the reported overall score. Canonical outcome-backed scores provide all four components. Legacy payloads may retain historical breakdown keys or omit newer components; treat those payloads as compatibility data.\n",
+            "properties": {
+              "availability": {
+                "description": "Availability component (0-100)",
+                "example": 85,
+                "type": "number"
+              },
+              "dataIntegrity": {
+                "description": "Data-integrity component (0-100)",
+                "example": 100,
+                "type": "number"
+              },
+              "gracefulDegradation": {
+                "description": "Graceful-degradation component (0-100)",
+                "example": 90,
+                "type": "number"
+              },
+              "recovery": {
+                "description": "Recovery component (0-100)",
+                "example": 75,
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
           "grade": {
             "description": "Letter grade for resilience",
             "enum": [
@@ -5524,6 +6816,10 @@
             "type": "number"
           }
         },
+        "required": [
+          "overall",
+          "grade"
+        ],
         "type": "object"
       },
       "ResilienceTelemetry": {
@@ -5659,12 +6955,17 @@
             "type": "string"
           },
           "characteristics": {
-            "description": "Provider-specific resource characteristics",
+            "description": "Provider-specific resource characteristics. For AWS RDS resources, `extendedSupport`, `engine`, `engineVersion`, `databaseEngine`, `databaseEngineVersion`, and `dbEngineVersion` are rejected with `INVALID_FIELD`: CWM models base resource rates and behavior but does not price RDS lifecycle/support surcharges. Arbitrary data remains supported under the resource-level `metadata` object.\n",
             "properties": {
               "accelerator": {
                 "description": "Kubernetes + `inferenceMode` only — the GPU/accelerator type of the node pool. Known values: `a10g` (AWS g5), `t4` (GCP), `a10-fractional` (Azure NC8ads_A10_v4 — 1/3 A10 partition at one-third of full-A10 throughput), `a10` (OCI VM.GPU.A10.1 — full A10), `h100` (DigitalOcean GPU Droplet). Determines the per-node token throughput used to derive `metrics.tokensPerSecond` and `metrics.costPerMillionTokens`.\n",
                 "example": "a10g",
                 "type": "string"
+              },
+              "appReadySteps": {
+                "description": "Request-serving compute only — modeled application-readiness ramp after a task or instance becomes active. Zero keeps the default binary-ready behavior.",
+                "minimum": 0,
+                "type": "integer"
               },
               "autoscaling": {
                 "description": "Compute only — marks a compute resource as the autoscaling primary. When multiple compute resources exist, the engine uses the one flagged `autoscaling: true` as the autoscaling target; otherwise it falls back to the first compute resource.\n",
@@ -5716,13 +7017,13 @@
                 "type": "integer"
               },
               "containerCpu": {
-                "description": "Request-serving compute only — runtime CPU allocation in vCPUs. Used by Cloud Run, functions where the allocation is known, and Azure Container Apps to price active and warm capacity.\n",
-                "example": 2,
+                "description": "Request-serving compute only — runtime CPU allocation in vCPUs. For ECS/Fargate this must be supplied together with `containerMemoryGiB` and match a supported task allocation. It is canonicalized to the same allocation represented by `size`.\n",
+                "example": 0.5,
                 "exclusiveMinimum": 0,
                 "type": "number"
               },
               "containerMemoryGiB": {
-                "description": "Request-serving compute only — runtime memory allocation in GiB. Used by every request-serving provider policy for execution billing.\n",
+                "description": "Request-serving compute only — runtime memory allocation in GiB. For ECS/Fargate this must be supplied together with `containerCpu` and match a supported task allocation.\n",
                 "example": 1,
                 "exclusiveMinimum": 0,
                 "type": "number"
@@ -5731,6 +7032,156 @@
                 "description": "ECS/Fargate only — initial desired running task count. Traffic may change this count within minTaskCount/maxTaskCount; Fargate never uses generic compute cloning.",
                 "minimum": 0,
                 "type": "integer"
+              },
+              "eksSpotInterruption": {
+                "description": "Opt-in deterministic AWS EKS Spot interruption lifecycle. Ordinary Spot pricing and risk behavior is unchanged when this object is absent. `triggerAtStep` is a simulation step; the interruption notice is always a bounded 120 simulated seconds.\n",
+                "properties": {
+                  "enabled": {
+                    "const": true,
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "imageCacheHit": {
+                    "type": "boolean"
+                  },
+                  "imageCacheState": {
+                    "default": "cold",
+                    "enum": [
+                      "warm",
+                      "cold"
+                    ],
+                    "type": "string"
+                  },
+                  "imageSizeMiB": {
+                    "default": 0,
+                    "maximum": 102400,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "interruptionHandling": {
+                    "default": "reschedule",
+                    "enum": [
+                      "reschedule",
+                      "drain-only",
+                      "fail-fast"
+                    ],
+                    "type": "string"
+                  },
+                  "noticeWindowSeconds": {
+                    "const": 120,
+                    "default": 120,
+                    "type": "integer"
+                  },
+                  "pullBandwidthMiBPerSecond": {
+                    "default": 100,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100000,
+                    "type": "number"
+                  },
+                  "schedulingCapacity": {
+                    "default": 1,
+                    "maximum": 10000,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "simulationSecondsPerStep": {
+                    "default": 1,
+                    "exclusiveMinimum": 0,
+                    "maximum": 60,
+                    "type": "number"
+                  },
+                  "startupSeconds": {
+                    "default": 10,
+                    "maximum": 3600,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "triggerAtStep": {
+                    "default": 0,
+                    "maximum": 100000,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "workloadReplicas": {
+                    "default": 1,
+                    "maximum": 10000,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ],
+                "type": "object"
+              },
+              "eksSpotMigration": {
+                "description": "AWS EKS Kubernetes Spot interruption model. Opt-in only. When enabled, CWM emits a bounded 120-second interruption notice, workload migration/readiness progress, and a separate deadline hit/miss result. Migration evidence is not the same as sustained service-health recovery.\n",
+                "properties": {
+                  "deadlineSeconds": {
+                    "default": 120,
+                    "maximum": 120,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "enabled": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "handling": {
+                    "default": "reschedule",
+                    "enum": [
+                      "reschedule",
+                      "no_reschedule"
+                    ],
+                    "type": "string"
+                  },
+                  "imageCached": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "imageSizeMiB": {
+                    "default": 0,
+                    "maximum": 10000000,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "migrationDurationSeconds": {
+                    "description": "Optional deterministic scenario override. When omitted, CWM derives migration duration from image pull, scheduling, and startup inputs.\n",
+                    "maximum": 3600,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "pullBandwidthMiBPerSecond": {
+                    "default": 100,
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000,
+                    "type": "number"
+                  },
+                  "schedulingCapacity": {
+                    "default": 100,
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000,
+                    "type": "number"
+                  },
+                  "startupSeconds": {
+                    "default": 0,
+                    "maximum": 120,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "triggerAtSeconds": {
+                    "default": 0,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "workloadCount": {
+                    "default": 1,
+                    "maximum": 1000,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
               },
               "eventNotificationsEnabled": {
                 "description": "Storage event notifications — when true the engine models event notification delivery latency: baseline 1 500 ms, rising by 1 ms per 10 RPS above 5 000 RPS, capped at 30 000 ms. The latency penalty is propagated to downstream serverless compute resources (Lambda for S3, Cloud Functions for GCS, Azure Functions for Azure Blob via Event Grid, OCI Functions for OCI Object Storage). A `notification_delayed` warning event is emitted once when simulation traffic exceeds 20 000 RPS and cleared when traffic drops back below that threshold. Supported providers: `aws` (S3), `gcp` (GCS), `azure` (Blob Storage), `oci` (Object Storage). Ignored on non-storage resources and OCI block-volume resources.\n",
@@ -5756,6 +7207,11 @@
                 "description": "Kubernetes + `inferenceMode` only — average prompt (prefill) tokens per inference request. Drives the time-to-first-token component of the inference latency model. Defaults to `2 × tokensPerRequest` (a typical ⅔-input / ⅓-output chat mix) when omitted.\n",
                 "example": 1000,
                 "type": "number"
+              },
+              "instanceType": {
+                "description": "Compatibility alias for `size`, commonly used for AWS EC2 instance types such as `t3.medium`. When `size` is omitted, this value is canonicalized into `size` and resolved through the provider catalog. If both fields are supplied they must be identical; `size` is the canonical field. Unknown values remain visible as unrecognized SKUs and use the normal estimated fallback coverage.\n",
+                "example": "t3.medium",
+                "type": "string"
               },
               "interNode": {
                 "description": "Flat-form alias for `topology.interNode`. Normalized into the nested `topology` object at the API boundary before storage; the nested value wins when both are present. Only the nested form is stored and echoed back.\n",
@@ -6082,7 +7538,7 @@
                 "type": "array"
               },
               "openshiftOffering": {
-                "description": "Kubernetes-only distribution overlay. The resource `provider` remains the backing substrate for regions, network behavior, worker-node pricing, and provider latency. `rosa-hcp` and `rosa-classic` require AWS; `aro` requires Azure; `openshift-dedicated` supports AWS or GCP; and `self-managed` supports any existing CWM backing provider. Platform/licensing charges are additive to worker-node charges, and cost breakdowns identify worker, platform, and control-plane rows separately. AWS publishes ROSA's $0.171 per 4-vCPU worker service fee uniformly across supported standard regions and its ROSA HCP $0.25 per-cluster-hour fee. Azure publishes the ARO D4s v3 East US license line at $124.830/month ($0.171/hour using 730 hours/month). That ARO platform rate is marked\n `official` only when the resource location is Azure East US;\n resources in another region, or without a region, retain the\n East US amount as an estimate/reference assumption. OpenShift\n Dedicated and self-managed subscription allocations remain\n estimated where no comparable universal hourly line is\n published. Omit this field for byte-compatible generic\n Kubernetes.\n",
+                "description": "Kubernetes-only distribution overlay. The resource `provider` remains the backing substrate for regions, network behavior, worker-node pricing, and provider latency. `rosa-hcp` and `rosa-classic` require AWS; `aro` requires Azure; `openshift-dedicated` supports AWS or GCP; and `self-managed` supports any existing CWM backing provider. Platform/licensing charges are additive to worker-node charges, and cost breakdowns identify worker, platform, and control-plane rows separately. AWS publishes ROSA's $0.171 per 4-vCPU worker service fee uniformly across supported standard regions and its ROSA HCP $0.25 per-cluster-hour fee. Azure publishes the ARO D4s v3 (4 vCPU) East US OpenShift line at $124.830/month, separate from the $160.60/month Linux VM line ($0.171/hour using 730 hours/month). Verified 2026-08-27 at https://azure.microsoft.com/en-us/pricing/details/openshift/. A three-worker, 2-vCPU-per-worker topology derives a valid $0.2565/hour platform total from that unit rate ($0.171 × 6 ÷ 4); it is not an independent published rate. The published ARO platform unit rate is marked `official` only when the resource location is Azure East US; resources in another region, or without a region, retain the East US amount as an estimate/reference assumption. OpenShift Dedicated and self-managed subscription allocations remain\n estimated where no comparable universal hourly line is\n published. Omit this field for byte-compatible generic\n Kubernetes.\n",
                 "enum": [
                   "rosa-hcp",
                   "rosa-classic",
@@ -6230,11 +7686,12 @@
                 "type": "number"
               },
               "serviceFamily": {
-                "description": "Provider-specific service family identifier. AWS values include: `ec2`, `rds`, `aurora-postgresql`, `aurora-dsql`, `aurora-serverless`, `dynamodb`, `s3`, `elb`, `cloudfront`, `lambda`. GCP values include: `gce`, `cloud-sql`, `cloud-spanner`, `bigtable-ssd`, `bigtable-hdd`, `cloudRun`, `cloudFunctions`, `gcs`, `cloud-load-balancing`. Azure values include: `azure_vm`, `azure-sql`, `azureFunctions`, `azureContainerApps`, `blob-storage`, `azure-lb`, `eventhub`. OCI values include: `oci_vm`, `ociFunctions`, `autonomous-db`, `oci-container`, `oci-lb`, `oci-streaming`. DigitalOcean values include: `droplets`, `managed_postgresql`, `spaces`, `load_balancer`.\nIdle / residual-billing families (billed a flat rate regardless of traffic — see `characteristics.billingState`): AWS: `nat-gateway`, `vpc-endpoint`, `eip-detached`, `ebs-snapshot`, `alb-idle`. GCP: `cloud-nat`, `psc-endpoint`, `static-ip`, `pd-snapshot`, `clb-idle`. Azure: `azure-nat-gw`, `private-endpoint`, `azure-static-ip`, `disk-snapshot`, `azure-lb-idle`. OCI: `oci-reserved-ip`, `block-backup`, `oci-lb-idle`. DigitalOcean: `do-reserved-ip`, `do-vol-snapshot`, `do-lb-idle`. Snapshot/backup families bill per GB-month × `capacityGB` ÷ 730.\n",
+                "description": "Provider-specific service family identifier. AWS values include: `ec2`, `ecsFargate`, `rds`, `aurora-postgresql`, `aurora-dsql`, `aurora-serverless`, `dynamodb`, `s3`, `elb`, `cloudfront`, `lambda`. GCP values include: `gce`, `cloud-sql`, `cloud-spanner`, `bigtable-ssd`, `bigtable-hdd`, `cloudRun`, `cloudFunctions`, `gcs`, `cloud-load-balancing`. Azure values include: `azure_vm`, `azure-sql`, `azureFunctions`, `azureContainerApps`, `blob-storage`, `azure-lb`, `eventhub`. OCI values include: `oci_vm`, `ociFunctions`, `autonomous-db`, `oci-container`, `oci-lb`, `oci-streaming`. DigitalOcean values include: `droplets`, `managed_postgresql`, `spaces`, `load_balancer`.\nIdle / residual-billing families (billed a flat rate regardless of traffic — see `characteristics.billingState`): AWS: `nat-gateway`, `vpc-endpoint`, `eip-detached`, `ebs-snapshot`, `alb-idle`. GCP: `cloud-nat`, `psc-endpoint`, `static-ip`, `pd-snapshot`, `clb-idle`. Azure: `azure-nat-gw`, `private-endpoint`, `azure-static-ip`, `disk-snapshot`, `azure-lb-idle`. OCI: `oci-reserved-ip`, `block-backup`, `oci-lb-idle`. DigitalOcean: `do-reserved-ip`, `do-vol-snapshot`, `do-lb-idle`. Snapshot/backup families bill per GB-month × `capacityGB` ÷ 730.\n",
                 "example": "ec2",
                 "type": "string"
               },
               "size": {
+                "description": "Provider size/SKU label. For `serviceFamily: ecsFargate`, use an exact canonical allocation label such as `0.5 vCPU / 1 GB` or `1 vCPU / 2 GB`. A label and explicit `containerCpu`/`containerMemoryGiB` pair are equivalent; if both are supplied they must match. Unsupported, malformed, incomplete, or conflicting Fargate shapes return `INVALID_FARGATE_TASK_SIZE`. The default `0.25 vCPU / 0.5 GB` is used only when neither sizing form is supplied.\n",
                 "example": "m5.large",
                 "type": "string"
               },
@@ -6323,8 +7780,21 @@
             },
             "type": "object"
           },
+          "dataState": {
+            "description": "Data durability, separate from service health; permanently_lost is irreversible.",
+            "enum": [
+              "intact",
+              "temporarily_unavailable",
+              "permanently_lost"
+            ],
+            "type": "string"
+          },
+          "databaseRebuilt": {
+            "description": "Explicitly rebuilt empty database; does not restore original lost data.",
+            "type": "boolean"
+          },
           "failureParkStepsRemaining": {
-            "description": "Compute and Kubernetes only — number of simulation steps remaining in the forced unavailability window after an `inject-failure` call. Present only on step responses (`POST /simulations/{id}/step`); absent on GET responses, on resources that were not explicitly failed via `inject-failure`, and when the forced window has expired (value would be 0, so the field is omitted instead).\nThe value counts down from `critStepsRequired - 1` on the first step after failure injection toward 0 on the last step of the park window, where `critStepsRequired` is derived from the resource's `recoveryPolicy.criticalSteps` (default 4, so the initial value is typically 3). Once the field is absent the node enters its organic cooldown-demotion recovery arc: it transitions critical → warning → healthy over subsequent steps.\n",
+            "description": "Compute and Kubernetes only — number of simulation steps remaining in the forced unavailability window after an `inject-failure` call. Present only on step responses (`POST /simulations/{id}/step`); absent on GET responses, on resources that were not explicitly failed via `inject-failure`, and when the forced window has expired (value would be 0, so the field is omitted instead).\nThe value counts down from `parkSteps - 1` on the first step after failure injection toward 0 on the last step of the park window, where `parkSteps` is `recoveryPolicy.failureParkSteps` when supplied and otherwise `recoveryPolicy.criticalSteps` (default 4, so the initial value is typically 3). Once the field is absent the node enters its organic cooldown-demotion recovery arc: it transitions critical → warning → healthy over subsequent steps.\n",
             "example": 3,
             "minimum": 0,
             "type": "integer"
@@ -6361,7 +7831,7 @@
             "type": "string"
           },
           "recoveryPolicy": {
-            "description": "Per-resource recovery thresholds that control how quickly the simulation transitions a resource from critical → warning → healthy. All four fields default to the global values (criticalCpuThreshold: 80, criticalSteps: 4, warningCpuThreshold: 70, warningSteps: 3) when omitted. Stateless microservices can use lower thresholds and fewer steps to heal faster; databases can use higher thresholds and more steps for a stricter recovery window.\n",
+            "description": "Per-resource recovery thresholds that control how quickly the simulation transitions a resource from critical → warning → healthy. The four cooldown fields default to the global values (criticalCpuThreshold: 80, criticalSteps: 4, warningCpuThreshold: 70, warningSteps: 3) when omitted. `failureParkSteps`, when supplied, controls only the bounded unavailability window for the quick `inject-failure` flow; after that window the node can rejoin routing and continues through organic critical → warning → healthy cooldown. It must be at least 1. Use the persistent `instance_down` failure plus `recover-resource` when the node must remain unavailable until an explicit recovery action. Stateless microservices can use lower thresholds and fewer steps to heal faster; databases can use higher thresholds and more steps for a stricter recovery window.\n",
             "properties": {
               "criticalCpuThreshold": {
                 "default": 80,
@@ -6374,6 +7844,12 @@
               "criticalSteps": {
                 "default": 4,
                 "description": "Number of consecutive simulation steps the CPU must stay below criticalCpuThreshold before transitioning from critical to warning.",
+                "example": 2,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "failureParkSteps": {
+                "description": "Number of simulation steps that a node failed through the quick inject-failure flow remains unavailable before it may rejoin routing. When omitted, criticalSteps is used. Zero is rejected.\n",
                 "example": 2,
                 "minimum": 1,
                 "type": "integer"
@@ -6395,6 +7871,20 @@
               }
             },
             "type": "object"
+          },
+          "recoveryProgress": {
+            "$ref": "#/components/schemas/RecoveryProgress"
+          },
+          "recoverySource": {
+            "enum": [
+              "none",
+              "surviving_backup",
+              "surviving_replica"
+            ],
+            "type": "string"
+          },
+          "recoverySourceResourceId": {
+            "type": "string"
           },
           "routedRps": {
             "description": "Compute and Kubernetes only — effective requests per second routed to this resource during the most recent simulation step. Only present on compute and kubernetes resources in step responses (`POST /simulations/{id}/step`); absent on GET and on non-compute, non-kubernetes resource types.\nThe value is a float (one decimal place) so per-node values sum exactly to the simulation-level traffic without integer rounding error. For an ALB topology with three nodes at 45 RPS total all three nodes report `routedRps: 15.0`; if one node is killed the two surviving nodes each report `routedRps: 22.5` (the killed node's share is redistributed to the survivors). A node that is failed or parked reports `routedRps: 0.0`. Kubernetes clusters in an ALB topology report the per-cluster share of the routed traffic.\n",
@@ -6617,6 +8107,10 @@
           "defaultFailureInjections": {
             "items": {
               "properties": {
+                "duration": {
+                  "description": "Duration in simulation steps, independent of startTime.",
+                  "type": "number"
+                },
                 "endTime": {
                   "type": "number"
                 },
@@ -6644,6 +8138,19 @@
                   "default": 0,
                   "type": "number"
                 },
+                "targetProvider": {
+                  "enum": [
+                    "aws",
+                    "gcp",
+                    "azure",
+                    "oci",
+                    "digitalocean"
+                  ],
+                  "type": "string"
+                },
+                "targetRegion": {
+                  "type": "string"
+                },
                 "targetResourceId": {
                   "type": "string"
                 },
@@ -6655,8 +8162,11 @@
                     "instance_kill",
                     "instance_down",
                     "az_outage",
+                    "region_outage",
+                    "permanent_data_loss",
                     "database_overload",
-                    "network_latency"
+                    "network_latency",
+                    "spot_interruption"
                   ],
                   "type": "string"
                 }
@@ -6668,6 +8178,57 @@
                 "startTime",
                 "isActive",
                 "parameters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "defaultLifecycleEvents": {
+            "description": "Deterministic lifecycle events that are part of the scenario's pre-run plan.",
+            "items": {
+              "properties": {
+                "affectedWorkloadCount": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "handling": {
+                  "default": "reschedule",
+                  "enum": [
+                    "reschedule",
+                    "drain-only",
+                    "fail-fast"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "noticeWindowSeconds": {
+                  "const": 120,
+                  "type": "integer"
+                },
+                "startTime": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "targetResourceId": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "spot_interruption"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "targetResourceId",
+                "startTime",
+                "noticeWindowSeconds",
+                "affectedWorkloadCount",
+                "handling"
               ],
               "type": "object"
             },
@@ -6756,6 +8317,17 @@
           "id": {
             "description": "Unique scenario identifier.",
             "example": "github-inspired-cascading-retry-storm",
+            "type": "string"
+          },
+          "primaryPurpose": {
+            "description": "Optional explicit primary purpose. Educational means a guided concept,\nchaos means an injected failure, predictive means a capacity simulation,\nand optimization means a configuration comparison. Legacy rows may omit it.\n",
+            "enum": [
+              "educational",
+              "chaos",
+              "predictive",
+              "optimization"
+            ],
+            "nullable": true,
             "type": "string"
           },
           "protectedResilienceConfig": {
@@ -6940,6 +8512,11 @@
           "description": {
             "type": "string"
           },
+          "effectiveConfigHash": {
+            "description": "Canonical SHA-256 of the effective six-control startup configuration.",
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
           "id": {
             "description": "Unique simulation identifier",
             "format": "uuid",
@@ -6954,6 +8531,9 @@
           "normalizedConfig": {
             "$ref": "#/components/schemas/NormalizedConfig"
           },
+          "replayIdentity": {
+            "$ref": "#/components/schemas/ReplayIdentity"
+          },
           "resilienceConfig": {
             "allOf": [
               {
@@ -6967,6 +8547,44 @@
               "$ref": "#/components/schemas/Resource"
             },
             "type": "array"
+          },
+          "scenarioAttribution": {
+            "description": "Trusted server-side attribution copied from the live scenario catalog; absent for explicit resource-graph creates.",
+            "properties": {
+              "id": {
+                "description": "Live scenario catalog ID that supplied the simulation graph",
+                "type": "string"
+              },
+              "revision": {
+                "description": "Catalog revision, when provided",
+                "nullable": true,
+                "type": "string"
+              },
+              "source": {
+                "description": "Trusted server-side attribution source",
+                "enum": [
+                  "scenario-catalog"
+                ],
+                "type": "string"
+              },
+              "version": {
+                "description": "Catalog version, when provided",
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "revision",
+              "source"
+            ],
+            "type": "object"
+          },
+          "scenarioHash": {
+            "description": "Canonical SHA-256 of the persisted scenario graph and attached traffic-pattern order.",
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
           },
           "traffic": {
             "type": "number"
@@ -7748,6 +9366,12 @@
         "description": "API key or wallet-session JWT authentication using Bearer tokens in the Authorization header.\n\n**How to authenticate:**\n1. Create an API key using POST /api/keys\n2. Include the key in the Authorization header: `Bearer cwm_live_<your_key>`\n3. All RL environment endpoints require authentication\n\n**Rate Limits:**\n- Default: 1000 requests/hour per key\n- Configurable per key\n- Returns 429 when exceeded\n",
         "scheme": "bearer",
         "type": "http"
+      },
+      "UiSessionCookie": {
+        "description": "HttpOnly browser-workspace session cookie issued by\n`POST /api/ui/simulations`. It authorizes UI mutations for simulations\nowned by that browser workspace.\n",
+        "in": "cookie",
+        "name": "cwm_ui_session",
+        "type": "apiKey"
       },
       "x402": {
         "description": "x402 v2 Base micropayment option. Select the Base entry from\n`GET /api/billing/x402/config` `paymentOptions`, then send its signed USDC\nmicro-payment in the `X-PAYMENT` header to get full access to the metered\nendpoint in a single round-trip — no account, no API key, no sign-up required.\n\n**402 → pay → retry loop:**\n1. Call the endpoint without an `X-PAYMENT` header.\n2. Receive a `402 Payment Required` response. The body is a\n   standard JSON `PaymentRequired` object. The same payload is also\n   echoed as a base64-encoded string in the `PAYMENT-REQUIRED`\n   response header for clients that cannot access the body.\n3. Decode the `PaymentRequired` body (or the `PAYMENT-REQUIRED`\n   header) to read the exact `payTo` wallet,\n   USDC amount, network, and facilitator URL.\n4. Construct and sign the payment with your x402 client library.\n5. Retry the Base request with the `X-PAYMENT` header — the server\n   verifies via `https://facilitator.payai.network` and responds `200`.\n\n**Optional Solana:** When `paymentOptions` advertises a Solana entry, callers\nmay instead select it and use `PAYMENT-SIGNATURE`. Solana is an additional\noption; use `X-PAYMENT` for the Base option shown by this security scheme.\n\n**Discovery:** `GET /api/billing/x402/config` returns the live `payTo`\naddress, canonical `paymentOptions`, per-call-type USDC amounts, facilitator\nURL, and the credits-per-USDC conversion rate. Always fetch this before\nhardcoding any amounts or a payment header.\n\n**Price range:** $0.0010 per step/RL call — $0.0050 per\nanalysis/chaos/multi-cloud call (see `x-x402-price-usdc` on each\noperation for the exact amount).\n\n**Facilitator:** `https://facilitator.payai.network` (PayAI-operated,\nverifies the advertised Base and optional Solana options).\n",
@@ -9095,7 +10719,10 @@
                                   "database_slowdown",
                                   "database_overload",
                                   "zone_outage",
+                                  "region_outage",
+                                  "permanent_data_loss",
                                   "instance_failure",
+                                  "eks_spot_interruption",
                                   "network_latency",
                                   "network_partition",
                                   "cascading_failure",
@@ -9122,6 +10749,10 @@
                                   "oci",
                                   "digitalocean"
                                 ],
+                                "type": "string"
+                              },
+                              "targetRegion": {
+                                "description": "Canonical region key for region_outage or permanent_data_loss.",
                                 "type": "string"
                               },
                               "targetResourceId": {
@@ -9320,7 +10951,7 @@
     },
     "/chaos/run": {
       "post": {
-        "description": "Execute a chaos engineering test by injecting failures into a simulation.\nCan use pre-built scenarios or custom failure injections.\n\nThis endpoint works with simulations built on **any supported provider**,\nincluding AWS, GCP, Azure, OCI, and **DigitalOcean**. When targeting a\nDigitalOcean-based simulation, failure types such as `kill_instance`\naffect Droplets, `zone_failure` targets DigitalOcean datacenter regions,\nand `database_crash` targets Managed Database clusters.\n\n**Failure naming surfaces** — three zone-related names, three different contexts:\n- `zone_outage` — custom injection type in `customInjections[].failureType` (this endpoint)\n- `az_outage` — failure type in the synchronous `POST /simulations/{id}/failures` API\n- `zone_failure` — pre-built scenario ID used in `scenarioId`\n\n**Multi-fault cascade example** — inject a zone outage and a database slowdown simultaneously\nvia `customInjections` to test correlated failure handling:\n\n```json\n{\n  \"simulationId\": \"sim-abc123\",\n  \"customInjections\": [\n    { \"failureType\": \"zone_outage\", \"targetZone\": \"us-east-1a\", \"duration\": 120 },\n    { \"failureType\": \"database_slowdown\", \"targetResourceId\": \"db-primary\", \"intensity\": 80, \"duration\": 120 }\n  ]\n}\n```\n\n**Resilience grade caveat** — the `grade` in the result reflects a static vulnerability\nanalysis of your architecture (SPOF detection, redundancy gaps). It may not change between\na single-fault run and a multi-fault run on already-resilient topologies because the grade\nmeasures architectural exposure, not live error rate. To measure severity differences between\nfault combinations, pair `POST /chaos/run` (vulnerability report) with the synchronous\n`POST /simulations/{id}/failures` + step-loop pattern (live metrics).\n",
+        "description": "Execute a chaos engineering test by injecting failures into a simulation.\nCan use pre-built scenarios or custom failure injections.\n\nThis endpoint works with simulations built on **any supported provider**,\nincluding AWS, GCP, Azure, OCI, and **DigitalOcean**. When targeting a\nDigitalOcean-based simulation, failure types such as `kill_instance`\naffect Droplets, `zone_failure` targets DigitalOcean datacenter regions,\nand `database_crash` targets Managed Database clusters.\n\n**Failure naming surfaces** — three zone-related names, three different contexts:\n- `zone_outage` — custom injection type in `customInjections[].failureType` (this endpoint)\n- `az_outage` — failure type in the synchronous `POST /simulations/{id}/failures` API\n- `zone_failure` — pre-built scenario ID used in `scenarioId`\n\n**Multi-fault cascade example** — inject a zone outage and a database slowdown simultaneously\nvia `customInjections` to test correlated failure handling:\n\n```json\n{\n  \"simulationId\": \"sim-abc123\",\n  \"customInjections\": [\n    { \"failureType\": \"zone_outage\", \"targetZone\": \"us-east-1a\", \"duration\": 120 },\n    { \"failureType\": \"database_slowdown\", \"targetResourceId\": \"db-primary\", \"intensity\": 80, \"duration\": 120 }\n  ]\n}\n```\n\n **Resilience grade** — the `grade` in the result is derived from the\n live weighted `overall` score, including recovery, availability, data\n integrity, and graceful degradation. Vulnerability findings remain\n architectural evidence and may be similar across fault combinations,\n but the grade is not a static SPOF label. To inspect both, pair\n `POST /chaos/run` (vulnerability report) with the synchronous\n `POST /simulations/{id}/failures` + step-loop pattern (live metrics).\n",
         "operationId": "runChaosTest",
         "requestBody": {
           "content": {
@@ -9394,7 +11025,10 @@
                             "database_slowdown",
                             "database_overload",
                             "zone_outage",
+                            "region_outage",
+                            "permanent_data_loss",
                             "instance_failure",
+                            "eks_spot_interruption",
                             "network_latency",
                             "network_partition",
                             "cascading_failure",
@@ -9421,6 +11055,10 @@
                             "oci",
                             "digitalocean"
                           ],
+                          "type": "string"
+                        },
+                        "targetRegion": {
+                          "description": "Canonical region key for region_outage or permanent_data_loss.",
                           "type": "string"
                         },
                         "targetResourceId": {
@@ -15949,8 +17587,59 @@
     },
     "/scenarios": {
       "get": {
-        "description": "Returns the list of pre-built infrastructure scenario templates. Scenarios\ndefine a complete simulation configuration (resources, traffic, connections)\nthat can be loaded directly into a new simulation via the browser UI or the\nAPI.\n\n**No authentication required.**\n",
+        "description": "Returns the list of pre-built infrastructure scenario templates. Scenarios\ndefine a complete simulation configuration (resources, traffic, connections)\nthat can be loaded directly into a new simulation via the browser UI or the\nAPI.\n\nOptional filters narrow the catalog by provider, category, and difficulty.\nOmit all filters to receive the complete, unfiltered scenario catalog.\nCategory matching is case-insensitive.\n\n**No authentication required.**\n",
         "operationId": "listScenarios",
+        "parameters": [
+          {
+            "description": "Return scenarios containing resources from this cloud provider.",
+            "example": "aws",
+            "in": "query",
+            "name": "provider",
+            "required": false,
+            "schema": {
+              "enum": [
+                "aws",
+                "gcp",
+                "azure",
+                "oci",
+                "digitalocean"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return scenarios in this category. Matching is case-insensitive.\nSupported catalog categories are cost, failure, networking, reliability,\nand scaling.\n",
+            "example": "reliability",
+            "in": "query",
+            "name": "category",
+            "required": false,
+            "schema": {
+              "enum": [
+                "cost",
+                "failure",
+                "networking",
+                "reliability",
+                "scaling"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return scenarios at this difficulty level.",
+            "example": "intermediate",
+            "in": "query",
+            "name": "difficulty",
+            "required": false,
+            "schema": {
+              "enum": [
+                "beginner",
+                "intermediate",
+                "advanced"
+              ],
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -16246,6 +17935,46 @@
                 }
               },
               "schema": {
+                "oneOf": [
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "scenarioId"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "connections"
+                          ]
+                        }
+                      ]
+                    },
+                    "required": [
+                      "resources"
+                    ]
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "resources"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "connections"
+                          ]
+                        }
+                      ]
+                    },
+                    "required": [
+                      "scenarioId"
+                    ]
+                  }
+                ],
                 "properties": {
                   "autoscaleTargetCpuPercent": {
                     "description": "Grok-compatible alias for `autoscalingTargetCpu`.",
@@ -16300,7 +18029,7 @@
                     "description": "Optional retry/cascade resilience model. When present, the step engine\nmodels retry amplification, circuit-breaker state, rate limiting, and\ncascading-failure depth across declared `dependencies`. Omit to leave\nthe resilience model disabled (byte-identical to existing behavior).\n"
                   },
                   "resources": {
-                    "description": "Cloud resources in the simulation",
+                    "description": "Cloud resources in the simulation; mutually exclusive with scenarioId",
                     "items": {
                       "$ref": "#/components/schemas/Resource"
                     },
@@ -16320,6 +18049,37 @@
                     "minimum": 0,
                     "type": "number"
                   },
+                  "scenarioId": {
+                    "description": "Live scenario identifier from the scenario catalog; mutually exclusive with resources and connections",
+                    "example": "web-autoscaling",
+                    "type": "string"
+                  },
+                  "scenarioOverrides": {
+                    "additionalProperties": false,
+                    "description": "Scenario-only customization. Requires scenarioId and must not\nbe combined with resources or connections. Currently supports\nonly the catalog EKS Spot startup duration.\n",
+                    "properties": {
+                      "eksSpotInterruption": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "startupSeconds": {
+                            "description": "Catalog EKS Spot startup duration in seconds",
+                            "example": 60,
+                            "maximum": 3600,
+                            "minimum": 0,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "startupSeconds"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "eksSpotInterruption"
+                    ],
+                    "type": "object"
+                  },
                   "traffic": {
                     "default": 1000,
                     "description": "Initial traffic load (requests per second)",
@@ -16328,8 +18088,7 @@
                   }
                 },
                 "required": [
-                  "name",
-                  "resources"
+                  "name"
                 ],
                 "type": "object"
               }
@@ -16378,6 +18137,927 @@
           "Create"
         ],
         "x-x402-call-type": "simulation_create",
+        "x-x402-price-usdc": "$0.0010"
+      },
+      "x-stability": "stable"
+    },
+    "/simulations/stateless": {
+      "post": {
+        "description": "Executes a tightly bounded cloud scenario entirely in memory through the\nproduction hybrid, pricing, failure, and autoscaling engine paths. No\nsimulation, metric, event, result, ownership, or job record is created.\nThe same seed and input produce the same result. This REST-only operation\nrequires write scope via a bearer key or one x402 payment; MCP transport\nis intentionally omitted because it cannot preserve payment challenge,\nsettlement, and replay semantics end to end.\n",
+        "operationId": "runStatelessSimulation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "autoscaling": {
+                  "maxInstances": 4,
+                  "minInstances": 1,
+                  "targetCpuPercent": 70
+                },
+                "resources": [
+                  {
+                    "characteristics": {
+                      "autoscaling": true,
+                      "instanceType": "t3.medium"
+                    },
+                    "id": "web-1",
+                    "name": "Web server",
+                    "provider": "aws",
+                    "type": "compute"
+                  }
+                ],
+                "seed": 42,
+                "steps": 3,
+                "traffic": {
+                  "change": {
+                    "atStep": 2,
+                    "targetRps": 2000
+                  },
+                  "initialRps": 500
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "autoscaling": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "maxInstances": {
+                        "default": 4,
+                        "maximum": 8,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "minInstances": {
+                        "default": 1,
+                        "maximum": 8,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "targetCpuPercent": {
+                        "default": 70,
+                        "maximum": 90,
+                        "minimum": 20,
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "connections": {
+                    "default": [],
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "sourceId": {
+                          "maxLength": 64,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "targetId": {
+                          "maxLength": 64,
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "sourceId",
+                        "targetId"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 16,
+                    "type": "array"
+                  },
+                  "failure": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "atStep": {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "durationSteps": {
+                        "default": 1,
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "spotInterruption": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "imageCacheHit": {
+                            "type": "boolean"
+                          },
+                          "imageCacheState": {
+                            "enum": [
+                              "warm",
+                              "cold"
+                            ],
+                            "type": "string"
+                          },
+                          "imageSizeMiB": {
+                            "maximum": 102400,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          "interruptionHandling": {
+                            "enum": [
+                              "reschedule",
+                              "drain-only",
+                              "fail-fast"
+                            ],
+                            "type": "string"
+                          },
+                          "noticeWindowSeconds": {
+                            "const": 120,
+                            "type": "integer"
+                          },
+                          "pullBandwidthMiBPerSecond": {
+                            "exclusiveMinimum": 0,
+                            "maximum": 100000,
+                            "type": "number"
+                          },
+                          "schedulingCapacity": {
+                            "maximum": 10000,
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "simulationSecondsPerStep": {
+                            "exclusiveMinimum": 0,
+                            "maximum": 60,
+                            "type": "number"
+                          },
+                          "startupSeconds": {
+                            "maximum": 3600,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          "triggerAtStep": {
+                            "maximum": 100000,
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "workloadReplicas": {
+                            "maximum": 10000,
+                            "minimum": 1,
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "targetResourceId": {
+                        "maxLength": 64,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "instance_kill",
+                          "instance_down",
+                          "az_outage",
+                          "database_overload",
+                          "network_latency",
+                          "spot_interruption"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "targetResourceId",
+                      "atStep"
+                    ],
+                    "type": "object"
+                  },
+                  "resources": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "characteristics": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "autoscaling": {
+                              "type": "boolean"
+                            },
+                            "baseLatency": {
+                              "maximum": 60000,
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            "costMultiplier": {
+                              "maximum": 100,
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            "eksSpotInterruption": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "enabled": {
+                                  "const": true,
+                                  "default": true,
+                                  "type": "boolean"
+                                },
+                                "imageCacheHit": {
+                                  "type": "boolean"
+                                },
+                                "imageCacheState": {
+                                  "default": "cold",
+                                  "enum": [
+                                    "warm",
+                                    "cold"
+                                  ],
+                                  "type": "string"
+                                },
+                                "imageSizeMiB": {
+                                  "default": 0,
+                                  "maximum": 102400,
+                                  "minimum": 0,
+                                  "type": "number"
+                                },
+                                "interruptionHandling": {
+                                  "default": "reschedule",
+                                  "enum": [
+                                    "reschedule",
+                                    "drain-only",
+                                    "fail-fast"
+                                  ],
+                                  "type": "string"
+                                },
+                                "noticeWindowSeconds": {
+                                  "const": 120,
+                                  "default": 120,
+                                  "type": "integer"
+                                },
+                                "pullBandwidthMiBPerSecond": {
+                                  "default": 100,
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 100000,
+                                  "type": "number"
+                                },
+                                "schedulingCapacity": {
+                                  "default": 1,
+                                  "maximum": 10000,
+                                  "minimum": 0,
+                                  "type": "integer"
+                                },
+                                "simulationSecondsPerStep": {
+                                  "default": 1,
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 60,
+                                  "type": "number"
+                                },
+                                "startupSeconds": {
+                                  "default": 10,
+                                  "maximum": 3600,
+                                  "minimum": 0,
+                                  "type": "number"
+                                },
+                                "triggerAtStep": {
+                                  "default": 0,
+                                  "maximum": 100000,
+                                  "minimum": 0,
+                                  "type": "integer"
+                                },
+                                "workloadReplicas": {
+                                  "default": 1,
+                                  "maximum": 10000,
+                                  "minimum": 1,
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "instanceType": {
+                              "description": "Compatibility alias for size. If size is omitted, this value is canonicalized into size; if both are supplied they must match, with size remaining canonical.",
+                              "maxLength": 64,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "maxConnections": {
+                              "maximum": 1000000,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "maxNodes": {
+                              "maximum": 20,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "maxThroughput": {
+                              "exclusiveMinimum": 0,
+                              "maximum": 1000000,
+                              "type": "number"
+                            },
+                            "minNodes": {
+                              "maximum": 20,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "nodeCount": {
+                              "maximum": 20,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "pricingModel": {
+                              "enum": [
+                                "on-demand",
+                                "spot"
+                              ],
+                              "type": "string"
+                            },
+                            "serviceFamily": {
+                              "maxLength": 64,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "size": {
+                              "maxLength": 64,
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "id": {
+                          "maxLength": 64,
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+                          "type": "string"
+                        },
+                        "name": {
+                          "maxLength": 80,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "provider": {
+                          "enum": [
+                            "aws",
+                            "gcp",
+                            "azure",
+                            "oci",
+                            "digitalocean"
+                          ],
+                          "type": "string"
+                        },
+                        "type": {
+                          "enum": [
+                            "compute",
+                            "database",
+                            "storage",
+                            "network",
+                            "cache",
+                            "queue",
+                            "kubernetes"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "type",
+                        "provider"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 8,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "seed": {
+                    "default": 1,
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "steps": {
+                    "default": 3,
+                    "maximum": 10,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "traffic": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "change": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "atStep": {
+                            "maximum": 10,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          "targetRps": {
+                            "maximum": 100000,
+                            "minimum": 1,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "atStep",
+                          "targetRps"
+                        ],
+                        "type": "object"
+                      },
+                      "initialRps": {
+                        "maximum": 100000,
+                        "minimum": 1,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "initialRps"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "resources",
+                  "traffic"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "autoscaling": {
+                      "description": "Normalized autoscaling settings and the fleet size materialized before the first step.",
+                      "properties": {
+                        "effectiveMaxInstances": {
+                          "nullable": true,
+                          "type": "integer"
+                        },
+                        "effectiveMinInstances": {
+                          "nullable": true,
+                          "type": "integer"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "initialFleetSize": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "requestedMaxInstances": {
+                          "nullable": true,
+                          "type": "integer"
+                        },
+                        "requestedMinInstances": {
+                          "nullable": true,
+                          "type": "integer"
+                        },
+                        "targetCpuPercent": {
+                          "nullable": true,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "requestedMinInstances",
+                        "requestedMaxInstances",
+                        "effectiveMinInstances",
+                        "effectiveMaxInstances",
+                        "targetCpuPercent",
+                        "initialFleetSize"
+                      ],
+                      "type": "object"
+                    },
+                    "cost": {
+                      "properties": {
+                        "baselinePerHourUsd": {
+                          "type": "number"
+                        },
+                        "deltaPerHourUsd": {
+                          "type": "number"
+                        },
+                        "deltaPercent": {
+                          "type": "number"
+                        },
+                        "finalPerHourUsd": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "baselinePerHourUsd",
+                        "finalPerHourUsd",
+                        "deltaPerHourUsd",
+                        "deltaPercent"
+                      ],
+                      "type": "object"
+                    },
+                    "coverage": {
+                      "properties": {
+                        "billingPolicyCoverage": {
+                          "properties": {
+                            "complete": {
+                              "type": "boolean"
+                            },
+                            "exclusions": {
+                              "items": {
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "status": {
+                              "enum": [
+                                "complete",
+                                "excluded_policies"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "complete",
+                            "status",
+                            "exclusions"
+                          ],
+                          "type": "object"
+                        },
+                        "estimatedCount": {
+                          "type": "number"
+                        },
+                        "knownGapCount": {
+                          "type": "number"
+                        },
+                        "level": {
+                          "enum": [
+                            "full",
+                            "partial",
+                            "limited"
+                          ],
+                          "type": "string"
+                        },
+                        "modeledCostShareOfTotal": {
+                          "type": "number"
+                        },
+                        "modeledCount": {
+                          "type": "number"
+                        },
+                        "notObservableCategories": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "resources": {
+                          "items": {
+                            "properties": {
+                              "behaviourFidelity": {
+                                "type": "string"
+                              },
+                              "costFidelity": {
+                                "type": "string"
+                              },
+                              "coverageBasis": {
+                                "enum": [
+                                  "deterministic",
+                                  "ml",
+                                  "estimated",
+                                  "unsupported"
+                                ],
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "note": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "resourceType": {
+                                "type": "string"
+                              },
+                              "shareExcluded": {
+                                "type": "boolean"
+                              },
+                              "shareOfSimulatedCost": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "resourceType",
+                              "costFidelity",
+                              "behaviourFidelity",
+                              "shareOfSimulatedCost",
+                              "reason",
+                              "coverageBasis"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "structuralLimitations": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "level",
+                        "modeledCount",
+                        "estimatedCount",
+                        "knownGapCount",
+                        "notObservableCategories",
+                        "structuralLimitations",
+                        "modeledCostShareOfTotal",
+                        "billingPolicyCoverage",
+                        "resources"
+                      ],
+                      "type": "object"
+                    },
+                    "decisions": {
+                      "properties": {
+                        "blendedSteps": {
+                          "type": "integer"
+                        },
+                        "events": {
+                          "items": {
+                            "properties": {
+                              "message": {
+                                "type": "string"
+                              },
+                              "severity": {
+                                "type": "string"
+                              },
+                              "step": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "step",
+                              "severity",
+                              "message"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "fallbackSteps": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "blendedSteps",
+                        "fallbackSteps",
+                        "events"
+                      ],
+                      "type": "object"
+                    },
+                    "eksSpotInterruptions": {
+                      "description": "Final deterministic EKS Spot interruption telemetry for each configured lifecycle, including optional authoritative seeded migrationEvaluation and field-level provenance.",
+                      "items": {
+                        "$ref": "#/components/schemas/EksSpotInterruptionTelemetry"
+                      },
+                      "type": "array"
+                    },
+                    "error": {
+                      "properties": {
+                        "breakdown": {
+                          "nullable": true,
+                          "properties": {
+                            "capacityOverload": {
+                              "type": "number"
+                            },
+                            "computeFailure": {
+                              "type": "number"
+                            },
+                            "cpuOverload": {
+                              "type": "number"
+                            },
+                            "dbFailure": {
+                              "type": "number"
+                            },
+                            "ociStorage": {
+                              "type": "number"
+                            },
+                            "poolSaturation": {
+                              "type": "number"
+                            },
+                            "queueAbsorption": {
+                              "type": "number"
+                            },
+                            "runtimeMemory": {
+                              "type": "number"
+                            },
+                            "startupBackpressure": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "poolSaturation",
+                            "dbFailure",
+                            "computeFailure",
+                            "capacityOverload",
+                            "cpuOverload",
+                            "ociStorage",
+                            "queueAbsorption"
+                          ],
+                          "type": "object"
+                        },
+                        "ratePercent": {
+                          "type": "number"
+                        },
+                        "successfulThroughputRps": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "ratePercent",
+                        "successfulThroughputRps",
+                        "breakdown"
+                      ],
+                      "type": "object"
+                    },
+                    "execution": {
+                      "properties": {
+                        "engineVersion": {
+                          "type": "string"
+                        },
+                        "seed": {
+                          "type": "integer"
+                        },
+                        "stateless": {
+                          "type": "boolean"
+                        },
+                        "steps": {
+                          "type": "integer"
+                        },
+                        "synchronous": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "stateless",
+                        "synchronous",
+                        "steps",
+                        "seed",
+                        "engineVersion"
+                      ],
+                      "type": "object"
+                    },
+                    "performance": {
+                      "properties": {
+                        "latencyP50Ms": {
+                          "type": "number"
+                        },
+                        "latencyP95Ms": {
+                          "type": "number"
+                        },
+                        "latencyP99Ms": {
+                          "type": "number"
+                        },
+                        "throughputRps": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "latencyP50Ms",
+                        "latencyP95Ms",
+                        "latencyP99Ms",
+                        "throughputRps"
+                      ],
+                      "type": "object"
+                    },
+                    "reliability": {
+                      "properties": {
+                        "availabilityPercent": {
+                          "type": "number"
+                        },
+                        "failureApplied": {
+                          "type": "boolean"
+                        },
+                        "unavailableResourceIds": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "availabilityPercent",
+                        "unavailableResourceIds",
+                        "failureApplied"
+                      ],
+                      "type": "object"
+                    },
+                    "settlement": {
+                      "description": "Added by successful x402 settlement; absent for API-key calls.",
+                      "properties": {
+                        "network": {
+                          "type": "string"
+                        },
+                        "payer": {
+                          "type": "string"
+                        },
+                        "transactionHash": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "utilization": {
+                      "properties": {
+                        "cpuPercent": {
+                          "type": "number"
+                        },
+                        "kubernetesNodePercent": {
+                          "type": "number"
+                        },
+                        "memoryPercent": {
+                          "type": "number"
+                        },
+                        "resourceCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "cpuPercent",
+                        "memoryPercent",
+                        "resourceCount"
+                      ],
+                      "type": "object"
+                    },
+                    "walletSession": {
+                      "description": "Short-lived wallet session added by successful x402 settlement; absent for API-key calls.",
+                      "properties": {
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "execution",
+                    "cost",
+                    "performance",
+                    "autoscaling",
+                    "utilization",
+                    "error",
+                    "reliability",
+                    "eksSpotInterruptions",
+                    "coverage",
+                    "decisions"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Synchronous stateless simulation result"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "description": "x402 payment required or insufficient credits"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "x402": []
+          },
+          {
+            "x402Solana": []
+          }
+        ],
+        "summary": "Run a stateless synchronous cloud simulation",
+        "tags": [
+          "Execute"
+        ],
+        "x-payment-info": {
+          "price": {
+            "amount": "0.001",
+            "currency": "USD",
+            "mode": "fixed"
+          },
+          "protocols": [
+            "x402"
+          ]
+        },
+        "x-x402-call-type": "simulation.stateless",
         "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
@@ -16942,7 +19622,7 @@
     },
     "/simulations/{simulationId}/cost-breakdown": {
       "get": {
-        "description": "Returns the per-resource hourly cost array from the simulation's most\nrecent metrics record, joined with each resource's current status\n(`healthy` / `warning` / `critical` / `stopped`). Use this after a\nfailure or traffic surge to identify which resources continue billing\nwhile degraded (\"zombie\" or \"residual\" infrastructure) — e.g. a NAT\nGateway billing $0.045/hr while the fleet it fronts is critical, or\nidle instances still accruing compute cost.\n\n`totalCostPerHour` is the exact sum of all `resources[].costPerHour`\nvalues. The response is always a flat array (no paging, no metrics\nhistory), making it cheap to call between scenario steps.\n\nReturns 404 when the simulation has not been stepped yet (no metrics\nrecord exists). Requires `read` scope and ownership, or an x402\nmicro-payment (`simulation_cost_breakdown`, $0.0010).\n",
+        "description": "Returns the per-resource hourly cost array from the simulation's most\nrecent metrics record, joined with each resource's current status and\nserving state. `status` is raw health severity/cooldown; use\n`availabilityState`, `isRoutable`, and `routedRps` to determine whether\nthe resource is currently serving. A critical resource may therefore be\n`availabilityState: degraded` with `isRoutable: true` after it rejoins\nrouting. Use this after a failure or traffic surge to identify resources\nthat continue billing while genuinely unavailable (\"residual\" spend).\n\n`totalCostPerHour` is the exact sum of all `resources[].costPerHour`\nvalues. The response is always a flat array (no paging, no metrics\nhistory), making it cheap to call between scenario steps.\n\nOpenShift rows retain their billing metadata. For ARO, compare like-for-like\nunits: `publishedUnitRatePerHour` is the official `$0.171/hour` rate per\n4-vCPU billing unit, while `derivedPlatformFeePerHour` and `costPerHour`\nare the topology-derived total. For example, three 2-vCPU workers produce\n`effectiveWorkerVcpu: 6` and a `$0.2565/hour` platform total\n(`publishedUnitRatePerHour × effectiveWorkerVcpu ÷ billingUnitVcpu`).\nPlatform, control-plane, and worker rows are separate additive entries;\nthe estimated control-plane charge must not be folded into the platform\nunit comparison or added a second time.\n\nReturns 404 when the simulation has not been stepped yet (no metrics\nrecord exists). Requires `read` scope and ownership, or an x402\nmicro-payment (`simulation_cost_breakdown`, $0.0010).\n",
         "operationId": "getSimulationCostBreakdown",
         "parameters": [
           {
@@ -16962,23 +19642,101 @@
                 "schema": {
                   "properties": {
                     "residualCostPerHour": {
-                      "description": "Exact subtotal of costPerHour for resources whose status is critical or stopped — cost still accruing while degraded (\"zombie\"/residual spend). 0 when nothing is degraded.",
+                      "description": "Exact subtotal of costPerHour for resources that are currently unavailable/parked or stopped. A critical resource that is degraded but serving is excluded; use availabilityState rather than status to interpret current serving state.",
                       "example": 0.045,
                       "type": "number"
                     },
                     "resources": {
                       "items": {
                         "properties": {
+                          "availabilityState": {
+                            "description": "Current serving classification for compute, Kubernetes, and database rows. `available` means healthy and serving; `degraded` means warning or critical severity while still serving; `unavailable` means no traffic is being served. This is authoritative for current serving state; do not infer unavailability from status: critical alone.\n",
+                            "enum": [
+                              "available",
+                              "degraded",
+                              "unavailable"
+                            ],
+                            "type": "string"
+                          },
+                          "billingUnit": {
+                            "description": "Published OpenShift platform billing unit used before topology proration.",
+                            "enum": [
+                              "4-vcpu-hour",
+                              "cluster-hour"
+                            ],
+                            "type": "string"
+                          },
+                          "billingUnitVcpu": {
+                            "description": "Number of worker vCPUs in one published billing unit; 4 for ARO.",
+                            "type": "number"
+                          },
+                          "chargeType": {
+                            "description": "OpenShift accounting component; platform, control-plane, and worker rows are additive.",
+                            "enum": [
+                              "platform",
+                              "control-plane",
+                              "worker"
+                            ],
+                            "type": "string"
+                          },
                           "costPerHour": {
                             "example": 0.045,
                             "type": "number"
+                          },
+                          "derivedPlatformFeePerHour": {
+                            "description": "Topology-derived platform charge; equals publishedUnitRatePerHour × effectiveWorkerVcpu ÷ billingUnitVcpu for ARO. For three 2-vCPU workers this is $0.2565/hour, not a second published rate.",
+                            "type": "number"
+                          },
+                          "effectiveDate": {
+                            "description": "ISO date of the pricing evidence represented by this row.",
+                            "type": "string"
+                          },
+                          "effectiveWorkerCount": {
+                            "description": "Total worker count represented by the derived OpenShift platform charge.",
+                            "type": "integer"
+                          },
+                          "effectiveWorkerVcpu": {
+                            "description": "Total worker vCPU-equivalents used to prorate the published platform unit.",
+                            "type": "number"
+                          },
+                          "isRoutable": {
+                            "description": "Whether this resource is currently receiving routed traffic. True for available/degraded rows and false for unavailable rows.",
+                            "type": "boolean"
                           },
                           "name": {
                             "example": "app-nat",
                             "type": "string"
                           },
+                          "offering": {
+                            "description": "OpenShift offering associated with this row, when the resource is an OpenShift overlay.",
+                            "type": "string"
+                          },
+                          "pricingArithmetic": {
+                            "description": "Published amount and conversion used for an OpenShift platform/license row.",
+                            "type": "string"
+                          },
+                          "pricingSource": {
+                            "description": "Pricing source associated with this row.",
+                            "type": "string"
+                          },
+                          "pricingStatus": {
+                            "description": "Provenance status for the pricing represented by this row.",
+                            "enum": [
+                              "official",
+                              "estimated"
+                            ],
+                            "type": "string"
+                          },
                           "provider": {
                             "example": "aws",
+                            "type": "string"
+                          },
+                          "publishedUnitRatePerHour": {
+                            "description": "Published platform rate for one billing unit, before topology proration. For ARO this is $0.171/hour per 4 vCPU in the published East US reference.",
+                            "type": "number"
+                          },
+                          "referenceRegion": {
+                            "description": "Region represented by the published pricing evidence.",
                             "type": "string"
                           },
                           "resourceId": {
@@ -16987,6 +19745,10 @@
                           "resourceType": {
                             "example": "network",
                             "type": "string"
+                          },
+                          "routedRps": {
+                            "description": "Current routed requests per second for tracked compute, Kubernetes, and database rows when available.",
+                            "type": "number"
                           },
                           "status": {
                             "description": "Current resource status (\"stopped\" when billingState is stopped; \"removed\" when the resource no longer exists)",
@@ -16998,6 +19760,49 @@
                               "removed"
                             ],
                             "type": "string"
+                          },
+                          "workerTopology": {
+                            "description": "Per-pool worker quantities used to derive the OpenShift platform charge.",
+                            "properties": {
+                              "effectiveWorkerVcpu": {
+                                "type": "number"
+                              },
+                              "nodePools": {
+                                "items": {
+                                  "properties": {
+                                    "effectiveWorkerVcpu": {
+                                      "type": "number"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "workerCount": {
+                                      "type": "integer"
+                                    },
+                                    "workerVcpu": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "workerCount",
+                                    "workerVcpu",
+                                    "effectiveWorkerVcpu"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "workerCount": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "workerCount",
+                              "effectiveWorkerVcpu",
+                              "nodePools"
+                            ],
+                            "type": "object"
                           }
                         },
                         "required": [
@@ -17076,6 +19881,152 @@
         "x-x402-price-usdc": "$0.0010"
       },
       "x-stability": "stable"
+    },
+    "/simulations/{simulationId}/deploy": {
+      "post": {
+        "description": "Starts a rolling replacement of all running tasks in an `ecsFargate`\nresource. Tasks are replaced in batches of `maxSurge`: each new batch\nwarms through `taskStartupSeconds` (the resource's configured startup\ndelay) before the corresponding old tasks begin draining through\n`taskScaleDownSeconds`. During the drain window the ready new tasks\nserve new connections while the old tasks finish existing ones, so\neffective serving capacity is preserved throughout the deploy.\n\nProgress is visible in subsequent `GET /simulations/{simulationId}`\nresponses under each resource's `metadata.fargateDeployReplacingCount`\nand in `normalizedConfig.requestServing[].rollingDeploy` (present only\nwhile a deploy is in flight). A `\"success\"` event is emitted when the\nfinal batch completes.\n\nOnly `ecsFargate` resources support this action. Provide `resourceId`\nor `resourceName` to target a specific resource; omit both to\nauto-detect the first ecsFargate resource in the simulation.\n\nRequires `write` scope and ownership.\n",
+        "operationId": "deploySimulationResource",
+        "parameters": [
+          {
+            "description": "Simulation UUID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "autoDetect": {
+                  "summary": "Deploy the only ecsFargate resource (auto-detected)",
+                  "value": {}
+                },
+                "byNameSurge2": {
+                  "summary": "Deploy a named service with maxSurge 2",
+                  "value": {
+                    "maxSurge": 2,
+                    "resourceName": "fargate-service-01"
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Target a specific ecsFargate resource by `resourceId` or `resourceName`. Omit both to auto-detect the first ecsFargate resource. `maxSurge` controls how many new tasks are launched per batch before the corresponding old tasks begin draining (default 1).",
+                "properties": {
+                  "maxSurge": {
+                    "default": 1,
+                    "description": "Number of new tasks to launch per batch before the corresponding old tasks drain (default 1). Larger values speed up the deploy at the cost of temporarily running more tasks.",
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "resourceId": {
+                    "description": "ID of the ecsFargate resource to deploy. Takes precedence over resourceName.",
+                    "type": "string"
+                  },
+                  "resourceName": {
+                    "description": "Human-readable name of the ecsFargate resource to deploy.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "deployedResourceId": "res-1",
+                  "deployedResourceName": "fargate-service-01",
+                  "event": {
+                    "id": "evt-id",
+                    "message": "fargate-service-01: rolling deployment started — replacing 4 tasks in batches of 1",
+                    "severity": "info",
+                    "simulationId": "sim-abc123"
+                  },
+                  "simulation": {
+                    "id": "sim-abc123",
+                    "resources": []
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "deployedResourceId": {
+                      "description": "ID of the ecsFargate resource being deployed",
+                      "type": "string"
+                    },
+                    "deployedResourceName": {
+                      "description": "Name of the ecsFargate resource being deployed",
+                      "type": "string"
+                    },
+                    "event": {
+                      "description": "Deployment-started event emitted to the simulation event log",
+                      "type": "object"
+                    },
+                    "simulation": {
+                      "description": "Updated simulation state (resources with deploy metadata set)",
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rolling deployment initiated"
+          },
+          "400": {
+            "description": "No ecsFargate resource found, or resource already deploying"
+          },
+          "402": {
+            "description": "Payment required (x402)"
+          },
+          "403": {
+            "description": "Access denied (not the owner)"
+          },
+          "404": {
+            "description": "Simulation or resource not found"
+          }
+        },
+        "security": [
+          {
+            "x402": []
+          },
+          {
+            "x402Solana": []
+          }
+        ],
+        "summary": "Start a rolling ECS Fargate deployment",
+        "tags": [
+          "Simulations"
+        ],
+        "x-codeSamples": [
+          {
+            "label": "curl",
+            "lang": "curl",
+            "source": "curl -X POST https://www.cloudworldmodel.ai/api/simulations/sim-abc123/deploy \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"resourceName\": \"fargate-service-01\", \"maxSurge\": 2}'\n"
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "amount": "0.001",
+            "currency": "USD",
+            "mode": "fixed"
+          },
+          "protocols": [
+            "x402"
+          ]
+        },
+        "x-x402-call-type": "simulation.deploy",
+        "x-x402-price-usdc": "$0.0010"
+      },
+      "x-stability": "experimental"
     },
     "/simulations/{simulationId}/explain": {
       "post": {
@@ -17281,6 +20232,20 @@
                     "example": 10,
                     "type": "integer"
                   },
+                  "targetProvider": {
+                    "enum": [
+                      "aws",
+                      "gcp",
+                      "azure",
+                      "oci",
+                      "digitalocean"
+                    ],
+                    "type": "string"
+                  },
+                  "targetRegion": {
+                    "description": "Canonical region key. region_outage requires this and targetProvider. Permanent data loss requires a resource ID or provider-qualified region/zone scope; expiration never restores destroyed data.",
+                    "type": "string"
+                  },
                   "targetResourceId": {
                     "description": "ID of the specific resource to target (optional)",
                     "nullable": true,
@@ -17298,8 +20263,11 @@
                       "instance_kill",
                       "instance_down",
                       "az_outage",
+                      "region_outage",
+                      "permanent_data_loss",
                       "database_overload",
-                      "network_latency"
+                      "network_latency",
+                      "spot_interruption"
                     ],
                     "example": "az_outage",
                     "type": "string"
@@ -17429,7 +20397,7 @@
     },
     "/simulations/{simulationId}/inject-failure": {
       "post": {
-        "description": "Fails one resource in the simulation (marks it critical) and records an\nerror event.\n\n**Targeting (recommended)** — pass `resourceId` or `resourceName`\n(human-readable name; exact match preferred, an unambiguous prefix is\naccepted) in the request body to fail a specific, named resource (e.g.\n`{ \"resourceName\": \"web-server-01\" }`). This path is deterministic and\nreproducible — use it for controlled scenarios, CI fault-tree runs, and\nany case where a predictable outcome matters. If `resourceName` matches\nmore than one resource, a 400 is returned with a `candidates` list\nnaming every match so the caller can retry unambiguously. If the\nresolved resource is not in a faileable state (already critical/warning),\na 400 describing its current status is returned.\n\n**Random mode (opt-in)** — pass `{\"random\": true}` to explicitly select\na random healthy node via the simulation's RNG. This path is\n**non-deterministic** and not suitable for controlled scenarios or CI\nreplay. Use it only when intentional random selection is explicitly\ndesired. An empty body `{}` returns 400 with a hint naming all three\nvalid patterns.\n\nThe response always echoes the applied outcome via\n`resolvedResourceId`, `resolvedResourceName`, and `previousHealth` —\non the random path these are populated from whichever resource was\nselected.\n\nReturns 400 if no healthy nodes are available to fail.\nFor fine-grained control over failure type and duration, use\n`POST /simulations/{simulationId}/failures` instead.\n\n**Resource name discovery (agents: do this first)** — before calling this\nendpoint, call `GET /simulations/{simulationId}` and read the top-level\n`resources` array. Each element has an `id` and a `name` field. Use one of\nthose values as `resourceId` or `resourceName` in your request body. The\nresponse also returns a `healthyNodes` array `[{id, name}, ...]` listing\nevery currently healthy resource, so you can update your inventory on each\ncall without a separate lookup.\n\n**Unknown fields are rejected before payment settlement** — if the request body\ncontains any field other than `resourceId`, `resourceName`, or `random` (for\nexample the common agent mistake `targetResourceId`, `target`, or `resource`),\nthe endpoint returns a structured 400 with a \"Did you mean\" hint before any\nUSDC charge is settled. An empty body `{}` also returns 400 with a hint naming\nall three valid patterns.\n\nRequires `write` scope and ownership.\n",
+        "description": "Fails one resource in the simulation (marks it critical) and records an\nerror event.\n\nQuick `inject-failure` uses the resource's bounded `failureParkSteps`\nwindow (or `criticalSteps` when that field is omitted): the targeted\ncompute/Kubernetes node is unavailable and receives no routed traffic\nduring that window, then rejoins the routing pool automatically when\norganic cooldown can resume. This is different from the persistent\nreversible `instance_down` failure created through `/failures`, which\nremains unavailable until deactivated or recovered with\n`recover-resource`; `instance_kill` permanently removes the resource.\nPoll the step response or `GET /simulations/{simulationId}` for\n`availabilityState`, `isRoutable`, `routedRps`, and `recoveryProgress`.\n`failureParkSteps` must be a positive integer; an explicit zero is\nrejected rather than treated as an ambiguous no-park mode.\n\n**Targeting (recommended)** — pass `resourceId` or `resourceName`\n(human-readable name; exact match preferred, an unambiguous prefix is\naccepted) in the request body to fail a specific, named resource (e.g.\n`{ \"resourceName\": \"web-server-01\" }`). This path is deterministic and\nreproducible — use it for controlled scenarios, CI fault-tree runs, and\nany case where a predictable outcome matters. If `resourceName` matches\nmore than one resource, a 400 is returned with a `candidates` list\nnaming every match so the caller can retry unambiguously. If the\nresolved resource is not in a faileable state (already critical/warning),\na 400 describing its current status is returned.\n\n**Random mode (opt-in)** — pass `{\"random\": true}` to explicitly select\na random healthy node via the simulation's RNG. This path is\n**non-deterministic** and not suitable for controlled scenarios or CI\nreplay. Use it only when intentional random selection is explicitly\ndesired. An empty body `{}` returns 400 with a hint naming all three\nvalid patterns.\n\nThe response always echoes the applied outcome via\n`resolvedResourceId`, `resolvedResourceName`, and `previousHealth` —\non the random path these are populated from whichever resource was\nselected.\n\nReturns 400 if no healthy nodes are available to fail.\nFor fine-grained control over failure type and duration, use\n`POST /simulations/{simulationId}/failures` instead.\n\n**Resource name discovery (agents: do this first)** — before calling this\nendpoint, call `GET /simulations/{simulationId}` and read the top-level\n`resources` array. Each element has an `id` and a `name` field. Use one of\nthose values as `resourceId` or `resourceName` in your request body. The\nresponse also returns a `healthyNodes` array `[{id, name}, ...]` listing\nevery currently healthy resource, so you can update your inventory on each\ncall without a separate lookup.\n\n**Unknown fields are rejected before payment settlement** — if the request body\ncontains any field other than `resourceId`, `resourceName`, or `random` (for\nexample the common agent mistake `targetResourceId`, `target`, or `resource`),\nthe endpoint returns a structured 400 with a \"Did you mean\" hint before any\nUSDC charge is settled. An empty body `{}` also returns 400 with a hint naming\nall three valid patterns.\n\nRequires `write` scope and ownership.\n",
         "operationId": "injectFailure",
         "parameters": [
           {
@@ -17954,7 +20922,7 @@
     },
     "/simulations/{simulationId}/recover-resource": {
       "post": {
-        "description": "Clears a specific failed resource's failure state so the simulation\nengine restores it to healthy over subsequent steps. Deactivates any\nin-effect **reversible** failure injection targeting the resource\n(`instance_down`, `database_overload`), restores snapshotted\ncharacteristics where available, and resets the resource's health\ncounters to the recovery-threshold boundary.\n\n**`instance_kill` cannot be recovered** — that failure type\npermanently removes the target resource from the simulation. Calling\nthis endpoint with the killed resource's id returns `400\nRESOURCE_KILLED`; re-add the resource via\n`PATCH /simulations/{simulationId}`, or prefer `instance_down` when\nyou want a reversible outage.\n\n**Scoped to the targeted resource only** — other resources that remain\nfailed are not affected.\n\nThe response echoes the applied outcome, including `stepsToHealthy`:\na best-case estimate of the `POST /step` (or `step-hybrid`) calls\nneeded for the engine to demote the resource back to `healthy` under\nthe current recovery policy (defaults: critical→warning after 4 steps\nbelow 80% CPU, warning→healthy after 3 steps below 70%; recovery\npre-fills the critical counter to its boundary, so the default\nestimate is 4 steps). The count assumes CPU stays below the demotion\nthreshold on every subsequent step; if CPU exceeds the threshold on\nany step the cooldown counter resets and more steps will be required.\nPoll `GET /simulations/{simulationId}` after stepping to verify.\n\nWorks for every provider (AWS, GCP, Azure, OCI, DigitalOcean) —\nunlike `bulk-resize`, which is DigitalOcean-only.\n\nProvide `resourceName` or `resourceId`. Returns 400 when the resource\ncannot be found, was permanently removed by `instance_kill`, or is\nalready healthy.\n\nRequires `write` scope and ownership.\n",
+        "description": "Clears a specific failed resource's failure state so the simulation\nengine restores it to healthy over subsequent steps. Deactivates any\nin-effect **reversible** failure injection targeting the resource\n(`instance_down`, `database_overload`), restores snapshotted\ncharacteristics where available, and resets the resource's health\ncounters to the recovery-threshold boundary.\n\nReturns 409 `PERMANENT_DATA_LOSS` for destroyed data that has not been\nexplicitly rebuilt. Generic recovery never clears `dataState`; an empty\nrebuilt database can serve again while its original data remains lost.\n\nThe quick `inject-failure` endpoint is intentionally different: its\npositive `failureParkSteps` window is automatic, so the node may rejoin\nrouting after the window without this endpoint. Use `recover-resource`\nwhen an explicit recovery is required for a persistent reversible\n`instance_down` failure; poll `isRoutable`, `routedRps`, and\n`recoveryProgress` after either flow.\n\n**`instance_kill` cannot be recovered** — that failure type\npermanently removes the target resource from the simulation. Calling\nthis endpoint with the killed resource's id returns `400\nRESOURCE_KILLED`; re-add the resource via\n`PATCH /simulations/{simulationId}`, or prefer `instance_down` when\nyou want a reversible outage.\n\n**Scoped to the targeted resource only** — other resources that remain\nfailed are not affected.\n\nThe response echoes the applied outcome, including `stepsToHealthy`:\na lower-bound estimate of the `POST /step` (or `step-hybrid`) calls\nneeded for the engine to demote the resource back to `healthy` under\nthe current recovery policy (defaults: critical→warning after 4 steps\nbelow 80% CPU, warning→healthy after 3 steps below 70%; recovery\npre-fills the critical counter to its boundary, so the default lower\nbound is 4 steps). `stepsToHealthyIsLowerBound` is always true:\nexplicitly failed resources may require an additional failure-park\ntransition before cooldown resumes, and a CPU threshold breach resets\nthe cooldown counter. Callers should take at least `stepsToHealthy`\nsteps, then poll `GET /simulations/{simulationId}` until the resource\nis healthy.\n\nWorks for every provider (AWS, GCP, Azure, OCI, DigitalOcean) —\nunlike `bulk-resize`, which is DigitalOcean-only.\n\nProvide `resourceName` or `resourceId`. Returns 400 when the resource\ncannot be found, was permanently removed by `instance_kill`, or is\nalready healthy.\n\nRequires `write` scope and ownership.\n",
         "operationId": "recoverSimulationResource",
         "parameters": [
           {
@@ -18014,7 +20982,8 @@
                   "recoveryState": "recovering",
                   "resolvedResourceId": "res-1",
                   "resolvedResourceName": "app-server-01",
-                  "stepsToHealthy": 4
+                  "stepsToHealthy": 4,
+                  "stepsToHealthyIsLowerBound": true
                 },
                 "schema": {
                   "properties": {
@@ -18029,6 +20998,9 @@
                       "description": "Resource status before recovery (e.g. critical, warning)",
                       "type": "string"
                     },
+                    "recoveryProgress": {
+                      "$ref": "#/components/schemas/RecoveryProgress"
+                    },
                     "recoveryState": {
                       "enum": [
                         "recovering"
@@ -18042,8 +21014,12 @@
                       "type": "string"
                     },
                     "stepsToHealthy": {
-                      "description": "Best-case estimate — the number of simulation steps until the resource is healthy again, assuming CPU stays below the demotion threshold on every subsequent step. If CPU exceeds the threshold on any step the cooldown counter resets and more steps will be required than this estimate.",
+                      "description": "Lower-bound estimate — callers should take at least this many simulation steps before polling for healthy. Explicitly failed resources may require an additional failure-park transition before cooldown resumes, and a CPU threshold breach resets the cooldown counter.",
                       "type": "integer"
+                    },
+                    "stepsToHealthyIsLowerBound": {
+                      "description": "Always true; stepsToHealthy is a lower bound, not a completion guarantee.",
+                      "type": "boolean"
                     }
                   },
                   "type": "object"
@@ -18401,8 +21377,63 @@
                 "schema": {
                   "properties": {
                     "coverageSummary": {
-                      "description": "Simulation coverage summary for this hybrid step — what CWM could\nmodel deterministically, what it estimated, and what it could not\nsee at all. Shares are of SIMULATED cost, never a real bill; known\ngaps are listed by name with a zero share. Also persisted on each\ndecision in the cumulative hybrid result.\n\n**Share distribution:** `shareOfSimulatedCost` values do NOT necessarily\nsum to 1.0. When an unrecognized SKU is present its share is deliberately\nforced to 0. Use `modeledCostShareOfTotal` as the authoritative denominator.\n",
+                      "description": "Resource/behavior and base-rate coverage summary for this hybrid step —\nwhat CWM could model deterministically, what it estimated, and what it\ncould not see at all. `level` never means complete economic or invoice\ncoverage; inspect `billingPolicyCoverage` separately. Shares are of\nSIMULATED cost, never a real bill; known\ngaps are listed by name with a zero share. Also persisted on each\ndecision in the cumulative hybrid result.\n\n**Share distribution:** `shareOfSimulatedCost` values do NOT necessarily\nsum to 1.0. When an unrecognized SKU is present its share is deliberately\nforced to 0. Use `modeledCostShareOfTotal` as the authoritative denominator.\n",
                       "properties": {
+                        "billingPolicyCoverage": {
+                          "description": "Economic billing-policy dimension, separate from resource behavior and base-rate fidelity. An RDS resource always lists RDS Extended Support as an unpriced exclusion; CWM does not estimate that surcharge.\n",
+                          "properties": {
+                            "complete": {
+                              "type": "boolean"
+                            },
+                            "exclusions": {
+                              "items": {
+                                "properties": {
+                                  "policy": {
+                                    "example": "RDS Extended Support",
+                                    "type": "string"
+                                  },
+                                  "priced": {
+                                    "enum": [
+                                      false
+                                    ],
+                                    "type": "boolean"
+                                  },
+                                  "reason": {
+                                    "type": "string"
+                                  },
+                                  "resourceId": {
+                                    "type": "string"
+                                  },
+                                  "resourceName": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "resourceId",
+                                  "resourceName",
+                                  "policy",
+                                  "priced",
+                                  "reason"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "status": {
+                              "enum": [
+                                "complete",
+                                "excluded_policies"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "complete",
+                            "status",
+                            "exclusions"
+                          ],
+                          "type": "object"
+                        },
                         "estimatedCount": {
                           "example": 2,
                           "type": "integer"
@@ -18412,7 +21443,7 @@
                           "type": "integer"
                         },
                         "level": {
-                          "description": "Deterministic rules — \"full\": every resource is modeled and no\nnot-observable category applies; \"limited\": at least one\nnot-observable category applies to this resource mix; \"partial\":\nanything estimated or a known gap, but nothing not-observable.\n",
+                          "description": "Resource/behavior fidelity only. Deterministic rules — \"full\": every resource is modeled and no\nnot-observable category applies; \"limited\": at least one\nnot-observable category applies to this resource mix; \"partial\":\nanything estimated or a known gap, but nothing not-observable.\n",
                           "enum": [
                             "full",
                             "partial",
@@ -18514,6 +21545,11 @@
                       },
                       "type": "object"
                     },
+                    "effectiveConfigHash": {
+                      "description": "Canonical SHA-256 of the effective six-control startup configuration.",
+                      "pattern": "^[a-f0-9]{64}$",
+                      "type": "string"
+                    },
                     "events": {
                       "items": {
                         "type": "object"
@@ -18533,7 +21569,58 @@
                       "$ref": "#/components/schemas/HybridSimulationResult"
                     },
                     "metrics": {
-                      "description": "Metrics snapshot for this step",
+                      "description": "Metrics snapshot for this step. `throughput` is successful throughput (goodput). The normal simulation engine emits `offeredRps` on the final top-level step result as the aggregate original-client offered load for the same step/window. Legacy persisted histories may omit it; it is never derived from retry/path/per-resource figures.\n",
+                      "properties": {
+                        "costPerHour": {
+                          "description": "Estimated infrastructure cost per hour (USD)",
+                          "type": "number"
+                        },
+                        "cpuUsage": {
+                          "description": "CPU utilization (%)",
+                          "type": "number"
+                        },
+                        "errorRate": {
+                          "description": "Error rate (%)",
+                          "type": "number"
+                        },
+                        "latencyP50": {
+                          "description": "Median latency (ms)",
+                          "type": "number"
+                        },
+                        "latencyP95": {
+                          "description": "P95 latency (ms)",
+                          "type": "number"
+                        },
+                        "latencyP99": {
+                          "description": "P99 latency (ms)",
+                          "type": "number"
+                        },
+                        "memoryUsage": {
+                          "description": "Memory utilization (%)",
+                          "type": "number"
+                        },
+                        "modeledShedRps": {
+                          "description": "Aggregate request rate shed by modeled capacity limits for this step/window (RPS). Optional: emitted only when complete aggregate capacity evidence exists, never fabricated from goodput or error rate, and distinct from application errors.\n",
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "offeredRps": {
+                          "description": "Aggregate original-client request rate offered to the simulation for this step/window (RPS). The normal simulation engine emits this on the final top-level step result and persists it with current metric history; legacy histories may omit it. Never infer from retry/path/per-resource figures.\n",
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "simulationId": {
+                          "type": "string"
+                        },
+                        "throughput": {
+                          "description": "Successful/effective throughput (goodput) in RPS",
+                          "type": "number"
+                        },
+                        "timestamp": {
+                          "description": "Simulation timestamp for this metric snapshot (seconds)",
+                          "type": "number"
+                        }
+                      },
                       "type": "object"
                     },
                     "ownership": {
@@ -18562,6 +21649,14 @@
                         }
                       },
                       "type": "object"
+                    },
+                    "replayIdentity": {
+                      "$ref": "#/components/schemas/ReplayIdentity"
+                    },
+                    "scenarioHash": {
+                      "description": "Canonical SHA-256 of the persisted scenario graph and attached traffic-pattern order.",
+                      "pattern": "^[a-f0-9]{64}$",
+                      "type": "string"
                     },
                     "simulation": {
                       "$ref": "#/components/schemas/Simulation"

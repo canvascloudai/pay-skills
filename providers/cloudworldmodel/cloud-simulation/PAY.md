@@ -32,6 +32,10 @@ without provisioning real resources or incurring cloud bills.
   traffic, failures, and capacity, request sizing hints, and validate model accuracy.
 - **Hybrid simulation** — run the blended deterministic + ML simulation engine
   (`simulation_step_hybrid`).
+- **Stateless one-call simulation** — submit a bounded infrastructure, traffic,
+  autoscaling, and optional failure scenario and receive cost, performance,
+  utilization, error, reliability, and model-coverage results synchronously
+  (`simulation.stateless`), without creating any CWM resource first.
 
 ## x402 payment flow
 
@@ -58,6 +62,7 @@ Discovery section.
 | Call type | USDC (Solana / Base) |
 |---|---|
 | `rl.step`, `rl.batch_step`, `rl.eval` | $0.0010 |
+| `simulation.stateless` | $0.0010 |
 | `simulation_step_hybrid` | $0.0010 |
 | `ai.explain`, `ai.optimize`, `ai.troubleshoot`, `ai_bottleneck` | $0.0010 |
 | `ai_analysis`, `ai.status`, `ai.results`, `ai.recommendations` | $0.0010 |
