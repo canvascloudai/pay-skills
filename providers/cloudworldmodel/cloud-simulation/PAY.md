@@ -68,7 +68,7 @@ Discovery section.
 | `ai_analysis`, `ai.status`, `ai.results`, `ai.recommendations` | $0.0010 |
 | `wallet_session` | $0.0010 |
 | `simulation.inject_traffic`, `simulation.inject_failure`, `simulation.inject_failure_create`, `simulation.inject_failure_update`, `simulation.inject_failure_delete` | $0.0010 |
-| `simulation.resize`, `simulation.apply_right_sizing`, `simulation.recover_resource`, `right_sizing_hint` | $0.0010 |
+| `simulation.deploy`, `simulation.resize`, `simulation.apply_right_sizing`, `simulation.recover_resource`, `right_sizing_hint` | $0.0010 |
 | `validate_cost_accuracy`, `validate_performance_accuracy`, `benchmark.validate` | $0.0010 |
 | `simulation_create`, `simulation_list`, `simulation_get`, `simulation_cost_breakdown` | $0.0010 |
 | `rl_env_create`, `rl_env_get`, `rl_env_delete`, `rl_env_reset`, `rl_env_observation`, `rl_eval_status` | $0.0010 |
