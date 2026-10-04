@@ -61,18 +61,18 @@ Discovery section.
 
 | Call type | USDC (Solana / Base) |
 |---|---|
-| `rl.step`, `rl.batch_step`, `rl.eval` | $0.0010 |
-| `simulation.stateless` | $0.0010 |
-| `simulation_step_hybrid` | $0.0010 |
-| `ai.explain`, `ai.optimize`, `ai.troubleshoot`, `ai_bottleneck` | $0.0010 |
-| `ai_analysis`, `ai.status`, `ai.results`, `ai.recommendations` | $0.0010 |
-| `wallet_session` | $0.0010 |
-| `simulation.inject_traffic`, `simulation.inject_failure`, `simulation.inject_failure_create`, `simulation.inject_failure_update`, `simulation.inject_failure_delete` | $0.0010 |
-| `simulation.deploy`, `simulation.resize`, `simulation.apply_right_sizing`, `simulation.recover_resource`, `right_sizing_hint` | $0.0010 |
-| `validate_cost_accuracy`, `validate_performance_accuracy`, `benchmark.validate` | $0.0010 |
-| `simulation_create`, `simulation_list`, `simulation_get`, `simulation_cost_breakdown` | $0.0010 |
-| `rl_env_create`, `rl_env_get`, `rl_env_delete`, `rl_env_reset`, `rl_env_observation`, `rl_eval_status` | $0.0010 |
-| `multicloud.status`, `multicloud_results`, `multicloud_partial_results`, `multicloud_stream` | $0.0010 |
+| `rl.step`, `rl.batch_step`, `rl.eval` | $0.0030 (3 credits) |
+| `simulation.stateless` | $0.0030 (3 credits) |
+| `simulation_step_hybrid` | $0.0030 (3 credits) |
+| `ai.explain`, `ai.optimize`, `ai.troubleshoot`, `ai_bottleneck` | $0.0030 (3 credits) |
+| `ai_analysis`, `ai.status`, `ai.results`, `ai.recommendations` | $0.0030 (3 credits) |
+| `wallet_session` | $0.0030 (3 credits) |
+| `simulation.inject_traffic`, `simulation.inject_failure`, `simulation.inject_failure_create`, `simulation.inject_failure_update`, `simulation.inject_failure_delete` | $0.0030 (3 credits) |
+| `simulation.deploy`, `simulation.resize`, `simulation.apply_right_sizing`, `simulation.recover_resource`, `right_sizing_hint`, `provider_api_limits` | $0.0030 (3 credits) |
+| `validate_cost_accuracy`, `validate_performance_accuracy`, `benchmark.validate` | $0.0030 (3 credits) |
+| `simulation_create`, `simulation_list`, `simulation_get`, `simulation_cost_breakdown` | $0.0030 (3 credits) |
+| `rl_env_create`, `rl_env_get`, `rl_env_delete`, `rl_env_reset`, `rl_env_observation`, `rl_eval_status` | $0.0030 (3 credits) |
+| `multicloud.status`, `multicloud_results`, `multicloud_partial_results`, `multicloud_stream` | $0.0030 (3 credits) |
 | `chaos.run`, `chaos_batch` | $0.0050 |
 | `multicloud.explore` | $0.0050 |
 | `optimization.run` | $0.0050 |
@@ -84,7 +84,7 @@ USDC uses 6 decimal places on both chains; 1 credit = 1 000 atomic units = $0.00
 
 - Fetch `/api/billing/x402/config` once per session to read the live `payTo` wallet
   address and exact atomic-unit amounts per call type — do not hardcode them.
-- Prefer `rl.batch_step` (1 credit for up to 30 steps) over looping `rl.step` to
+- Prefer `rl.batch_step` (3 credits for up to 30 steps) over looping `rl.step` to
   reduce round-trips.
 - High-cost calls (`chaos.run`, `multicloud.explore`) each cost 5× a step call; use
   them after a warm-up phase to avoid wasting budget on uninitialised environments.
