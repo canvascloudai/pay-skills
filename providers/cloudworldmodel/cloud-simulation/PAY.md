@@ -86,7 +86,8 @@ USDC uses 6 decimal places on both chains; 1 credit = 1 000 atomic units = $0.00
   address and exact atomic-unit amounts per call type — do not hardcode them.
 - Prefer `rl.batch_step` (3 credits for up to 30 steps) over looping `rl.step` to
   reduce round-trips.
-- High-cost calls (`chaos.run`, `multicloud.explore`) each cost 5× a step call; use
+- High-cost calls (`chaos.run`, `multicloud.explore`) cost $0.0050 each, compared
+  with $0.0030 for a step call (approximately 1.67×); use
   them after a warm-up phase to avoid wasting budget on uninitialised environments.
 - The `simulation_step_hybrid` endpoint auto-claims a wallet-owned simulation on the
   first call; the simulation is retained for 90 rolling days without an explicit
